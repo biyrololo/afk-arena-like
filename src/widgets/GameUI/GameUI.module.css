@@ -1,0 +1,43 @@
+.burning-border::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    z-index: 1;
+    border-radius: 12px;
+    padding: 4px;
+    background: linear-gradient(
+        45deg,
+        #ff0000,   /* тёмно-красный — основа огня */
+        #ff4500,   /* оранжево-красный */
+        #ff8c00,   /* тёмный оранжевый */
+        #ffa500,   /* стандартный оранжевый */
+        #ffd700,   /* светло-оранжевый */
+        #ffff00,   /* жёлтый — как языки пламени */
+        #ff8c00,
+        #ff4500,
+        #ff0000
+    );
+    background-size: 400% 400%;
+    animation: burn 3s ease infinite;
+    -webkit-mask: 
+      linear-gradient(#fff 0 0) content-box, 
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: destination-out;
+    mask-composite: exclude;
+  }
+  
+  /* Анимация градиента */
+  @keyframes burn {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+}

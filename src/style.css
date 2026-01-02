@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: black;
+}
+
+canvas {
+  outline: 1px solid red;
+}
+
+@font-face {
+  font-family: 'Pixel';
+  src: url('assets/fonts/toxigenesis bd.otf') format('opentype');
+}
+
+* {
+  box-sizing: border-box;
+  font-family: 'Pixel';
+}

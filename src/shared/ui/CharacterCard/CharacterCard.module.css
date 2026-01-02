@@ -1,0 +1,26 @@
+.card {
+    display: flex;
+    flex-direction: column;
+    border-radius: 20px;
+    border: 1px solid white;
+    overflow: hidden;
+    cursor: pointer;
+    color: wheat;
+    gap: 20px;
+    padding-block-end: 16px;
+}
+
+.img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+}
+
+.name,
+.info {
+    padding-inline: 16px;
+}
+
+.name {
+    font-size: 24px;
+}
