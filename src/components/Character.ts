@@ -144,6 +144,11 @@ export default class Character extends Phaser.GameObjects.Container {
         // Параметры отображения (если не указаны, используем размеры фрейма)
         this.displayWidth = displayWidth || frameWidth;
         this.displayHeight = displayHeight || frameHeight;
+
+        if(displayWidth && !displayHeight) {
+            this.displayWidth = displayWidth;
+            this.displayHeight = (displayWidth * frameHeight) / frameWidth;
+        }
         
         // Устанавливаем размер отображения
         this.sprite.setDisplaySize(this.displayWidth, this.displayHeight);
@@ -427,6 +432,14 @@ export default class Character extends Phaser.GameObjects.Container {
             });
         }
     }
+
+    public hideHPBar(): Character {
+        this.hpBarBg.setVisible(false);
+        this.hpBar.setVisible(false);
+        this.hpText.setVisible(false);
+
+        return this
+    }
     
     /**
      * Воспроизведение анимации
@@ -618,6 +631,14 @@ export default class Character extends Phaser.GameObjects.Container {
 
     public getTextureKey(): string {
         return this.textureKey;
+    }
+
+    public getFrameWidth(): number {
+        return this.frameWidth;
+    }
+
+    public getFrameHeight(): number {
+        return this.frameHeight;
     }
 
     public setFlipX(flip: boolean) {

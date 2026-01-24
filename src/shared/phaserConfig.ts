@@ -1,18 +1,18 @@
 import Phaser from 'phaser';
 
 const sizes = {
-  width: 1400,
-  height: 800
+  width: 1920,
+  height: 1080
 }
 
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
   width: sizes.width,
   height: sizes.height,
-  // scale: {
-  //   mode: Phaser.Scale.RESIZE,
-  //   autoCenter: Phaser.Scale.CENTER_HORIZONTALLY
-  // }
+  scale: {
+    mode: Phaser.Scale.FIT,
+    autoCenter: Phaser.Scale.CENTER_HORIZONTALLY
+  }
 };
 
 export const startGame = (parent: string | HTMLElement, scenes: Phaser.Types.Scenes.SceneType[]) => new Phaser.Game({

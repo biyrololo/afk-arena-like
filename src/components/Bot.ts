@@ -80,6 +80,9 @@ export class BotController {
             if(this.state !== 'attacking') {
                 const isOnLeft = hp.centerX < thp.centerX;
                 if(this.character.direction !== isOnLeft) this.character.setFlipX(!isOnLeft);
+                if(this.currentAttack === 'special') {
+                    this.scene.events.emit('ultimateStarted', this.character)
+                }
                 this.character.playAnimation(this.currentAttack, this.currentAttack);
                 this.character.onAnimationEnd = () => {
                     this.pickAttack();

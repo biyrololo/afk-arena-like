@@ -1,15 +1,22 @@
+import { PlotModal } from "@/entities/plot/ui/PlotModal/PlotModal";
+import { ResponsiveUI } from "@/shared/ui/ResponsiveUI/ResponsiveUI";
 import MenuUI from "@/widgets/MenuUI/MenuUI";
+
 
 export default function Menu() {
     return (
-        <div
-        className={`
-            w-[1400px] h-[800px] relative
-            bg-[url('/assets/backgrounds/tavern.png')]
-            bg-cover
-        `}
-        >
-            <MenuUI />
-        </div>
+        <ResponsiveUI>
+            <div
+            className={`
+                w-full h-full relative
+                bg-[url('assets/menu/menu.webp')]
+                bg-cover
+                bg-center
+            `}
+            >
+                <MenuUI />
+            </div>
+            <PlotModal />
+        </ResponsiveUI>
     )
 }

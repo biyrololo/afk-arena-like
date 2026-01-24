@@ -1,14 +1,14 @@
-import { EventBus } from "@/utils/eventBus";
-import { useMemo } from "react";
 import { useNavigate } from "react-router-dom"
 
-type MenuNav = {
-    icon: string;
-    width: number;
-    height: number;
-    callback: () => void;
-    title: string
-}
+import crystal from '@/assets/menu/crystal.png';
+import sword from '@/assets/menu/sword.png';
+import heroes from '@/assets/menu/heroes.png';
+import equipment from '@/assets/menu/equipment.png';
+
+import classes from './MenuUI.module.css';
+import { Balances } from "../Balances/Balances";
+import { usePlayerStore } from "@/entities/player/model/player.store";
+import { useShallow } from "zustand/shallow";
 
 export default function MenuUI() {
     const navigate = useNavigate();
@@ -17,71 +17,84 @@ export default function MenuUI() {
         navigate('/game/start');
     }
 
-    const navs: MenuNav[] = useMemo(() => ([
-        {
-            icon: '/assets/menu/heroes.png',
-            width: 150,
-            height: 100,
-            callback: () => navigate('/my-characters'),
-            title: 'Герои'
-        },
-        {
-            icon: '/assets/menu/attack.png',
-            width: 100,
-            height: 100,
-            callback: handleStartGame,
-            title: 'Бой'
-        },
-        {
-            icon: '/assets/menu/home.png',
-            width: 100,
-            height: 100,
-            callback: () => {},
-            title: 'Главная'
-        },
-        {
-            icon: '/assets/menu/summon.png',
-            width: 100,
-            height: 100,
-            callback: () => {},
-            title: 'Призыв'
-        }
-    ]), [])
+    const crystalAspectRatio = 722 / 601;
+    const swordAspectRatio = 249 / 322;
+    const heroesAspectRatio = 400 / 322;
+    const equipmentAspectRatio = 400 / 422;
+
+    const [chapterNumber, stageNumber] = usePlayerStore(useShallow(state => [state.chapterNumber, state.stageNumber]))
 
     return (
         <div className="absolute inset-0">
-            <section className={`
-                absolute bottom-0 right-0 left-0
-                bg-amber-600/40
-                p-4
-                h-40
-                flex
-                items-end
-                *:cursor-pointer
-                text-white
-                justify-center
-                gap-10
-                `}>
-                    {
-                        navs.map(n => (
-                            <button 
-                            key={n.title}
-                            onClick={n.callback}
-                            className="group"
-                            >
-                                <div 
-                                className="bg-cover bottom-0 relative transition-all duration-100 group-hover:bottom-1"
-                                style={{
-                                    backgroundImage: `url(${n.icon})`,
-                                    width: `${n.width}px`,
-                                    height: `${n.height}px`
-                                }}
-                                />
-                                <h2 className="group-hover:top-0.5 relative transition-all duration-100 top-0">{n.title}</h2>
-                            </button>
-                        ))
-                    }
-            </section>
+            <Balances />
+            <div 
+            className={`${classes['magic-glow']}`}
+            style={{
+                width: 500,
+                height: 500 / crystalAspectRatio,
+                right: 190,
+                bottom: 300,
+            }}
+            />
+            <div
+            className={`
+                absolute flex flex-col items-center justify-center cursor-pointer hover:scale-110 transition-all duration-100
+                `}
+            style={{
+                backgroundImage: `url(${crystal})`,
+                backgroundSize: 'contain',
+                width: 400,
+                height: 400 / crystalAspectRatio,
+                right: 190,
+                bottom: 220,
+            }}
+            onClick={() => navigate('/summon')}
+            >
+                <span className="text-white bg-amber-950 border-4 border-amber-600 py-2 px-6 rounded-full text-5xl mt-40">Призыв</span>
+            </div>
+            <div
+            className="absolute flex flex-col items-center justify-center cursor-pointer hover:scale-110 transition-all duration-100"
+            style={{
+                backgroundImage: `url(${sword})`,
+                backgroundSize: 'contain',
+                width: 400,
+                height: 400 / swordAspectRatio,
+                left: 760,
+                bottom: 70,
+            }}
+            onClick={() => handleStartGame()}
+            >
+                <span className="text-white bg-amber-950 border-4 border-amber-600 py-2 px-6 rounded-full text-5xl mt-60">В бой</span>
+                <span className="text-white bg-amber-950 border-4 border-amber-600 py-2 px-6 rounded-full text-3xl mt-4">{`Этап ${chapterNumber}-${stageNumber}`}</span>
+            </div>
+            <div
+            className="absolute flex flex-col items-center justify-center cursor-pointer hover:scale-110 transition-all duration-100"
+            style={{
+                backgroundImage: `url(${heroes})`,
+                backgroundSize: 'contain',
+                width: 600,
+                height: 600 / heroesAspectRatio,
+                left: 150,
+                bottom: 430,
+            }}
+            onClick={() => navigate('/my-characters')}
+            >
+                <span className="text-white bg-amber-950 border-4 border-amber-600 py-2 px-6 rounded-full text-5xl mt-80">Герои</span>
+            </div>
+            <div
+            className="absolute flex flex-col items-center justify-center cursor-pointer hover:scale-110 transition-all duration-100"
+            style={{
+                backgroundImage: `url(${equipment})`,
+                backgroundSize: 'contain',
+                width: 300,
+                height: 300 / equipmentAspectRatio,
+                left: 150,
+                bottom: 70,
+            }}
+            onClick={() => navigate('/my-equipment')}
+            >
+                <span className="text-white bg-amber-950 border-4 border-amber-600 py-2 px-6 rounded-full text-5xl mt-50">Снаряжение</span>
+            </div>
         </div> 
     )
 }

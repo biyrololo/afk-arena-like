@@ -6,12 +6,16 @@ import GameUI from "@/widgets/GameUI/GameUI";
 import PhaserGame from "@/shared/ui/PhaserGame";
 import type { PlayerCharacter } from "@/shared/types/PlayerCharacter";
 import { useEffect } from "react";
+import { ResponsiveUI } from "@/shared/ui/ResponsiveUI/ResponsiveUI";
+import { findStage } from "@/entities/chapter/lib/chapters";
 
 export default function Game() {
     const location = useLocation();
     const navgiate = useNavigate();
 
     const characters: Array<PlayerCharacter | null> | undefined = location.state?.characters;
+    const chapter: number | undefined = location.state?.chapter;
+    const stage: number | undefined = location.state?.stage;
 
     useEffect(() => {
         if(!characters) {
@@ -22,14 +26,19 @@ export default function Game() {
     }, [])
     
     useEffect(() => {
+        if(!characters || !chapter || !stage) return;
         console.log('CHARACTERS', characters);
         EventBus.on('sceneReady', (scene: string) => {
             console.log('loaded', scene);
             if(scene === 'GameScene') {
                 console.log('emit addAllies', characters);
                 EventBus.emit('addAllies', characters);
+                const currentStage = findStage(chapter, stage);
+                if(!currentStage) {
+                    throw new Error(`Stage ${chapter}-${stage} not found`);
+                }
                 console.log('emit start');
-                EventBus.emit('start')
+                EventBus.emit('start', currentStage)
             }
         })
 
@@ -37,14 +46,14 @@ export default function Game() {
         return () => {
             EventBus.removeListener('sceneReady');
         }
-    }, [])
+    }, [characters, chapter, stage])
 
     useEffect(() => {
         EventBus.on('gameOverUI', (data: {win: boolean}) => {
             console.log(data);
             navgiate('/game/end', {
                 state: {
-                    win: data.win
+                    ...data
                 }
             })
         })
@@ -55,7 +64,9 @@ export default function Game() {
     return (
         <>
             <PhaserGame scenes={[GameScene]} />
-            <GameUI />
+            <ResponsiveUI>
+                <GameUI />
+            </ResponsiveUI>
         </>
     )   
 }

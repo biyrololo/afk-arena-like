@@ -5,6 +5,8 @@ import { useEffect, useLayoutEffect, useRef } from "react"
 import { EventBus } from "@/utils/eventBus";
 import { startGame } from "../phaserConfig";
 
+import styles from './PhaserGame.module.css';
+
 type PhaserGameProps = {
     scenes: Phaser.Types.Scenes.SceneType[]
 }
@@ -41,6 +43,6 @@ export default function PhaserGame({ scenes }: PhaserGameProps) {
     // }, [])
 
     return (
-        <div id="game-container"></div>
+        <div id="game-container" className={styles['game-container']}></div>
     )
 }

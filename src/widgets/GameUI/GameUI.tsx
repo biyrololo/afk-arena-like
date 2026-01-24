@@ -62,18 +62,18 @@ export default function GameUI() {
 
     return (
         <div className={`
-            text-white absolute bottom-0 h-[180px] bg-zinc-700/80 w-full
+            text-white absolute bottom-0 h-[250px] bg-zinc-700/80 w-full
             flex
             items-center
             gap-10
-            p-5
+            p-10
         `}>
             {
                 heroes.map((h, i) => (
                     <button
                     key={i}
                     className={cn(`
-                        w-30 h-30  
+                        w-50 h-50  
                         bg-cover
                         relative
                         `,

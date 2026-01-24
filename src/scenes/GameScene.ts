@@ -4,8 +4,12 @@ import { EventBus } from '@/utils/eventBus';
 import Phaser from 'phaser';
 import type { PlayerCharacter } from '@/shared/types/PlayerCharacter';
 import generateCharacter from '@/characters/characters';
+import type { IStage } from '@/entities/chapter/lib/chapter.model';
+import { calculateStatsWithEquipment } from '@/shared/types/develop';
 
 export default class GameScene extends Phaser.Scene {
+    private background!: Phaser.GameObjects.Image;
+
     private allies: Character[] = [];
     private enemies: Character[] = [];
 
@@ -16,10 +20,19 @@ export default class GameScene extends Phaser.Scene {
         { x: 100, y: 300 },
     ];
 
+    private enemiesPositions: { x: number, y: number }[] = [
+        { x: 1000, y: 200 },
+        { x: 1000, y: 400 },
+        { x: 1200, y: 100 },
+        { x: 1200, y: 300 },
+    ];
+
     /**
      * Боты
      */
     private bots: BotController[] = [];
+
+    private stage: IStage | null = null;
 
     constructor() {
         super({ key: 'GameScene' });
@@ -59,9 +72,10 @@ export default class GameScene extends Phaser.Scene {
 
     create(): void {
         console.warn('CREATE SCENE')
-        const background = this.add.image(0, 0, 'background').setOrigin(0, 0);
-        background.displayWidth = this.scale.width;
-        background.displayHeight = this.scale.height;
+        
+        this.background = this.add.image(0, 0, 'background').setOrigin(0, 0);
+        this.background.displayWidth = this.scale.width;
+        this.background.displayHeight = this.scale.height;
         
         EventBus.on('addAllies', this.handleAddAllies, this)
 
@@ -73,6 +87,7 @@ export default class GameScene extends Phaser.Scene {
         EventBus.emit('sceneReady', 'GameScene');
 
         this.events.on('destroy', this.onDestroy, this);
+        this.events.on('ultimateStarted', this.playUltimateEffect, this)
     }
 
     onDestroy(): void {
@@ -84,6 +99,9 @@ export default class GameScene extends Phaser.Scene {
         EventBus.off('gameOver', this.onGameOver, this);
 
         EventBus.off('useAllySpecialAttack', this.handleUseAllySpecialAttack, this);
+
+        this.events.off('destroy', this.onDestroy, this);
+        this.events.off('ultimateStarted', this.playUltimateEffect, this);
     }
 
     private handleUseAllySpecialAttack(index: number) {
@@ -123,14 +141,24 @@ export default class GameScene extends Phaser.Scene {
         // this.enemies = [];
         // this.bots = [];
         // this.scene.start('MenuScene', { win });
-        EventBus.emit('gameOverUI', { win });
+        EventBus.emit('gameOverUI', { win, stage: this.stage?.stageNumber, chapter: this.stage?.chapterNumber });
     }
 
-    private handleStart() {
+    private handleStart(stage: IStage) {
+        this.stage = stage;
         console.log('handleStart');
         console.log('this.allies', this.allies);
-        generateCharacter(this, 'enemy', 'fireKing', {x: 1000, y: 400, maxHp: 200, speed: 250});
-        generateCharacter(this, 'enemy', 'frostGuardian', {x: 1000, y: 200, maxHp: 400, speed: 100});
+
+        stage.enemies.forEach((enemy, i) => {
+            if(!this.enemiesPositions[i]) return;
+            generateCharacter(this, 'enemy', enemy.key as any, {
+                ...this.enemiesPositions[i], 
+                character: calculateStatsWithEquipment(enemy)
+            });
+        })
+        
+        // generateCharacter(this, 'enemy', 'fireKing', {x: 1000, y: 400, maxHp: 200, speed: 250});
+        // generateCharacter(this, 'enemy', 'frostGuardian', {x: 1000, y: 200, maxHp: 400, speed: 100});
         this.allies.forEach((ally, i) => {
             ally.onUpdateHP = () => {
                 const hp = ally.getHP();
@@ -141,9 +169,7 @@ export default class GameScene extends Phaser.Scene {
             }
             ally.onDeath = () => {
                 if(this.allies.filter(a => a.isAlive()).length === 0) {
-                    EventBus.emit('gameOver', {
-                        win: false
-                    });
+                    EventBus.emit('gameOver', false);
                 }
             }
         })
@@ -151,9 +177,7 @@ export default class GameScene extends Phaser.Scene {
         this.enemies.forEach((enemy) => {
             enemy.onDeath = () => {
                 if(this.enemies.filter(e => e.isAlive()).length === 0) {
-                    EventBus.emit('gameOver', {
-                        win: true
-                    });
+                    EventBus.emit('gameOver', true);
                 }
             }
         })
@@ -187,8 +211,97 @@ export default class GameScene extends Phaser.Scene {
         if(!position) {
             throw new Error(`Position for ally ${index} not found`);
         }
-        generateCharacter(this, 'ally', ally.key as any, {...position, speed: 200});
+        generateCharacter(this, 'ally', ally.key as any, {
+            ...position, 
+            character: calculateStatsWithEquipment(ally)
+        })
     }
+
+    private highlightCaster(character: Character) {
+        const aura = this.add.circle(
+            character.x,
+            character.y + character.displayHeight / 3,
+            character.displayHeight * 0.2,
+            0x00ffff,
+            0.35
+        )
+        .setDepth(character.depth);
+
+        this.tweens.add({
+            targets: aura,
+            scale: 1.3,
+            alpha: 0,
+            duration: 600,
+            onComplete: () => aura.destroy()
+        });
+    }
+
+
+    // GameScene.ts
+    private playUltimateEffect(character: Character) {
+        this.highlightCaster(character);
+        this.time.timeScale = 0.3;
+        this.tweens.timeScale = 0.3;
+        this.anims.globalTimeScale = 0.3;
+
+
+        this.time.delayedCall(400, () => {
+            this.time.timeScale = 1;
+            this.tweens.timeScale = 1;
+            this.anims.globalTimeScale = 1;
+        });
+        
+        return;
+
+        const cam = this.cameras.main;
+
+        // затемнение
+        const overlay = this.add.rectangle(
+            cam.centerX,
+            cam.centerY,
+            cam.width,
+            cam.height,
+            0x000000,
+            0.7
+        )
+        .setScrollFactor(0)
+        .setDepth(9999);
+
+        // имя ульты
+        const text = this.add.text(
+            cam.centerX,
+            cam.centerY,
+            'ULTIMATE!',
+            {
+                fontSize: '64px',
+                color: '#ffffff',
+                fontStyle: 'bold',
+                stroke: '#000',
+                strokeThickness: 6
+            }
+        )
+        .setOrigin(0.5)
+        .setScrollFactor(0)
+        .setDepth(10000)
+        .setAlpha(0);
+
+        this.tweens.add({
+            targets: text,
+            alpha: 1,
+            scale: 1.2,
+            duration: 300,
+            yoyo: true,
+        });
+
+        cam.shake(300, 0.01);
+        cam.flash(200);
+
+        this.time.delayedCall(800, () => {
+            overlay.destroy();
+            text.destroy();
+        });
+    }
+
 
     update(time: number, delta: number): void {
         this.bots.sort((a, b) => a.getCharacter().getHitbox().bottom - b.getCharacter().getHitbox().bottom)
