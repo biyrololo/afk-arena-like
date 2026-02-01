@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import { EventBus } from "@/utils/eventBus";
 import classes from './GameUI.module.css'
 import cn from 'classnames'
+import { Avatars } from "@/shared/avatars";
 
 interface Hero {
     texture: string;
@@ -82,7 +83,7 @@ export default function GameUI() {
                         }
                     )}
                     style={{
-                        backgroundImage: `url('/assets/${h.texture}Mini.png')`,
+                        backgroundImage: `url(${Avatars[h.texture as keyof typeof Avatars]})`,
                         cursor: h.energy < h.maxEnergy ? 'not-allowed' : 'pointer',
                         ...(h.energy >= h.maxEnergy && { 
                             scale: 1.1

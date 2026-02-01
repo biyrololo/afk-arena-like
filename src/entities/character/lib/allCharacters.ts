@@ -2,6 +2,130 @@ import usePlayerCharactersStore from "@/shared/store/PlayerCharactersStore";
 import { Character } from "@/shared/types/character";
 import { v4 } from "uuid";
 
+export const FIREWARRIOR_CHARACTER: Character.Character = {
+    id: '0',
+    key: 'firewarrior',
+    name: 'Огненный воин',
+    rarity: Character.Rarity.COMMON,
+    role: Character.Role.DPS,
+    faction: Character.Faction.FIRE,
+    damageType: Character.DamageType.PHYSICAL,
+    power: 100,
+    baseStats: {
+        maxHp: 600,
+        attack: 100,
+        speed: 120,
+        defense: 40
+    },
+    progression: {
+        level: 1,
+        maxLevel: 999,
+        stars: 0,
+        ascension: 0
+    },
+    advancedStats: {
+        critChance: 0.5,
+        critDamage: 0.5,
+        dodge: 0.5,
+        lifesteal: 0.5,
+        accuracy: 0.5
+    },
+    skills: [],
+}
+
+export const VIKING_CHARACTER: Character.Character = {
+    id: '0',
+    key: 'viking',
+    name: 'Викинг',
+    rarity: Character.Rarity.COMMON,
+    role: Character.Role.DPS,
+    faction: Character.Faction.NATURE,
+    damageType: Character.DamageType.PHYSICAL,
+    power: 100,
+    baseStats: {
+        maxHp: 500,
+        attack: 80,
+        speed: 100,
+        defense: 120
+    },
+    progression: {
+        level: 1,
+        maxLevel: 999,
+        stars: 0,
+        ascension: 0
+    },
+    advancedStats: {
+        critChance: 0.5,
+        critDamage: 0.5,
+        dodge: 0.5,
+        lifesteal: 0.5,
+        accuracy: 0.5
+    },
+    skills: [],
+}
+
+export const SPEARWOMAN_CHARACTER: Character.Character = {
+    id: '0',
+    key: 'spearwoman',
+    name: 'Копейщик',
+    rarity: Character.Rarity.COMMON,
+    role: Character.Role.DPS,
+    faction: Character.Faction.NATURE,
+    damageType: Character.DamageType.PHYSICAL,
+    power: 100,
+    baseStats: {
+        maxHp: 300,
+        attack: 150,
+        speed: 250,
+        defense: 20
+    },
+    progression: {
+        level: 1,
+        maxLevel: 999,
+        stars: 0,
+        ascension: 0
+    },
+    advancedStats: {
+        critChance: 0.5,
+        critDamage: 0.5,
+        dodge: 0.5,
+        lifesteal: 0.5,
+        accuracy: 0.5
+    },
+    skills: [],
+}
+
+export const WARRIOR_CHARACTER: Character.Character = {
+    id: '0',
+    key: 'warrior',
+    name: 'Воин',
+    rarity: Character.Rarity.COMMON,
+    role: Character.Role.TANK,
+    faction: Character.Faction.NATURE,
+    damageType: Character.DamageType.PHYSICAL,
+    power: 100,
+    baseStats: {
+        maxHp: 300,
+        attack: 100,
+        speed: 200,
+        defense: 60
+    },
+    progression: {
+        level: 1,
+        maxLevel: 999,
+        stars: 0,
+        ascension: 0
+    },
+    advancedStats: {
+        critChance: 0.5,
+        critDamage: 0.5,
+        dodge: 0.5,
+        lifesteal: 0.5,
+        accuracy: 0.5
+    },
+    skills: [],
+}
+
 export const FROST_GUARDIAN: Character.Character = {
     id: '0',
     key: 'frostGuardian',
@@ -11,9 +135,16 @@ export const FROST_GUARDIAN: Character.Character = {
     faction: Character.Faction.ICE,
     damageType: Character.DamageType.MAGIC,
     power: 70,
+    advancedStats: {
+        critChance: 0.5,
+        critDamage: 0.5,
+        dodge: 0.5,
+        lifesteal: 0.5,
+        accuracy: 0.5
+    },
     
     baseStats: {
-        maxHp: 400,
+        maxHp: 700,
         attack: 35,
         speed: 100,
         defense: 70
@@ -32,7 +163,7 @@ export const FIRE_KING_CHARACTER: Character.Character = {
     key: 'fireKing',
     name: 'Огненный рыцарь',
     baseStats: {
-            maxHp: 100,
+            maxHp: 300,
             attack: 50,
             speed: 250,
             defense: 50
@@ -49,6 +180,13 @@ export const FIRE_KING_CHARACTER: Character.Character = {
         stars: 0,
         ascension: 0
     },
+    advancedStats: {
+        critChance: 0.5,
+        critDamage: 0.5,
+        dodge: 0.5,
+        lifesteal: 0.5,
+        accuracy: 0.5
+    },
     skills: [],
 }
 
@@ -63,7 +201,7 @@ export const CRYSTAL_KING: Character.Character = {
     power: 30,
 
     baseStats: {
-        maxHp: 100,
+        maxHp: 300,
         attack: 50, // недостающий атрибут в исходном объекте
         speed: 150,
         defense: 50 // недостающий атрибут в исходном объекте
@@ -74,6 +212,14 @@ export const CRYSTAL_KING: Character.Character = {
         stars: 1,
         ascension: 0 // или любое другое значение
     },
+    advancedStats: {
+        critChance: 0.1,
+        critDamage: 0.5,
+        dodge: 0.5,
+        lifesteal: 0.5,
+        accuracy: 0.5
+    },
+    
     skills: [], // здесь можно добавить доступные навыки
 }
 
@@ -82,12 +228,6 @@ export const ALL_CHARACTERS: Character.Character[] = [
     CRYSTAL_KING,
     FROST_GUARDIAN
 ]
-
-export const cloneCharacter = (character: Character.Character) => {
-    const copy = structuredClone(character);
-    copy.id = v4();
-    return copy;
-}
 
 export const getCharacterEquipment = (id: Character.Character['id']) => {
     const allEquipment = usePlayerCharactersStore.getState().equipment;

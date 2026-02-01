@@ -4,6 +4,7 @@ import crystal from '@/assets/menu/crystal.png';
 import sword from '@/assets/menu/sword.png';
 import heroes from '@/assets/menu/heroes.png';
 import equipment from '@/assets/menu/equipment.png';
+import shop from '@/assets/menu/shop.png';
 
 import classes from './MenuUI.module.css';
 import { Balances } from "../Balances/Balances";
@@ -21,6 +22,8 @@ export default function MenuUI() {
     const swordAspectRatio = 249 / 322;
     const heroesAspectRatio = 400 / 322;
     const equipmentAspectRatio = 400 / 422;
+
+    const shopAspectRatio = 100 / 131;
 
     const [chapterNumber, stageNumber] = usePlayerStore(useShallow(state => [state.chapterNumber, state.stageNumber]))
 
@@ -94,6 +97,20 @@ export default function MenuUI() {
             onClick={() => navigate('/my-equipment')}
             >
                 <span className="text-white bg-amber-950 border-4 border-amber-600 py-2 px-6 rounded-full text-5xl mt-50">Снаряжение</span>
+            </div>
+            <div
+            className="absolute flex flex-col items-center justify-center cursor-pointer hover:scale-110 transition-all duration-100"
+            style={{
+                backgroundImage: `url(${shop})`,
+                backgroundSize: 'contain',
+                width: 100,
+                height: 100 / shopAspectRatio,
+                right: 100,
+                top: 120,
+            }}
+            onClick={() => navigate('/shop')}
+            >
+                <span className="text-white bg-amber-950 border-4 border-amber-600 py-2 px-6 rounded-full text-3xl mt-48">Магазин</span>
             </div>
         </div> 
     )

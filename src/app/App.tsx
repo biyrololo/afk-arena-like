@@ -9,6 +9,7 @@ import { MyCharacterPage } from "@/pages/MyCharacters/[id]";
 import { SummonPage } from "@/pages/Summon/SummonPage";
 import { MyEquipmentPage } from "@/pages/MyEquipment/MyEquipment";
 import { MyEquipmentItemPage } from "@/pages/MyEquipment/[id]";
+import { ShopPage } from "@/pages/Shop";
 
 export default function App() {
     return (
@@ -29,6 +30,7 @@ export default function App() {
                         <Route path="start" Component={GameStart} />
                         <Route path="end" Component={GameEnd} />
                     </Route>
+                    <Route path="shop" Component={ShopPage} />
                     <Route path="summon" Component={SummonPage} />
                 </Routes>
             </main>

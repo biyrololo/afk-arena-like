@@ -7,8 +7,12 @@ import Phaser from 'phaser';
 import crystalKing from '@/assets/crystalKing.png';
 import fireKing from '@/assets/fireKing.png';
 import frostGuardian from '@/assets/frost_guardian.png';
+import warrior from '@/assets/characters/warrior.png';
+import spearwoman from '@/assets/characters/spearwoman.png';
+import viking from '@/assets/characters/viking.png';
+import firewarrior from '@/assets/characters/firewarrior.png';
 
-import background from '@/assets/backgrounds/game_background_1.png';
+import background from '@/assets/backgrounds/field.webp';
 
 
 export default class CharacterViewScene extends Phaser.Scene {
@@ -32,13 +36,39 @@ export default class CharacterViewScene extends Phaser.Scene {
             frameWidth: 192,
             frameHeight: 128
         })
+        this.load.spritesheet('warrior', warrior, {
+            frameWidth: 69,
+            frameHeight: 44
+        })
+        this.load.spritesheet('spearwoman', spearwoman, {
+            frameWidth: 128,
+            frameHeight: 115
+        })
+        this.load.spritesheet('viking', viking, {
+            frameWidth: 115,
+            frameHeight: 84
+        })
+        this.load.spritesheet('firewarrior', firewarrior, {
+            frameWidth: 144,
+            frameHeight: 80
+        })
         this.load.image('background', background);
     }
 
     create(): void {
-        this.background = this.add.image(0, 0, 'background').setOrigin(0, 0);
-        this.background.displayWidth = this.scale.width;
-        this.background.displayHeight = this.scale.height;
+        this.background = this.add.image(0, 0, 'background');
+
+        // масштаб по высоте
+        const scale = this.scale.height / this.background.height;
+        this.background.setScale(scale);
+
+        // центрирование
+        this.background.setPosition(
+            this.scale.width / 2,
+            this.scale.height / 2
+        );
+        this.background.setOrigin(0.5, 0.5);
+
 
         EventBus.on('CharacterViewScene:setCharacter', this.setCharacter, this);
         EventBus.on('CharacterViewScene:playAnimation', this.handlePlayAnimation, this)
@@ -51,6 +81,12 @@ export default class CharacterViewScene extends Phaser.Scene {
     }
 
     handlePlayAnimation(animation: string) {
+        if(animation === 'attack1') {
+            const animsCount = this.character?.getAttacksConfig().attacksCount;
+
+            if(animsCount)
+                animation = `attack${Phaser.Math.Between(1, animsCount)}`;
+        }
         this.character?.playAnimation(animation, animation as any);
     }
 
@@ -73,16 +109,18 @@ export default class CharacterViewScene extends Phaser.Scene {
         }
 
         const c = generateCharacter(this as any, 'ally', char.key as any, {
-            x: 1920 / 2,
-            y: 1080 / 2,
-            displayWidth: 2000,
-            displayHeight: 0,
+            x: 1920 * 2 / 3,
+            y: 1080 * 1 / 2,
+            scale: 10,
             character: char
-        })
-        c.setPosition(
-            1920 / 2 + 200 - c.width / 2,
-            200
-        ).hideHPBar()
+        }).hideHPBar()
+
+        const hbh = c.getHitbox().height * 2;
+        const dh = c.displayHeight;
+
+        const offset = (dh - hbh) / 2;
+
+        c.setY(1080 * 3 / 5 - offset)
     }
 
     public addAlly(ally: Character) {

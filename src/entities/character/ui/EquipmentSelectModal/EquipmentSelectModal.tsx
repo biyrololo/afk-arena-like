@@ -4,7 +4,7 @@ import { EquipmentCard } from "../EquipmentCard/EquipmentCard";
 import { Button } from "@/shared/ui/Button/Button";
 import cn from "classnames";
 import { EquipmentFullCard } from "../EquipmentCard/EquipmentFullCard";
-import { EQUIPMENT_UPGRADE_COSTS, isEnoughResources, upgradeEquipment } from "@/shared/types/develop";
+import { calculateEquipmentPower, EQUIPMENT_UPGRADE_COSTS, isEnoughResources, upgradeEquipment } from "@/shared/types/develop";
 import { Icon } from "@/shared/ui/Icon/Icon";
 import { usePlayerStore } from "@/entities/player/model/player.store";
 import { useShallow } from "zustand/shallow";
@@ -18,7 +18,7 @@ export interface IEquipmentSelectModalProps {
     close: () => void;
 }
 
-const PER_PAGE = 5;
+const PER_PAGE = 3;
 
 export const EquipmentSelectModal: FC<IEquipmentSelectModalProps> = ({
     currentEquipment,
@@ -34,12 +34,15 @@ export const EquipmentSelectModal: FC<IEquipmentSelectModalProps> = ({
         setPage(0);
     }, [list, setPage]);
 
-    const paginatedList = list.slice(page * PER_PAGE, (page + 1) * PER_PAGE);
+    const sortedEquipment = list.sort((a, b) => calculateEquipmentPower(b) - calculateEquipmentPower(a));
+
+    const paginatedList = sortedEquipment.slice(page * PER_PAGE, (page + 1) * PER_PAGE);
 
     const isPrevDisabled = page === 0;
     const isNextDisabled = page >= Math.ceil(list.length / PER_PAGE) - 1;
 
     const resources = EQUIPMENT_UPGRADE_COSTS[(currentEquipment?.level || 0) + 1];
+
 
     const balances = usePlayerStore(useShallow((state) => state.balances));
 
@@ -93,8 +96,8 @@ export const EquipmentSelectModal: FC<IEquipmentSelectModalProps> = ({
                     ВЫБОР ЭКИПИРОВКИ
                 </h2>
                 
-                <div className="mb-8 bg-gray-800/50 rounded-xl p-6 border border-amber-900/20">
-                    <h3 className="text-2xl text-amber-200 mb-4 text-center">ТЕКУЩАЯ ЭКИПИРОВКА</h3>
+                <div className="mb-8 bg-gray-800/50 rounded-xl p-3 border border-amber-900/20">
+                    <h3 className="text-xl text-amber-200 mb-2 text-center">ТЕКУЩАЯ ЭКИПИРОВКА</h3>
                     <div className="flex flex-col items-center gap-4">
                         <EquipmentFullCard equipment={currentEquipment} withStats
                         onClick={() => navigate(`/my-equipment/${currentEquipment?.id}`)}
@@ -134,14 +137,14 @@ export const EquipmentSelectModal: FC<IEquipmentSelectModalProps> = ({
                 
                 <div className="mb-8 bg-gray-800/50 rounded-xl p-6 border border-amber-900/20">
                     <h3 className="text-2xl text-amber-200 mb-4 text-center">ДОСТУПНАЯ ЭКИПИРОВКА</h3>
-                    <div className="grid grid-cols-3 gap-6 min-h-[200px]">
+                    <div className="grid grid-cols-3 gap-6 min-h-[340px]">
                         {paginatedList.map((equipment) => (
-                            <div key={equipment.id} className="flex flex-col items-center">
+                            <div key={equipment.id} className="flex flex-col items-center h-full">
                                 <EquipmentFullCard
                                     equipment={equipment}
                                     size={100}
                                     iconSize={60}
-                                    className="w-full rounded-b-none rounded-t-2xl"
+                                    className="w-full rounded-b-none rounded-t-2xl grow"
                                     onClick={() => navigate(`/my-equipment/${equipment.id}`)}
                                 />
                                 <Button 

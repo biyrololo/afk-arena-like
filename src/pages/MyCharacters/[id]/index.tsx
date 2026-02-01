@@ -214,14 +214,14 @@ export const MyCharacterPage: FC = () => {
                                 <span className="text-4xl text-white">Крит шанс</span>
                                 <span className="text-3xl text-white text-right flex justify-end">
                                     {isHover && totalNewStats && totalStats.advancedStats?.critChance !== totalNewStats.advancedStats?.critChance && <span className="block mr-6 text-green-600">{(totalNewStats.advancedStats?.critChance || 0.50) * 100}% {'<'}</span>}
-                                    {(totalStats.advancedStats?.critChance || 0.50) * 100}%
+                                    {Math.floor((totalStats.advancedStats?.critChance || 0.50) * 100)}%
                                 </span>
                             </div>
                             <div className="grid grid-cols-2 gap-2 w-full px-2 pt-4 pb-2 border-b-2 border-amber-900">
                                 <span className="text-4xl text-white">Крит урон</span>
                                 <span className="text-3xl text-white text-right flex justify-end">
                                     {isHover && totalNewStats && totalStats.advancedStats?.critDamage !== totalNewStats.advancedStats?.critDamage && <span className="block mr-6 text-green-600">{(totalNewStats.advancedStats?.critDamage || 1.50) * 100}% {'<'}</span>}
-                                    {(totalStats.advancedStats?.critDamage || 1.50) * 100}%
+                                    {Math.floor((totalStats.advancedStats?.critDamage || 1.50) * 100)}%
                                 </span>
                             </div>
                             <div className="grid grid-cols-2 gap-2 w-full px-2 pt-4 pb-2 border-b-2 border-amber-900">
@@ -239,16 +239,16 @@ export const MyCharacterPage: FC = () => {
                             Назад
                         </span>
                     </div>
-                    <div className="absolute left-[35%] right-[2%] bottom-0 h-1/3 bg-gray-900/30 flex flex-col items-center justify-center p-8 gap-2">
+                    <div className="absolute left-[33.33%] right-0 bottom-0 h-1/3 bg-gray-900/30 flex flex-col items-center justify-center p-8 gap-2">
                         <div className="text-4xl text-white font-bold">
                             Снаряжение
                         </div>
                         <div className="grid grid-cols-5 gap-4 mb-4">
-                            <EquipmentCard equipment={equipment.weapon} onClick={() => setIsEquipmentModalOpen(Character.EquipmentSlot.WEAPON)} />
-                            <EquipmentCard equipment={equipment.helmet} onClick={() => setIsEquipmentModalOpen(Character.EquipmentSlot.HELMET)} />
-                            <EquipmentCard equipment={equipment.chest} onClick={() => setIsEquipmentModalOpen(Character.EquipmentSlot.CHEST)} />
-                            <EquipmentCard equipment={equipment.boots} onClick={() => setIsEquipmentModalOpen(Character.EquipmentSlot.BOOTS)} />
-                            <EquipmentCard equipment={equipment.accessory} onClick={() => setIsEquipmentModalOpen(Character.EquipmentSlot.ACCESSORY)} />
+                            <EquipmentCard fallback="true_hero_sword_weapon" equipment={equipment.weapon} onClick={() => setIsEquipmentModalOpen(Character.EquipmentSlot.WEAPON)} />
+                            <EquipmentCard fallback="orange_helmet" equipment={equipment.helmet} onClick={() => setIsEquipmentModalOpen(Character.EquipmentSlot.HELMET)} />
+                            <EquipmentCard fallback="orange_chest" equipment={equipment.chest} onClick={() => setIsEquipmentModalOpen(Character.EquipmentSlot.CHEST)} />
+                            <EquipmentCard fallback="orange_boots" equipment={equipment.boots} onClick={() => setIsEquipmentModalOpen(Character.EquipmentSlot.BOOTS)} />
+                            <EquipmentCard fallback="emerald_necklace_accessory" equipment={equipment.accessory} onClick={() => setIsEquipmentModalOpen(Character.EquipmentSlot.ACCESSORY)} />
                         </div>
                         <button 
                             className={`

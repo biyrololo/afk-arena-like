@@ -16,8 +16,8 @@ export const usePlayerStore = create<PlayerStore>()(
         subscribeWithSelector(
             (set, get) => ({
                 balances: {
-                    gold: 1000,
-                    gems: 1000,
+                    gold: 1e6,
+                    gems: 1e6,
                     summons: 1000
                 },
                 chapterNumber: 1,

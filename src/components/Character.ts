@@ -1,8 +1,43 @@
 import Phaser from 'phaser';
 
+import { Character as CharacterNS } from '@/shared/types/character';
+
 export type CharacterAttackType = 'special' | `attack${number}`;
 
 type CharacterState = 'idle' | CharacterAttackType | 'special' | 'walk' | 'dead';
+
+function curvedSlash(scene: Phaser.Scene, x: number, y: number, tilt = 1) {
+    const g = scene.add.graphics();
+    g.setBlendMode(Phaser.BlendModes.ADD);
+
+    const height = 140;
+    const curveOffset = 18 * tilt;
+
+    const curve = new Phaser.Curves.QuadraticBezier(
+        new Phaser.Math.Vector2(x, y - height / 2),
+        new Phaser.Math.Vector2(x + curveOffset, y),
+        new Phaser.Math.Vector2(x, y + height / 2)
+    );
+
+    // ВНЕШНИЙ (синий)
+    g.lineStyle(20, 0xb01313, 0.7);
+    curve.draw(g);
+
+    // ВНУТРЕННИЙ (белый)
+    g.lineStyle(6, 0xffffff, 1);
+    curve.draw(g);
+
+    scene.tweens.add({
+        targets: g,
+        alpha: 0,
+        duration: 400,
+        ease: 'Quad.easeOut',
+        onComplete: () => g.destroy()
+    });
+}
+
+
+
 
 export function applyAttackDamage(
     scene: Phaser.Scene,
@@ -14,6 +49,8 @@ export function applyAttackDamage(
     height: number,
     damage: number
 ) {
+    if(attacker.getHP() <= 0)
+        return;
     const dir = attacker.direction ? 1 : -1;
     const hitbox = new Phaser.Geom.Rectangle(
         attacker.x + offsetX * dir - width / 2,
@@ -26,20 +63,24 @@ export function applyAttackDamage(
     // const debug = scene.add.graphics();
     // debug.lineStyle(2, 0x00ff00);
     // debug.strokeRectShape(hitbox);
-    // scene.time.delayedCall(50, () => debug.destroy()); // Чтобы мигало
+    // scene.time.delayedCall(1000, () => debug.destroy()); // Чтобы мигало
 
     let hit = false;
+
+    const stats = attacker.getAdvancedStats();
 
     // Проверка попаданий
     enemies.forEach(enemy => {
         if (Phaser.Geom.Intersects.RectangleToRectangle(hitbox, enemy.getHitbox())) {
             hit = true;
-            enemy.takeDamage(damage);
+            const isCrit = Math.random() < stats.critChance;
+            enemy.takeDamage(damage, isCrit ? stats.critDamage : 0, stats.accuracy);
+            curvedSlash(scene, hitbox.centerX, hitbox.bottom, attacker.direction ? 1 : -1);
         }
     });
 
     if(hit && !(attacker.characterState === 'special')) {
-        attacker.gainEnergy(damage);
+        attacker.gainEnergy(damage * 100);
     }
 }
 
@@ -59,6 +100,9 @@ export default class Character extends Phaser.GameObjects.Container {
     private frameHeight: number;
     public displayWidth: number;
     public displayHeight: number;
+
+    private advancedStats: CharacterNS.AdvancedStats;
+    private baseStats: CharacterNS.BaseStats;
     
     // Параметры движения
     private speed: number;
@@ -111,6 +155,8 @@ export default class Character extends Phaser.GameObjects.Container {
     public onUpdateHP?: () => void;
 
     public flipSpritesheet = false;
+
+    private spriteOffsetX: number = 0;
     
     constructor(
         scene: Phaser.Scene,
@@ -118,23 +164,30 @@ export default class Character extends Phaser.GameObjects.Container {
         y: number,
         speed: number,
         textureKey: string,
+        baseStats: CharacterNS.BaseStats,
+        advancedStats: CharacterNS.AdvancedStats,
         frameWidth: number,
         frameHeight: number,
         displayWidth?: number,
         displayHeight?: number,
-        uiOffsetY?: number
+        uiOffsetY?: number,
+        spriteOffsetX?: number,
     ) {
         super(scene, x, y);
         scene.add.existing(this);
+
+        this.spriteOffsetX = spriteOffsetX || 0;
         
         // Создаем спрайт
-        this.sprite = scene.add.sprite(0, 0, textureKey);
+        this.sprite = scene.add.sprite(this.spriteOffsetX, 0, textureKey);
         this.add(this.sprite);
 
         this.speed = speed;
         
         // Параметры
         this.textureKey = textureKey;
+        this.baseStats = baseStats;
+        this.advancedStats = advancedStats;
         this.frameWidth = frameWidth;
         this.frameHeight = frameHeight;
 
@@ -158,17 +211,19 @@ export default class Character extends Phaser.GameObjects.Container {
         this.currentHP = 300;
         this.isDead = false;
         
-        this.createHPBar();
-
+        
         this.sprite.on('animationcomplete', this.onAnimationComplete, this);
         this.sprite.on('animationupdate', this.onAnimationUpdate, this);
-
+        
         this.hitbox = new Phaser.Geom.Rectangle(
             this.x - (this.displayWidth / 2) * 0.5,
             this.y - (this.displayHeight / 2) * 0.5,
             this.displayWidth * 0.5,
             this.displayHeight * 0.5
         );
+        
+        this.createHPBar();
+        // this.setDebugMode(true);
     }
 
     public setEnergy(energy: number) {
@@ -212,7 +267,7 @@ export default class Character extends Phaser.GameObjects.Container {
     public setHitbox(width: number, height: number, offsetX: number = 0, offsetY: number = 0) {
         this.hitbox.width = width;
         this.hitbox.height = height;
-        this.hitbox.x = this.x - width / 2 + offsetX;
+        this.hitbox.x = this.x - width / 2 + offsetX;   
         this.hitbox.y = this.y - height / 2 + offsetY;
         this.hitboxOffset.x = offsetX;
         this.hitboxOffset.y = offsetY;
@@ -251,7 +306,7 @@ export default class Character extends Phaser.GameObjects.Container {
         targetX: number,
         targetY: number,
         speed?: number,
-        stopDistance: number = 0,
+        stopDistance: number = 50,
         onReached?: () => void,
         follow?: Character,
         force: boolean = false
@@ -352,8 +407,8 @@ export default class Character extends Phaser.GameObjects.Container {
      * Создание полоски HP над персонажем
      */
     private createHPBar(): void {
-        const barWidth: number = this.frameWidth*0.5;
-        const barHeight: number = 8;
+        const barWidth: number = 100;
+        const barHeight: number = 20;
         const offsetY: number = this.uiOffsetY;
         
         // Фон полоски HP
@@ -374,10 +429,13 @@ export default class Character extends Phaser.GameObjects.Container {
         this.hpText = this.scene.add.text(0, offsetY - 15, `${this.currentHP}/${this.maxHP}`, {
             fontSize: '12px',
             color: '#ffffff',
-            align: 'center'
+            align: 'center',
+            font: "30px Birthstone"
         }).setOrigin(0.5);
         
         this.add(this.hpText);
+
+        this.hpText.setVisible(false);
     }
     
     /**
@@ -385,21 +443,22 @@ export default class Character extends Phaser.GameObjects.Container {
      */
     private updateHPBar(): void {
         this.onUpdateHP?.();
-        const hpPercent: number = this.currentHP / this.maxHP;
+        const hpPercent: number = Math.max(this.currentHP / this.maxHP, 0);
         const offsetY: number = this.uiOffsetY;
         
-        // Обновляем цвет полоски в зависимости от HP
-        if (hpPercent > 0.6) {
-            this.hpBar.clear().fillStyle(0x00ff00, 1); // Зеленый
-        } else if (hpPercent > 0.3) {
-            this.hpBar.clear().fillStyle(0xffff00, 1); // Желтый
-        } else {
-            this.hpBar.clear().fillStyle(0xff0000, 1); // Красный
-        }
-        
         // Обновляем ширину полоски
-        const barWidth: number = this.frameWidth * 0.5 * hpPercent;
-        this.hpBar.fillRect(-this.frameWidth/4, offsetY, barWidth, 8);
+        const barWidth: number = 100;
+
+        // Обновляем цвет полоски в зависимости от HP и перерисовываем полностью
+        this.hpBar.clear();
+        if (hpPercent > 0.6) {
+            this.hpBar.fillStyle(0x00ff00, 1); // Зеленый
+        } else if (hpPercent > 0.3) {
+            this.hpBar.fillStyle(0xffff00, 1); // Желтый
+        } else {
+            this.hpBar.fillStyle(0xff0000, 1); // Красный
+        }
+        this.hpBar.fillRect(-barWidth / 2, offsetY, barWidth * hpPercent, 20);
         
         // Обновляем текст
         this.hpText.setText(`${Math.max(0, Math.floor(this.currentHP))}/${this.maxHP}`);
@@ -485,35 +544,92 @@ export default class Character extends Phaser.GameObjects.Container {
     /**
      * Получение урона
      */
-    public takeDamage(damage: number): void {
+    public takeDamage(damage: number, critDmg: number = 0, accuracy: number = 0): void {
         if (this.isDead) return;
+
+        damage = Math.floor(damage * (1 + critDmg));
         
+        const effectiveDefense = this.baseStats.defense / (1 + accuracy)
+
+        damage = damage * 100 / (100 + effectiveDefense)
+
+        damage = Math.floor(damage);
+
+        const dodgeChance = this.advancedStats.dodge / (1 + accuracy);
+
+        let isDodged = false;
+
+        if(Math.random() < dodgeChance) {
+            damage = Math.max(1, Math.floor(damage / 3))
+            isDodged = true;
+        }
+
         this.currentHP -= damage;
         this.currentHP = Math.max(0, this.currentHP);
+
+        if(isDodged) {
+            this.currentHP = Math.max(1, this.currentHP);
+        }
 
         this.updateHPBar();
 
         // === Эффект появления текста урона ===
-        const offsetX = Phaser.Math.Between(-15, 15); // случайное смещение по X
-        const offsetY = Phaser.Math.Between(-5, 5);   // случайное смещение по Y
+        const offsetX = Phaser.Math.Between(-90, 90); // случайное смещение по X
+        const offsetY = Phaser.Math.Between(-100, 100);   // случайное смещение по Y
+
+        if(isDodged) {
+            const dodgeText = this.scene.add.text(
+                this.x + offsetX, 
+                this.y + offsetY - 100 + this.displayHeight / 6, // чуть выше персонажа
+                `Уклонение`,
+                {
+                    font: "80px Pixel",
+                    color: "#48f542",
+                    fontStyle: "bold",
+                    stroke: "#333333",
+                    strokeThickness: 5
+                }
+            ).setOrigin(0.5).setDepth(999);
+
+            this.scene.tweens.add({
+                targets: dodgeText,
+                y: dodgeText.y - 50,  // поднимаем на 30px
+                alpha: 0,              // исчезновение
+                scale: 0.2,
+                duration: 4000,
+                ease: "Cubic.easeOut",
+                onComplete: () => {
+                    dodgeText.destroy();
+                }
+            });
+        }
+
         const damageText = this.scene.add.text(
             this.x + offsetX, 
             this.y + offsetY + this.displayHeight / 6, // чуть выше персонажа
             `${damage}`,
-            {
-                font: "30px Pixel",
-                color: "#ffffff",
+            critDmg && !isDodged ? {
+                font: "200px Pixel",
+                color: "#f542d1",
                 fontStyle: "bold",
-                stroke: "#000",
-                strokeThickness: 3
+                stroke: "#333333",
+                strokeThickness: 7
+            } :
+            {
+                font: "100px Pixel",
+                color: isDodged ? '#48f542' : "#c92c20",
+                fontStyle: "bold",
+                stroke: "#333333",
+                strokeThickness: 5
             }
-        ).setOrigin(0.5);
+        ).setOrigin(0.5).setDepth(999);
 
         this.scene.tweens.add({
             targets: damageText,
-            y: damageText.y - 30,  // поднимаем на 30px
+            y: damageText.y - 50,  // поднимаем на 30px
             alpha: 0,              // исчезновение
-            duration: 2000,
+            scale: 0.2,
+            duration: 4000,
             ease: "Cubic.easeOut",
             onComplete: () => {
                 damageText.destroy();
@@ -641,12 +757,21 @@ export default class Character extends Phaser.GameObjects.Container {
         return this.frameHeight;
     }
 
+    public getBaseStats(): Readonly<CharacterNS.BaseStats> {
+        return this.baseStats;
+    }
+
+    public getAdvancedStats(): Readonly<CharacterNS.AdvancedStats> {
+        return this.advancedStats;
+    }
+
     public setFlipX(flip: boolean) {
         if(this.flipSpritesheet) {
             flip = !flip;
         }
         if(flip !== this.sprite.flipX) {
             this.sprite.setFlipX(flip);
+            this.sprite.setX(flip ?  - this.spriteOffsetX :  this.spriteOffsetX)
             this.direction = !this.direction;
         }
     }

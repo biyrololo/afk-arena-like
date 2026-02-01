@@ -40,9 +40,7 @@ export class BotController {
             return; // ждём окончания кд
         }
 
-        if (!this.currentTarget || this.currentTarget.getIsDead()) {
-            this.pickTarget();
-        }
+        this.pickTarget();
 
         if (!this.currentTarget) return;
 
@@ -65,7 +63,7 @@ export class BotController {
 
         const offsetY = hp.y - this.character.y;
 
-        if (Math.abs(hp.centerX - thp.centerX) > required.x || Math.abs(hp.centerY - thp.centerY) > required.y - 20) {
+        if (Math.abs(hp.centerX - thp.centerX) >= required.x || Math.abs(hp.centerY - thp.centerY) >= required.y - 20) {
             // console.log('moving', dist, Math.hypot(required.x, required.y), required);
             // подходим
             this.state = 'moving';

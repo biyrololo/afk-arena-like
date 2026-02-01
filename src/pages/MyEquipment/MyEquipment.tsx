@@ -8,8 +8,9 @@ import { useMemo, type FC } from "react";
 import { Button } from "@/shared/ui/Button/Button";
 import { EquipmentFullCard } from "@/entities/character/ui/EquipmentCard/EquipmentFullCard";
 import { assets } from "@/shared/assets";
+import { calculateEquipmentPower } from "@/shared/types/develop";
 
-const PER_PAGE = 4 * 3;
+const PER_PAGE = 3 * 3;
 
 export const MyEquipmentPage: FC = () => {
     const [params, setParams] = useSearchParams();
@@ -19,13 +20,17 @@ export const MyEquipmentPage: FC = () => {
     const navitate = useNavigate();
     const { equipment, characters } = usePlayerCharactersStore();
 
+    const sortedEquipment = useMemo(() => {
+        return [...equipment].sort((a, b) => calculateEquipmentPower(b) - calculateEquipmentPower(a));
+    }, [equipment]);
+
     const paginatedEquipment = useMemo(() => {
-        return equipment.slice(page * PER_PAGE, page * PER_PAGE + PER_PAGE);
-    }, [equipment, page, PER_PAGE]);
+        return sortedEquipment.slice(page * PER_PAGE, page * PER_PAGE + PER_PAGE);
+    }, [sortedEquipment, page, PER_PAGE]);
 
     const isNextDisabled = useMemo(() => {
-        return page * PER_PAGE + PER_PAGE >= equipment.length;
-    }, [equipment, page, PER_PAGE]);
+        return page * PER_PAGE + PER_PAGE >= sortedEquipment.length;
+    }, [sortedEquipment, page, PER_PAGE]);
 
     const isPreviousDisabled = useMemo(() => {
         return page === 0;
@@ -62,6 +67,7 @@ export const MyEquipmentPage: FC = () => {
             <div className="absolute inset-0 py-4 flex px-2">
                     <button 
                         className="
+                            absolute left-0
                             px-6 py-3
                             bg-gradient-to-r from-amber-700 to-amber-900
                             text-white text-2xl font-bold
@@ -79,7 +85,7 @@ export const MyEquipmentPage: FC = () => {
                         <span className="text-3xl">←</span>
                         Назад
                     </button>
-                    <div className="w-[2000px] mx-auto mt-24 flex flex-col gap-12 items-center">
+                    <div className="w-[1800px] mx-auto mt-24 flex flex-col gap-12 items-center">
                         <section className="grid grid-cols-3 gap-4 w-full">
                             {
                                 paginatedEquipment.map(eq => {
@@ -99,6 +105,7 @@ export const MyEquipmentPage: FC = () => {
                             <Button onClick={handlePrevious} disabled={isPreviousDisabled}>
                                 {'<'}
                             </Button>
+                            <span className="text-2xl font-bold text-white">{page + 1} / {Math.ceil(sortedEquipment.length / PER_PAGE)}</span>
                             <Button onClick={handleNext} disabled={isNextDisabled}>
                                 {'>'}
                             </Button>

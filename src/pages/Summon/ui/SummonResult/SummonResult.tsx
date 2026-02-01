@@ -1,4 +1,5 @@
 import { getRarityColor } from "@/entities/character/lib/getRarityColor";
+import { Avatars } from "@/shared/avatars";
 import type { Character } from "@/shared/types/character";
 import { AnimatePresence, motion } from "framer-motion";
 import type { FC } from "react";
@@ -19,7 +20,7 @@ export const SummonResult: FC<{
                 boxShadow: `0 0 20px ${getRarityColor(result.rarity)}`,
             }}
             >
-                <img className="h-full rounded" src={`assets/${result.key}Mini.png`} alt={result.name} />
+                <img className="h-full rounded" src={Avatars[result.key as keyof typeof Avatars]} alt={result.name} />
                 <div className="flex flex-col">
                     <p className={`
                         text-white text-center font-bold

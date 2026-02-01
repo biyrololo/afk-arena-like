@@ -7,6 +7,8 @@ import { HeroMiniCard } from "@/entities/character/ui/HeroMiniCard/HeroMiniCard"
 import { useMemo } from "react";
 import { Button } from "@/shared/ui/Button/Button";
 
+import bg from '@/assets/backgrounds/characters.webp';
+
 const PER_PAGE = 4 * 4;
 
 export function MyCharacters() {
@@ -52,14 +54,17 @@ export function MyCharacters() {
             <div
             className={`
                 w-full h-full relative
-                bg-[url('/assets/backgrounds/tavern.png')]
-                bg-cover
+                bg-center bg-cover bg-no-repeat
             `}
+            style={{
+                backgroundImage: `url(${bg})`
+            }}
             >
                 <Balances />
                 <div className="absolute inset-0 py-4 flex px-2">
                     <button 
                         className="
+                            absolute left-4
                             px-6 py-3
                             bg-gradient-to-r from-amber-700 to-amber-900
                             text-white text-2xl font-bold

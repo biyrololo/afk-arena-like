@@ -7,6 +7,13 @@ import generateCharacter from '@/characters/characters';
 import type { IStage } from '@/entities/chapter/lib/chapter.model';
 import { calculateStatsWithEquipment } from '@/shared/types/develop';
 
+import warrior from '@/assets/characters/warrior.png';
+import spearwoman from '@/assets/characters/spearwoman.png';
+import viking from '@/assets/characters/viking.png';
+import firewarrior from '@/assets/characters/firewarrior.png';
+
+import background from '@/assets/backgrounds/field.webp';
+
 export default class GameScene extends Phaser.Scene {
     private background!: Phaser.GameObjects.Image;
 
@@ -14,17 +21,17 @@ export default class GameScene extends Phaser.Scene {
     private enemies: Character[] = [];
 
     private alliesPositions: { x: number, y: number }[] = [
-        { x: 200, y: 200 },
-        { x: 200, y: 400 },
-        { x: 100, y: 100 },
-        { x: 100, y: 300 },
+        { x: 100, y: 500 },
+        { x: 100, y: 600 },
+        { x: 50, y: 800 },
+        { x: 40, y: 900 },
     ];
 
     private enemiesPositions: { x: number, y: number }[] = [
-        { x: 1000, y: 200 },
-        { x: 1000, y: 400 },
-        { x: 1200, y: 100 },
-        { x: 1200, y: 300 },
+        { x: 1800, y: 450 },
+        { x: 1800, y: 550 },
+        { x: 1600, y: 750 },
+        { x: 1600, y: 860 },
     ];
 
     /**
@@ -67,15 +74,42 @@ export default class GameScene extends Phaser.Scene {
             frameWidth: 192,
             frameHeight: 128
         })
-        this.load.image('background', 'assets/backgrounds/game_background_1.png');
+        this.load.spritesheet('warrior', warrior, {
+            frameWidth: 69,
+            frameHeight: 44
+        })
+        this.load.spritesheet('spearwoman', spearwoman, {
+            frameWidth: 128,
+            frameHeight: 115
+        })
+        this.load.spritesheet('viking', viking, {
+            frameWidth: 115,
+            frameHeight: 84
+        })
+        this.load.spritesheet('firewarrior', firewarrior, {
+            frameWidth: 144,
+            frameHeight: 80
+        })
+        
+        this.load.font('Birthstone', 'assets/fonts/Birthstone-Regular.ttf');
+        this.load.image('background', background);
     }
 
     create(): void {
         console.warn('CREATE SCENE')
         
-        this.background = this.add.image(0, 0, 'background').setOrigin(0, 0);
-        this.background.displayWidth = this.scale.width;
-        this.background.displayHeight = this.scale.height;
+        this.background = this.add.image(0, 0, 'background');
+
+        // масштаб по высоте
+        const scale = this.scale.height / this.background.height;
+        this.background.setScale(scale);
+
+        // центрирование
+        this.background.setPosition(
+            this.scale.width / 2,
+            this.scale.height / 2
+        );
+        this.background.setOrigin(0.5, 0.5);
         
         EventBus.on('addAllies', this.handleAddAllies, this)
 
@@ -219,9 +253,9 @@ export default class GameScene extends Phaser.Scene {
 
     private highlightCaster(character: Character) {
         const aura = this.add.circle(
-            character.x,
-            character.y + character.displayHeight / 3,
-            character.displayHeight * 0.2,
+            character.getHitbox().centerX,
+            character.getHitbox().centerY,
+            character.getHitbox().height / 3,
             0x00ffff,
             0.35
         )

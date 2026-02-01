@@ -10,6 +10,9 @@ import { usePlayerStore } from "@/entities/player/model/player.store";
 import { useShallow } from "zustand/shallow";
 import { findStage } from "@/entities/chapter/lib/chapters";
 
+import background from '@/assets/backgrounds/gamestart.webp';
+import { calculateCharacterPower } from "@/shared/types/develop";
+
 const PER_PAGE = 4 * 3;
 
 export default function GameStart() {
@@ -33,7 +36,7 @@ export default function GameStart() {
     const enemiesPower = useMemo(() => {
         const stage = findStage(chapterNumber, stageNumber);
         if(!stage) return 0;
-        return stage.enemies.reduce((acc, enemy) => acc + enemy.power, 0);
+        return stage.enemies.map(e => calculateCharacterPower(e)).reduce((acc, power) => acc + power, 0);
     }, [chapterNumber, stageNumber]);
 
     const paginatedCharacters = useMemo(() => {
@@ -108,9 +111,12 @@ export default function GameStart() {
             <div
             className={`
                 w-full h-full relative
-                bg-[url('/assets/backgrounds/tavern.png')]
                 bg-cover
+                bg-center
             `}
+            style={{
+                backgroundImage: `url(${background})`
+            }}
             >
                 <div className="absolute inset-0 py-4 flex">
                     <button 

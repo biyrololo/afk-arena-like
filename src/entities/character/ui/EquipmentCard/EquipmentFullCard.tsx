@@ -19,10 +19,10 @@ export const EquipmentFullCard = ({ equipment, onClick, size = 120, iconSize = 8
     const power = equipment ? calculateEquipmentPower(equipment) : 0;
     
     return (
-        <div className={`bg-gray-600/50 rounded-xl p-6 border cursor-pointer border-amber-800/20 relative ${className}`}
+        <div className={`bg-gray-600/50 backdrop-blur-sm rounded-xl p-6 border cursor-pointer border-amber-800/20 relative ${className}`}
         onClick={onClick}
         >
-            <div className="flex gap-8 items-center justify-between">
+            <div className="flex gap-8 items-start justify-between">
                 <EquipmentCard withLevel equipment={equipment} size={size} iconSize={iconSize} />
                 {
                     equipment && (
@@ -37,16 +37,16 @@ export const EquipmentFullCard = ({ equipment, onClick, size = 120, iconSize = 8
                 { equipment && withStats && (
                     <div className="grid grid-cols-3 border-l-2 border-amber-200/20 h-full pl-4" style={{ flexGrow: 2 }}>
                     <div className="flex flex-col gap-2 text-white text-2xl justify-evenly text-left">
-                        <div><span className="text-xl mr-2">ОЗ:</span> <b>{equipment?.stats.maxHp}</b></div>
-                        <div><span className="text-xl mr-2">АТК:</span> <b>{equipment?.stats.attack}</b></div>
+                        <div><span className="text-xl mr-2">ОЗ:</span> <b>{equipment?.stats.maxHp || 0}</b></div>
+                        <div><span className="text-xl mr-2">АТК:</span> <b>{equipment?.stats.attack || 0}</b></div>
                     </div>
                     <div className="flex flex-col gap-2 text-white text-2xl justify-evenly text-left">
-                        <div><span className="text-xl mr-2">Защита:</span> <b>{equipment?.stats.defense}</b></div>
-                        <div><span className="text-xl mr-2">Скорость:</span> <b>{equipment?.stats.speed}</b></div>
+                        <div><span className="text-xl mr-2">Защита:</span> <b>{equipment?.stats.defense || 0}</b></div>
+                        <div><span className="text-xl mr-2">Скорость:</span> <b>{equipment?.stats.speed || 0}</b></div>
                     </div>
                     <div className="flex flex-col gap-2 text-white text-2xl justify-evenly text-left">
-                        <div><span className="text-xl mr-2">Крит шанс:</span> <b>{(equipment?.stats.critChance || 0) * 100}%</b></div>
-                        <div><span className="text-xl mr-2">Крит урон:</span> <b>{(equipment?.stats.critDamage || 0) * 100}%</b></div>
+                        <div><span className="text-xl mr-2">Крит шанс:</span> <b>{Math.floor((equipment?.stats.critChance || 0) * 100)}%</b></div>
+                        <div><span className="text-xl mr-2">Крит урон:</span> <b>{Math.floor((equipment?.stats.critDamage || 0) * 100)}%</b></div>
                     </div>
                 </div>
                 ) }

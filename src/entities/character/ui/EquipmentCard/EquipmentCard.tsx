@@ -5,13 +5,14 @@ import { getRarityColor } from "../../lib/getRarityColor";
 
 export interface IEquipmentCardProps {
     equipment?: Character.Equipment;
+    fallback?: keyof typeof Icons;
     onClick?: () => void;
     size?: number;
     iconSize?: number;
     withLevel?: boolean;
 }
 
-export const EquipmentCard = ({ equipment, onClick, size = 120, iconSize = 80, withLevel }: IEquipmentCardProps) => {
+export const EquipmentCard = ({ equipment, onClick, size = 120, iconSize = 80, withLevel, fallback }: IEquipmentCardProps) => {
     if(iconSize > size) iconSize = size - 20;
     return (
         <div
@@ -30,13 +31,16 @@ export const EquipmentCard = ({ equipment, onClick, size = 120, iconSize = 80, w
             height: size,
             backgroundColor: equipment ? getRarityColor(equipment.rarity) + '77' : '',
             borderColor: equipment ? getRarityColor(equipment.rarity) : '',
+            aspectRatio: '1/1',
         }}
         onClick={onClick}
         >
             {
-                equipment && (
+                equipment ? (
                     <Icon icon={`${equipment.key}_${equipment.slot}` as keyof typeof Icons} size={iconSize} />
-                )
+                ) : fallback ? (
+                    <Icon dark icon={fallback as keyof typeof Icons} size={iconSize} />
+                ) : null
             }
             {
                 withLevel && equipment && (

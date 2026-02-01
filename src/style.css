@@ -21,6 +21,15 @@ canvas {
   src: url('assets/fonts/toxigenesis bd.otf') format('opentype');
 }
 
+@font-face {
+  font-family: 'Birthstone';
+  src: url('assets/fonts/Birthstone-Regular.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'LavishlyYours';
+  src: url('assets/fonts/LavishlyYours-Regular.ttf') format('truetype');
+}
+
 * {
   box-sizing: border-box;
   font-family: 'Pixel';

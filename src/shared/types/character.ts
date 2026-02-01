@@ -1,3 +1,5 @@
+import { v4 } from "uuid";
+
 export namespace Character {
     export enum Rarity {
         COMMON = 'common',
@@ -102,11 +104,42 @@ export namespace Character {
         power: number;
 
         baseStats: BaseStats;
-        advancedStats?: AdvancedStats;
+        advancedStats: AdvancedStats;
 
         progression: CharacterProgression;
 
         skills: Skill[];
     }
 
-} 
+}
+
+const levelUp = (character: Character.Character) => {
+    character.progression.level++;
+
+    character.baseStats.attack = Math.floor(character.baseStats.attack * 1.05);
+    character.baseStats.defense = Math.floor(character.baseStats.defense * 1.05);
+    character.baseStats.maxHp = Math.floor(character.baseStats.maxHp * 1.05);
+
+    if(character.progression.level % 5 === 0) {
+        if(character.advancedStats?.dodge) {
+            character.advancedStats.dodge+=0.05;
+        }
+        if(character.advancedStats?.critChance) {
+            character.advancedStats.critChance+=0.02;
+        }
+        if(character.advancedStats?.critDamage) {
+            character.advancedStats.critDamage+=0.05;
+        }
+    }
+}
+
+export const cloneCharacter = (character: Character.Character, withLevel?: number, withStats?: unknown) => {
+    const copy = structuredClone(character);
+    if(withLevel) {
+        for(let i = 0; i < withLevel; i++) {
+            levelUp(copy);
+        }
+    }
+    copy.id = v4();
+    return copy;
+}
