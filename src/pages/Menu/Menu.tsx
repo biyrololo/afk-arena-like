@@ -5,6 +5,7 @@ import { ResponsiveUI } from "@/shared/ui/ResponsiveUI/ResponsiveUI";
 import { EventBus } from "@/utils/eventBus";
 import MenuUI from "@/widgets/MenuUI/MenuUI";
 import { useEffect } from "react";
+import menu from '@/assets/menu/menu.webp'
 
 
 export default function Menu() {
@@ -19,7 +20,7 @@ export default function Menu() {
                 <div
                 className={`
                     w-full h-full relative
-                    bg-[url('assets/menu/menu.webp')]
+                    bg-[url(${menu})]
                     bg-cover
                     bg-center
                 `}

@@ -9,6 +9,8 @@ import { Character } from "@/shared/types/character";
 import { SummonResult } from "./ui/SummonResult/SummonResult";
 import { summon } from "@/entities/summon/lib/summon";
 
+import bg from '@/assets/backgrounds/summon.webp';
+
 
 export const SummonPage: FC = () => {
     const navigate = useNavigate();
@@ -37,7 +39,7 @@ export const SummonPage: FC = () => {
             <div 
             className="relative w-full h-full"
             style={{
-                backgroundImage: "url('assets/backgrounds/summon.webp')",
+                backgroundImage: `url(${bg})`,
                 backgroundSize: "cover",
                 backgroundRepeat: "no-repeat",
                 backgroundPosition: "center",

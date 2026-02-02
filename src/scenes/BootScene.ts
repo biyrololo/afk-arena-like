@@ -6,6 +6,10 @@ import spearwoman from '@/assets/characters/spearwoman.png';
 import viking from '@/assets/characters/viking.png';
 import firewarrior from '@/assets/characters/firewarrior.png';
 
+import summonBg from '@/assets/backgrounds/summon.webp';
+import menuBg from '@/assets/menu/menu.webp';
+
+
 import magic_field_bg from '@/assets/backgrounds/magic_field.png';
 import { EventBus } from '@/utils/eventBus';
 
@@ -43,6 +47,8 @@ export default class BootScene extends Phaser.Scene {
         
         this.load.font('Birthstone', 'assets/fonts/Birthstone-Regular.ttf');
         this.load.image('magic_field_bg', magic_field_bg);
+        this.load.image('summonBg', summonBg);
+        this.load.image('menuBg', menuBg);
         
         this.load.on('progress', (value: number) => {
             EventBus.emit('load:progress', value)

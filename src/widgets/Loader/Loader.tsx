@@ -44,6 +44,7 @@ export const Loader: FC = () => {
         <ResponsiveUI zIndex={9999}>
             <div className="w-full h-full bg-cover bg-center flex flex-col gap-4 items-center justify-center"
                 style={{ 
+                    backgroundColor: '#000000',
                     backgroundImage: `url(${bg})`, 
                     backgroundSize: "cover", 
                     backgroundPosition: "center",
