@@ -7,12 +7,15 @@ import generateCharacter from '@/characters/characters';
 import type { IStage } from '@/entities/chapter/lib/chapter.model';
 import { calculateStatsWithEquipment } from '@/shared/types/develop';
 
+import crystalKing from '@/assets/crystalKing.png';
+import fireKing from '@/assets/fireKing.png';
+import frostGuardian from '@/assets/frost_guardian.png';
 import warrior from '@/assets/characters/warrior.png';
 import spearwoman from '@/assets/characters/spearwoman.png';
 import viking from '@/assets/characters/viking.png';
 import firewarrior from '@/assets/characters/firewarrior.png';
 
-import background from '@/assets/backgrounds/field.webp';
+import magic_field_bg from '@/assets/backgrounds/magic_field.png';
 
 export default class GameScene extends Phaser.Scene {
     private background!: Phaser.GameObjects.Image;
@@ -21,17 +24,17 @@ export default class GameScene extends Phaser.Scene {
     private enemies: Character[] = [];
 
     private alliesPositions: { x: number, y: number }[] = [
-        { x: 100, y: 500 },
-        { x: 100, y: 600 },
-        { x: 50, y: 800 },
-        { x: 40, y: 900 },
+        { x: 100, y: 300 },
+        { x: 150, y: 400 },
+        { x: 200, y: 500 },
+        { x: 150, y: 600 },
     ];
 
     private enemiesPositions: { x: number, y: number }[] = [
-        { x: 1800, y: 450 },
-        { x: 1800, y: 550 },
-        { x: 1600, y: 750 },
-        { x: 1600, y: 860 },
+        { x: 1800, y: 310 },
+        { x: 1800, y: 420 },
+        { x: 1600, y: 450 },
+        { x: 1600, y: 550 },
     ];
 
     /**
@@ -62,15 +65,15 @@ export default class GameScene extends Phaser.Scene {
     }
 
     preload(): void {
-        this.load.spritesheet('crystalKing', 'assets/crystalKing.png', {
+        this.load.spritesheet('crystalKing', crystalKing, {
             frameWidth: 288,
             frameHeight: 128
         });
-        this.load.spritesheet('fireKing', 'assets/fireKing.png', {
+        this.load.spritesheet('fireKing', fireKing, {
             frameWidth: 288,
             frameHeight: 128
         });
-        this.load.spritesheet('frostGuardian', 'assets/frost_guardian.png', {
+        this.load.spritesheet('frostGuardian', frostGuardian, {
             frameWidth: 192,
             frameHeight: 128
         })
@@ -92,24 +95,28 @@ export default class GameScene extends Phaser.Scene {
         })
         
         this.load.font('Birthstone', 'assets/fonts/Birthstone-Regular.ttf');
-        this.load.image('background', background);
+        this.load.image('magic_field_bg', magic_field_bg);
+
+        this.load.on('progress', (value: number) => {
+            EventBus.emit('load:progress', value);
+        });
     }
 
     create(): void {
-        console.warn('CREATE SCENE')
+        console.log('CREATE SCENE')
         
-        this.background = this.add.image(0, 0, 'background');
+        this.background = this.add.image(0, 0, 'magic_field_bg');
 
         // масштаб по высоте
-        const scale = this.scale.height / this.background.height;
+        const scale = this.scale.width / this.background.width;
         this.background.setScale(scale);
 
         // центрирование
         this.background.setPosition(
             this.scale.width / 2,
-            this.scale.height / 2
+            this.scale.height
         );
-        this.background.setOrigin(0.5, 0.5);
+        this.background.setOrigin(0.5, 1);
         
         EventBus.on('addAllies', this.handleAddAllies, this)
 
@@ -122,6 +129,8 @@ export default class GameScene extends Phaser.Scene {
 
         this.events.on('destroy', this.onDestroy, this);
         this.events.on('ultimateStarted', this.playUltimateEffect, this)
+
+        EventBus.emit('load:end')
     }
 
     onDestroy(): void {
@@ -283,56 +292,6 @@ export default class GameScene extends Phaser.Scene {
             this.time.timeScale = 1;
             this.tweens.timeScale = 1;
             this.anims.globalTimeScale = 1;
-        });
-        
-        return;
-
-        const cam = this.cameras.main;
-
-        // затемнение
-        const overlay = this.add.rectangle(
-            cam.centerX,
-            cam.centerY,
-            cam.width,
-            cam.height,
-            0x000000,
-            0.7
-        )
-        .setScrollFactor(0)
-        .setDepth(9999);
-
-        // имя ульты
-        const text = this.add.text(
-            cam.centerX,
-            cam.centerY,
-            'ULTIMATE!',
-            {
-                fontSize: '64px',
-                color: '#ffffff',
-                fontStyle: 'bold',
-                stroke: '#000',
-                strokeThickness: 6
-            }
-        )
-        .setOrigin(0.5)
-        .setScrollFactor(0)
-        .setDepth(10000)
-        .setAlpha(0);
-
-        this.tweens.add({
-            targets: text,
-            alpha: 1,
-            scale: 1.2,
-            duration: 300,
-            yoyo: true,
-        });
-
-        cam.shake(300, 0.01);
-        cam.flash(200);
-
-        this.time.delayedCall(800, () => {
-            overlay.destroy();
-            text.destroy();
         });
     }
 

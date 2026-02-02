@@ -4,6 +4,8 @@ import { Icon } from "@/shared/ui/Icon/Icon";
 import { getRarityColor } from "../../lib/getRarityColor";
 import { EquipmentCard } from "./EquipmentCard";
 import { calculateEquipmentPower } from "@/shared/types/develop";
+import { Avatars } from "@/shared/avatars";
+import { useNavigate } from "react-router-dom";
 
 export interface IEquipmentFullCardProps {
     equipment?: Character.Equipment;
@@ -12,10 +14,22 @@ export interface IEquipmentFullCardProps {
     iconSize?: number;
     withStats?: boolean;
     className?: string;
-    withEquipedCharacter?: string
+    withEquipedCharacter?: string;
+    withEquipedCharacterFull?: Pick<Character.Character, 'key' | 'name' | 'rarity' | 'id'>
 }
 
-export const EquipmentFullCard = ({ equipment, onClick, size = 120, iconSize = 80, withStats, className, withEquipedCharacter }: IEquipmentFullCardProps) => {
+export const EquipmentFullCard = ({ 
+    equipment, 
+    onClick, 
+    size = 120, 
+    iconSize = 80, 
+    withStats, 
+    className,
+    withEquipedCharacter,
+withEquipedCharacterFull }
+: IEquipmentFullCardProps) => {
+    const navigate = useNavigate();
+
     const power = equipment ? calculateEquipmentPower(equipment) : 0;
     
     return (
@@ -58,6 +72,27 @@ export const EquipmentFullCard = ({ equipment, onClick, size = 120, iconSize = 8
                         borderTopLeftRadius: "10px"
                     }}
                     />
+                )
+            }
+            {
+                withEquipedCharacterFull && (
+                    <div className="flex items-center gap-2 flex-wrap cursor-pointer"
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        navigate(`/my-characters/${withEquipedCharacterFull.id}`);
+                    }}
+                    >
+                        <span className="text-white text-md">Экипировано:</span>
+                        <div className="flex items-center gap-2">
+                            <span className="text-white text-xl text-shadow-[0px_0px_4px_rgba(0,0,0,0.5)]"
+                            style={{color: getRarityColor(withEquipedCharacterFull.rarity)}}
+                            >{withEquipedCharacterFull.name}</span>
+                            <img src={Avatars[withEquipedCharacterFull.key as keyof typeof Avatars]} alt={withEquipedCharacterFull.name} 
+                            className="size-[40px] object-cover rounded-full"
+                            />
+                        </div>
+                    </div>
                 )
             }
         </div>

@@ -22,7 +22,9 @@ export default function Game() {
             navgiate('/', {
                 replace: true
             })
-    }
+        } else {
+            EventBus.emit('load:start')
+        }
     }, [])
     
     useEffect(() => {

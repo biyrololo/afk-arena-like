@@ -1,15 +1,15 @@
-import { useEffect, useState, type FC, type PropsWithChildren } from "react";
+import { useEffect, useLayoutEffect, useState, type FC, type PropsWithChildren } from "react";
 
 const ASPECT_RATIO = 16 / 9;
 const LOGICAL_WIDTH = 1920;
 const LOGICAL_HEIGHT = LOGICAL_WIDTH / ASPECT_RATIO; // ≈ 787.5
 
-export const ResponsiveUI: FC<PropsWithChildren> = ({ children }) => {
+export const ResponsiveUI: FC<PropsWithChildren<{ zIndex?: number }>> = ({ children, zIndex = 10 }) => {
   const [scale, setScale] = useState(1);
 
   const [marginLeft, setMarginLeft] = useState(0);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const updateScale = () => {
       const vw = window.innerWidth;
       const vh = window.innerHeight;
@@ -44,6 +44,7 @@ export const ResponsiveUI: FC<PropsWithChildren> = ({ children }) => {
   return (
     <div
       className="w-dvw inset-0 h-dvh absolute z-10 overflow-hidden"
+      style={{ zIndex }}
     >
       <div
         style={{

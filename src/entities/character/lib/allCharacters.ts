@@ -6,7 +6,7 @@ export const FIREWARRIOR_CHARACTER: Character.Character = {
     id: '0',
     key: 'firewarrior',
     name: 'Огненный воин',
-    rarity: Character.Rarity.COMMON,
+    rarity: Character.Rarity.RARE,
     role: Character.Role.DPS,
     faction: Character.Faction.FIRE,
     damageType: Character.DamageType.PHYSICAL,
@@ -28,7 +28,8 @@ export const FIREWARRIOR_CHARACTER: Character.Character = {
         critDamage: 0.5,
         dodge: 0.5,
         lifesteal: 0.5,
-        accuracy: 0.5
+        accuracy: 0.5,
+        energyRegen: 10
     },
     skills: [],
 }
@@ -37,7 +38,7 @@ export const VIKING_CHARACTER: Character.Character = {
     id: '0',
     key: 'viking',
     name: 'Викинг',
-    rarity: Character.Rarity.COMMON,
+    rarity: Character.Rarity.EPIC,
     role: Character.Role.DPS,
     faction: Character.Faction.NATURE,
     damageType: Character.DamageType.PHYSICAL,
@@ -59,7 +60,8 @@ export const VIKING_CHARACTER: Character.Character = {
         critDamage: 0.5,
         dodge: 0.5,
         lifesteal: 0.5,
-        accuracy: 0.5
+        accuracy: 0.5,
+        energyRegen: 10
     },
     skills: [],
 }
@@ -68,7 +70,7 @@ export const SPEARWOMAN_CHARACTER: Character.Character = {
     id: '0',
     key: 'spearwoman',
     name: 'Копейщик',
-    rarity: Character.Rarity.COMMON,
+    rarity: Character.Rarity.LEGENDARY,
     role: Character.Role.DPS,
     faction: Character.Faction.NATURE,
     damageType: Character.DamageType.PHYSICAL,
@@ -90,7 +92,8 @@ export const SPEARWOMAN_CHARACTER: Character.Character = {
         critDamage: 0.5,
         dodge: 0.5,
         lifesteal: 0.5,
-        accuracy: 0.5
+        accuracy: 0.5,
+        energyRegen: 10
     },
     skills: [],
 }
@@ -99,7 +102,7 @@ export const WARRIOR_CHARACTER: Character.Character = {
     id: '0',
     key: 'warrior',
     name: 'Воин',
-    rarity: Character.Rarity.COMMON,
+    rarity: Character.Rarity.UNCOMMON,
     role: Character.Role.TANK,
     faction: Character.Faction.NATURE,
     damageType: Character.DamageType.PHYSICAL,
@@ -121,7 +124,8 @@ export const WARRIOR_CHARACTER: Character.Character = {
         critDamage: 0.5,
         dodge: 0.5,
         lifesteal: 0.5,
-        accuracy: 0.5
+        accuracy: 0.5,
+        energyRegen: 10
     },
     skills: [],
 }
@@ -140,13 +144,14 @@ export const FROST_GUARDIAN: Character.Character = {
         critDamage: 0.5,
         dodge: 0.5,
         lifesteal: 0.5,
-        accuracy: 0.5
+        accuracy: 0.5,
+        energyRegen: 10
     },
     
     baseStats: {
-        maxHp: 700,
+        maxHp: 800,
         attack: 35,
-        speed: 100,
+        speed: 60,
         defense: 70
     },
     progression: {
@@ -185,7 +190,8 @@ export const FIRE_KING_CHARACTER: Character.Character = {
         critDamage: 0.5,
         dodge: 0.5,
         lifesteal: 0.5,
-        accuracy: 0.5
+        accuracy: 0.5,
+        energyRegen: 10
     },
     skills: [],
 }
@@ -217,7 +223,8 @@ export const CRYSTAL_KING: Character.Character = {
         critDamage: 0.5,
         dodge: 0.5,
         lifesteal: 0.5,
-        accuracy: 0.5
+        accuracy: 0.5,
+        energyRegen: 10
     },
     
     skills: [], // здесь можно добавить доступные навыки

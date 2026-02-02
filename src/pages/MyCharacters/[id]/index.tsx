@@ -1,6 +1,7 @@
 import { getCharacterEquipment } from "@/entities/character/lib/allCharacters";
 import { equipItem, getEquipmentBySlot, unequipItem } from "@/entities/character/lib/allEquipment";
 import { getRarityColor } from "@/entities/character/lib/getRarityColor";
+import { getRarityName } from "@/entities/character/lib/getRarityName";
 import { EquipmentCard } from "@/entities/character/ui/EquipmentCard/EquipmentCard";
 import { EquipmentSelectModal } from "@/entities/character/ui/EquipmentSelectModal/EquipmentSelectModal";
 import { usePlayerStore } from "@/entities/player/model/player.store";
@@ -19,6 +20,10 @@ import { useShallow } from "zustand/react/shallow";
 
 export const MyCharacterPage: FC = () => {
     const { id } = useParams();
+
+    useEffect(() => {
+        EventBus.emit('load:start')
+    }, [])
 
     const banalces = usePlayerStore(useShallow(state => state.balances))
 
@@ -124,6 +129,23 @@ export const MyCharacterPage: FC = () => {
                         >
                             {totalStats.name}
                         </p>
+                        <div
+                        className={`
+                            mt-1
+                            w-full
+                            bg-gray-900/80
+                            border-amber-900 border-4
+                            flex
+                            flex-col
+                            items-center
+                            justify-center
+                            rounded-xl
+                            px-4
+                            py-1
+                        `}
+                        >
+                            <span className="text-white text-2xl" style={{ color: getRarityColor(totalStats.rarity) }}>{getRarityName(totalStats.rarity)}</span>
+                        </div>
                         <div className="px-10 mt-4">
                             <p 
                             className={`
@@ -146,6 +168,7 @@ export const MyCharacterPage: FC = () => {
                                 }
                             </p>
                         </div>
+                        
                         <div
                         className={`
                             mt-4
@@ -191,7 +214,7 @@ export const MyCharacterPage: FC = () => {
                             <div className="grid grid-cols-2 gap-2 w-full px-2 pt-4 pb-2">
                                 <span className="text-4xl text-white">Защита</span>
                                 <span className="text-3xl text-white text-right flex justify-end">
-                                    {isHover && totalNewStats && totalStats.baseStats.defense !== totalNewStats.baseStats.defense && <span className="block mr-6 text-green-600">{totalNewStats.baseStats.defense} {'<'}</span>}
+                                    {isHover && totalNewStats && totalStats.baseStats.defense !== totalNewStats.baseStats.defense && <span className="block mr-6 text-green-600">{Math.floor(totalNewStats.baseStats.defense)} {'<'}</span>}
                                     {totalStats.baseStats.defense}
                                 </span>
                             </div>
@@ -213,22 +236,29 @@ export const MyCharacterPage: FC = () => {
                             <div className="grid grid-cols-2 gap-2 w-full px-2 pt-4 pb-2 border-b-2 border-amber-900">
                                 <span className="text-4xl text-white">Крит шанс</span>
                                 <span className="text-3xl text-white text-right flex justify-end">
-                                    {isHover && totalNewStats && totalStats.advancedStats?.critChance !== totalNewStats.advancedStats?.critChance && <span className="block mr-6 text-green-600">{(totalNewStats.advancedStats?.critChance || 0.50) * 100}% {'<'}</span>}
+                                    {isHover && totalNewStats && totalStats.advancedStats?.critChance !== totalNewStats.advancedStats?.critChance && <span className="block mr-6 text-green-600">{Math.floor((totalNewStats.advancedStats?.critChance || 0.50) * 100)}% {'<'}</span>}
                                     {Math.floor((totalStats.advancedStats?.critChance || 0.50) * 100)}%
                                 </span>
                             </div>
                             <div className="grid grid-cols-2 gap-2 w-full px-2 pt-4 pb-2 border-b-2 border-amber-900">
                                 <span className="text-4xl text-white">Крит урон</span>
                                 <span className="text-3xl text-white text-right flex justify-end">
-                                    {isHover && totalNewStats && totalStats.advancedStats?.critDamage !== totalNewStats.advancedStats?.critDamage && <span className="block mr-6 text-green-600">{(totalNewStats.advancedStats?.critDamage || 1.50) * 100}% {'<'}</span>}
+                                    {isHover && totalNewStats && totalStats.advancedStats?.critDamage !== totalNewStats.advancedStats?.critDamage && <span className="block mr-6 text-green-600">{Math.floor((totalNewStats.advancedStats?.critDamage || 1.50) * 100)}% {'<'}</span>}
                                     {Math.floor((totalStats.advancedStats?.critDamage || 1.50) * 100)}%
+                                </span>
+                            </div>
+                            <div className="grid grid-cols-2 gap-2 w-full px-2 pt-4 pb-2 border-b-2 border-amber-900">
+                                <span className="text-4xl text-white">Восстановление энергии</span>
+                                <span className="text-3xl text-white text-right flex justify-end">
+                                    {isHover && totalNewStats && totalStats.advancedStats?.energyRegen !== totalNewStats.advancedStats?.energyRegen && <span className="block mr-6 text-green-600">{Math.floor((totalNewStats.advancedStats?.energyRegen || 0.01) * 100)}% {'<'}</span>}
+                                    {Math.floor((totalStats.advancedStats?.energyRegen || 1) * 100)}%
                                 </span>
                             </div>
                             <div className="grid grid-cols-2 gap-2 w-full px-2 pt-4 pb-2 border-b-2 border-amber-900">
                                 <span className="text-4xl text-white">Уклонение</span>
                                 <span className="text-3xl text-white text-right flex justify-end">
-                                    {isHover && totalNewStats && totalStats.advancedStats?.dodge !== totalNewStats.advancedStats?.dodge && <span className="block mr-6 text-green-600">{(totalNewStats.advancedStats?.dodge || 0.01) * 100}% {'<'}</span>}
-                                    {(totalStats.advancedStats?.dodge || 0.01) * 100}%
+                                    {isHover && totalNewStats && totalStats.advancedStats?.dodge !== totalNewStats.advancedStats?.dodge && <span className="block mr-6 text-green-600">{Math.floor((totalNewStats.advancedStats?.dodge || 0.01) * 100)}% {'<'}</span>}
+                                    {Math.floor((totalStats.advancedStats?.dodge || 0.01) * 100)}%
                                 </span>
                             </div>
                         </div>
@@ -340,7 +370,7 @@ export const MyCharacterPage: FC = () => {
                                 unequipItem(equipment[isEquipmentModalOpen].id);
                             }
                         }}
-                        list={getEquipmentBySlot(isEquipmentModalOpen).filter((e) => e.id !== equipment[isEquipmentModalOpen]?.id)}
+                        list={getEquipmentBySlot(isEquipmentModalOpen)}
                         slot={isEquipmentModalOpen}
                         close={() => setIsEquipmentModalOpen(undefined)}
                         />

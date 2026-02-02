@@ -12,7 +12,7 @@ import spearwoman from '@/assets/characters/spearwoman.png';
 import viking from '@/assets/characters/viking.png';
 import firewarrior from '@/assets/characters/firewarrior.png';
 
-import background from '@/assets/backgrounds/field.webp';
+import magic_field_bg from '@/assets/backgrounds/magic_field.png';
 
 
 export default class CharacterViewScene extends Phaser.Scene {
@@ -24,6 +24,7 @@ export default class CharacterViewScene extends Phaser.Scene {
     }
 
     preload(): void {
+        EventBus.emit('load:start')
         this.load.spritesheet('crystalKing', crystalKing, {
             frameWidth: 288,
             frameHeight: 128
@@ -52,14 +53,18 @@ export default class CharacterViewScene extends Phaser.Scene {
             frameWidth: 144,
             frameHeight: 80
         })
-        this.load.image('background', background);
+        this.load.image('magic_field_bg', magic_field_bg);
+
+        this.load.on('progress', (value: number) => {
+            EventBus.emit('load:progress', value);
+        });
     }
 
     create(): void {
-        this.background = this.add.image(0, 0, 'background');
+        this.background = this.add.image(0, 0, 'magic_field_bg');
 
         // масштаб по высоте
-        const scale = this.scale.height / this.background.height;
+        const scale = this.scale.width / this.background.width;
         this.background.setScale(scale);
 
         // центрирование
@@ -76,6 +81,8 @@ export default class CharacterViewScene extends Phaser.Scene {
         this.scale.on('resize', this.handleResize, this);
 
         EventBus.emit('CharacterViewScene:ready')
+
+        EventBus.emit('load:end')
 
         this.events.on('destroy', this.destroy, this);
     }
@@ -100,6 +107,7 @@ export default class CharacterViewScene extends Phaser.Scene {
         EventBus.off('CharacterViewScene:setCharacter', this.setCharacter, this);
         EventBus.off('CharacterViewScene:playAnimation', this.handlePlayAnimation, this)
         this.scale.off('resize', this.handleResize, this);
+        EventBus.emit('load:end')
     }
 
     private setCharacter(char: PlayerCharacter | null) {

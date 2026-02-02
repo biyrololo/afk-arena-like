@@ -1,43 +1,11 @@
 import Phaser from 'phaser';
 
 import { Character as CharacterNS } from '@/shared/types/character';
+import { getDamageColor } from '@/entities/character/lib/getDamageColor';
 
 export type CharacterAttackType = 'special' | `attack${number}`;
 
 type CharacterState = 'idle' | CharacterAttackType | 'special' | 'walk' | 'dead';
-
-function curvedSlash(scene: Phaser.Scene, x: number, y: number, tilt = 1) {
-    const g = scene.add.graphics();
-    g.setBlendMode(Phaser.BlendModes.ADD);
-
-    const height = 140;
-    const curveOffset = 18 * tilt;
-
-    const curve = new Phaser.Curves.QuadraticBezier(
-        new Phaser.Math.Vector2(x, y - height / 2),
-        new Phaser.Math.Vector2(x + curveOffset, y),
-        new Phaser.Math.Vector2(x, y + height / 2)
-    );
-
-    // ВНЕШНИЙ (синий)
-    g.lineStyle(20, 0xb01313, 0.7);
-    curve.draw(g);
-
-    // ВНУТРЕННИЙ (белый)
-    g.lineStyle(6, 0xffffff, 1);
-    curve.draw(g);
-
-    scene.tweens.add({
-        targets: g,
-        alpha: 0,
-        duration: 400,
-        ease: 'Quad.easeOut',
-        onComplete: () => g.destroy()
-    });
-}
-
-
-
 
 export function applyAttackDamage(
     scene: Phaser.Scene,
@@ -47,7 +15,8 @@ export function applyAttackDamage(
     offsetY: number,
     width: number,
     height: number,
-    damage: number
+    damage: number,
+    damageType: CharacterNS.DamageType,
 ) {
     if(attacker.getHP() <= 0)
         return;
@@ -60,10 +29,12 @@ export function applyAttackDamage(
     );
 
     // Отладка зоны атаки
-    // const debug = scene.add.graphics();
-    // debug.lineStyle(2, 0x00ff00);
-    // debug.strokeRectShape(hitbox);
-    // scene.time.delayedCall(1000, () => debug.destroy()); // Чтобы мигало
+    if(attacker.getDebugMode()) {
+        const debug = scene.add.graphics();
+        debug.lineStyle(2, 0x00ff00);
+        debug.strokeRectShape(hitbox);
+        scene.time.delayedCall(1000, () => debug.destroy()); // Чтобы мигало
+    }
 
     let hit = false;
 
@@ -74,13 +45,12 @@ export function applyAttackDamage(
         if (Phaser.Geom.Intersects.RectangleToRectangle(hitbox, enemy.getHitbox())) {
             hit = true;
             const isCrit = Math.random() < stats.critChance;
-            enemy.takeDamage(damage, isCrit ? stats.critDamage : 0, stats.accuracy);
-            curvedSlash(scene, hitbox.centerX, hitbox.bottom, attacker.direction ? 1 : -1);
+            enemy.takeDamage(damage, isCrit ? stats.critDamage : 1, stats.accuracy, damageType);
         }
     });
 
     if(hit && !(attacker.characterState === 'special')) {
-        attacker.gainEnergy(damage * 100);
+        attacker.gainEnergy(stats.energyRegen * 100);
     }
 }
 
@@ -252,13 +222,13 @@ export default class Character extends Phaser.GameObjects.Container {
         return { attacksCount: this.attacksCount, hasSpecialAttack: this.hasSpecialAttack };
     }
 
-    public setAttacksDistances(attacksDistances: Record<CharacterAttackType, { x: number; y: number }>) {
+    public setAttacksDistances(attacksDistances: Record<CharacterAttackType, { x: number; y: number, minX?: number }>) {
         this.attacksDistances = attacksDistances;
     }
 
-    public getAttackDistance(attackType: CharacterAttackType) {
+    public getAttackDistance(attackType: CharacterAttackType): { x: number; y: number; minX?: number } {
         if(!this.attacksDistances[attackType]) {
-            return { x: 0, y: 0 };
+            return { x: 0, y: 0, minX: undefined };
         }
         return this.attacksDistances[attackType];
     }
@@ -290,6 +260,10 @@ export default class Character extends Phaser.GameObjects.Container {
             this.debugGraphics.destroy();
             this.debugGraphics = undefined;
         }
+    }
+
+    public getDebugMode(): boolean {
+        return this.debugMode;
     }
 
     /**
@@ -544,10 +518,10 @@ export default class Character extends Phaser.GameObjects.Container {
     /**
      * Получение урона
      */
-    public takeDamage(damage: number, critDmg: number = 0, accuracy: number = 0): void {
+    public takeDamage(damage: number, critDmg: number = 0, accuracy: number = 0, damageType: CharacterNS.DamageType = CharacterNS.DamageType.PHYSICAL): void {
         if (this.isDead) return;
 
-        damage = Math.floor(damage * (1 + critDmg));
+        damage = Math.floor(damage * (critDmg));
         
         const effectiveDefense = this.baseStats.defense / (1 + accuracy)
 
@@ -584,7 +558,7 @@ export default class Character extends Phaser.GameObjects.Container {
                 `Уклонение`,
                 {
                     font: "80px Pixel",
-                    color: "#48f542",
+                    color: '#48f542',
                     fontStyle: "bold",
                     stroke: "#333333",
                     strokeThickness: 5
@@ -608,16 +582,16 @@ export default class Character extends Phaser.GameObjects.Container {
             this.x + offsetX, 
             this.y + offsetY + this.displayHeight / 6, // чуть выше персонажа
             `${damage}`,
-            critDmg && !isDodged ? {
+            critDmg > 1 && !isDodged ? {
                 font: "200px Pixel",
-                color: "#f542d1",
+                color: getDamageColor(damageType),
                 fontStyle: "bold",
                 stroke: "#333333",
                 strokeThickness: 7
             } :
             {
-                font: "100px Pixel",
-                color: isDodged ? '#48f542' : "#c92c20",
+                font: "80px Pixel",
+                color: isDodged ? '#48f542' : getDamageColor(damageType),
                 fontStyle: "bold",
                 stroke: "#333333",
                 strokeThickness: 5

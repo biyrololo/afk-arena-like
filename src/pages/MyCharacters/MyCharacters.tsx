@@ -8,6 +8,8 @@ import { useMemo } from "react";
 import { Button } from "@/shared/ui/Button/Button";
 
 import bg from '@/assets/backgrounds/characters.webp';
+import { calculateCharacterPower } from "@/shared/types/develop";
+import { EventBus } from "@/utils/eventBus";
 
 const PER_PAGE = 4 * 4;
 
@@ -20,7 +22,7 @@ export function MyCharacters() {
     const { characters } = usePlayerCharactersStore();
 
     const paginatedCharacters = useMemo(() => {
-        return characters.slice(page * PER_PAGE, page * PER_PAGE + PER_PAGE);
+        return [...characters].sort((a, b) => calculateCharacterPower(b) - calculateCharacterPower(a) ).slice(page * PER_PAGE, page * PER_PAGE + PER_PAGE);
     }, [characters, page, PER_PAGE]);
 
     const isNextDisabled = useMemo(() => {

@@ -154,7 +154,7 @@ export function calculateCharacterPower(
         baseStats.maxHp * 0.2 +
         baseStats.attack * 1.5 +
         baseStats.defense * 1.2 +
-        baseStats.speed * 1.0;
+        baseStats.speed * 0.2;
 
     // 2. Role modifiers
     const roleModifiers: Record<Character.Role, number> = {
@@ -168,14 +168,13 @@ export function calculateCharacterPower(
     // 3. Advanced stats multiplier
     let advancedMultiplier = 1;
 
-    if (advancedStats) {
-        advancedMultiplier +=
-            advancedStats.critChance * 0.003 +
-            advancedStats.critDamage * 0.002 +
-            advancedStats.dodge * 0.002 +
-            advancedStats.lifesteal * 0.002 +
-            advancedStats.accuracy * 0.001;
-    }
+    advancedMultiplier +=
+        advancedStats.critChance * 0.3 +
+        advancedStats.critDamage * 0.2 +
+        advancedStats.dodge * 0.2 +
+        advancedStats.lifesteal * 0.2 +
+        advancedStats.accuracy * 0.2 +
+        advancedStats.energyRegen * 0.05;
 
     // 4. Progression multiplier
     const progressionMultiplier =
@@ -370,10 +369,10 @@ export const calculateEquipmentUpgradeStats = (equipment: Character.Equipment): 
 
 export const getMaxEquipmentLevel = (rarity: Character.Rarity): number => {
     const maxLevels: Record<Character.Rarity, number> = {
-        [Character.Rarity.COMMON]: 10,
-        [Character.Rarity.UNCOMMON]: 20,
-        [Character.Rarity.RARE]: 40,
-        [Character.Rarity.EPIC]: 60,
+        [Character.Rarity.COMMON]: 40,
+        [Character.Rarity.UNCOMMON]: 50,
+        [Character.Rarity.RARE]: 60,
+        [Character.Rarity.EPIC]: 70,
         [Character.Rarity.LEGENDARY]: 80
     };
     return maxLevels[rarity];
@@ -389,17 +388,6 @@ export const calculateStatsWithEquipment = (character: Character.Character): Cha
         copy.baseStats.defense += equipmentPiece.stats.defense || 0;
         copy.baseStats.maxHp += equipmentPiece.stats.maxHp || 0;
         copy.baseStats.speed += equipmentPiece.stats.speed || 0;
-
-        if(!copy.advancedStats) {
-            copy.advancedStats = {
-                critChance: 0,
-                critDamage: 0,
-                dodge: 0,
-                lifesteal: 0,
-                accuracy: 0
-            };
-        }
-
         copy.advancedStats.critChance += equipmentPiece.stats.critChance || 0;
         copy.advancedStats.critDamage += equipmentPiece.stats.critDamage || 0;
         copy.advancedStats.dodge += equipmentPiece.stats.dodge || 0;

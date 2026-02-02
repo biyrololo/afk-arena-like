@@ -9,6 +9,7 @@ import { Icon } from "@/shared/ui/Icon/Icon";
 import { usePlayerStore } from "@/entities/player/model/player.store";
 import { useShallow } from "zustand/shallow";
 import { useNavigate } from "react-router-dom";
+import usePlayerCharactersStore from "@/shared/store/PlayerCharactersStore";
 
 export interface IEquipmentSelectModalProps {
     currentEquipment?: Character.Equipment;
@@ -32,7 +33,9 @@ export const EquipmentSelectModal: FC<IEquipmentSelectModalProps> = ({
 
     useEffect(() => {
         setPage(0);
-    }, [list, setPage]);
+    }, [slot, setPage]);
+
+    const characters = usePlayerCharactersStore(useShallow((state) => state.characters));
 
     const sortedEquipment = list.sort((a, b) => calculateEquipmentPower(b) - calculateEquipmentPower(a));
 
@@ -112,7 +115,7 @@ export const EquipmentSelectModal: FC<IEquipmentSelectModalProps> = ({
                             </Button>
                             <Button 
                                 onClick={() => handleUpgradeClick()}
-                                className="bg-purple-700 hover:bg-purple-600 text-xl px-6 py-3"
+                                className="bg-purple-700 hover:bg-purple-600 text-xl px-6 py-3 min-h-[80px]"
                                 disabled={!canUpgrade || !currentEquipment}
                             >
                                 УЛУЧШИТЬ
@@ -137,7 +140,7 @@ export const EquipmentSelectModal: FC<IEquipmentSelectModalProps> = ({
                 
                 <div className="mb-8 bg-gray-800/50 rounded-xl p-6 border border-amber-900/20">
                     <h3 className="text-2xl text-amber-200 mb-4 text-center">ДОСТУПНАЯ ЭКИПИРОВКА</h3>
-                    <div className="grid grid-cols-3 gap-6 min-h-[340px]">
+                    <div className="grid grid-cols-3 gap-6 min-h-[350px]">
                         {paginatedList.map((equipment) => (
                             <div key={equipment.id} className="flex flex-col items-center h-full">
                                 <EquipmentFullCard
@@ -146,13 +149,25 @@ export const EquipmentSelectModal: FC<IEquipmentSelectModalProps> = ({
                                     iconSize={60}
                                     className="w-full rounded-b-none rounded-t-2xl grow"
                                     onClick={() => navigate(`/my-equipment/${equipment.id}`)}
+                                    withEquipedCharacterFull={characters.find((character) => character.id === equipment.equippedCharacterId)}
                                 />
-                                <Button 
-                                    onClick={() => onSelect(equipment)}
-                                    className="bg-green-700 hover:bg-green-600 justify-center text-3xl px-4 py-2 w-full rounded-t-none rounded-b-2xl"
-                                >
-                                    Выбрать
-                                </Button>
+                                {
+                                    equipment.id === currentEquipment?.id ? (
+                                        <Button 
+                                            onClick={() => onSelect(undefined)}
+                                            className="bg-red-700 hover:bg-red-600 justify-center text-3xl px-4 py-3 w-full rounded-t-none rounded-b-2xl"
+                                        >
+                                            Снять
+                                        </Button>
+                                    ) : (
+                                        <Button 
+                                            onClick={() => onSelect(equipment)}
+                                            className="bg-green-700 hover:bg-green-600 justify-center text-3xl px-4 py-3 w-full rounded-t-none rounded-b-2xl"
+                                        >
+                                            Выбрать
+                                        </Button>
+                                    )
+                                }
                             </div>
                         ))}
                         {paginatedList.length === 0 && (

@@ -28,6 +28,7 @@ export namespace Character {
     export enum DamageType {
         PHYSICAL = 'physical',
         MAGIC = 'magic',
+        FIRE = 'fire',
         // PURE = 'pure'
     }
     export interface BaseStats {
@@ -43,6 +44,7 @@ export namespace Character {
         dodge: number;        // %
         lifesteal: number;    // %
         accuracy: number;     // %
+        energyRegen: number;
     }
 
     export interface CharacterProgression {

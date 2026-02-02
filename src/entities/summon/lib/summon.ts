@@ -1,5 +1,6 @@
 import { usePlayerStore } from "@/entities/player/model/player.store";
 import usePlayerCharactersStore, { mockCharacters } from "@/shared/store/PlayerCharactersStore"
+import { calculateCharacterPower } from "@/shared/types/develop";
 import { v4 } from "uuid";
 
 const summonOnce = () => {
@@ -20,6 +21,7 @@ export const summon = (amount: 1 | 10) => {
     const result = []
     for (let i = 0; i < amount; i++) {
         const r = summonOnce()
+        r.power = calculateCharacterPower(r)
         r.id = v4();
         result.push(r)
     }

@@ -63,15 +63,17 @@ export class BotController {
 
         const offsetY = hp.y - this.character.y;
 
-        if (Math.abs(hp.centerX - thp.centerX) >= required.x || Math.abs(hp.centerY - thp.centerY) >= required.y - 20) {
-            // console.log('moving', dist, Math.hypot(required.x, required.y), required);
+        const requiredX = Math.max(required.x, thp.width / 2 + 10);
+
+        if (Math.abs(hp.centerX - thp.centerX) >= requiredX || Math.abs(hp.centerY - thp.centerY) >= required.y - 20) {
+            // console.log('moving', dist, Math.hypot(requiredX, required.y), required);
             // подходим
             this.state = 'moving';
             this.character.moveTowards(thp.centerX, thp.bottom - required.y - offsetY);
-        } else if(Math.abs(hp.centerX - thp.centerX) < required.x - 20) { 
+        } else if(Math.abs(hp.centerX - thp.centerX) < (required.minX ?? requiredX - 10)) { 
             this.state = 'moving';
             const isOnLeft = hp.centerX < thp.centerX;
-            this.character.moveTowards(isOnLeft ? thp.x - required.x - 40 : thp.x + required.x + 40, thp.bottom - required.y - offsetY);
+            this.character.moveTowards(isOnLeft ? thp.x - requiredX - 40 : thp.x + requiredX + 40, thp.bottom - required.y - offsetY);
         } else {
             this.character.stopMoving();
             // атакуем
@@ -84,7 +86,7 @@ export class BotController {
                 this.character.playAnimation(this.currentAttack, this.currentAttack);
                 this.character.onAnimationEnd = () => {
                     this.pickAttack();
-                    console.log('attack end');
+                    // console.log('attack end');
                     if(!this.shouldSpecialAttack) {
                         this.lastAttackTime = time;
                         this.state = 'cooldown';

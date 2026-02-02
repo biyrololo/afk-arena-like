@@ -3,15 +3,15 @@ import { Character } from "@/shared/types/character";
 export const getRarityColor = (rarity: Character.Rarity) => {
     switch (rarity) {
         case Character.Rarity.COMMON:
-            return '#4A90E2'; // blue
+            return '#57779C'; // blue
         case Character.Rarity.UNCOMMON:
             return '#7ED321'; // green
         case Character.Rarity.RARE:
-            return '#50C8FF'; // light blue / cyan-blue
+            return '#EDAD2D'; // light blue / cyan-blue
         case Character.Rarity.EPIC:
-            return '#F5A623'; // yellow-orange (золотистый)
+            return '#9425D9'; // yellow-orange (золотистый)
         case Character.Rarity.LEGENDARY:
-            return '#FF6B35'; // orange
+            return '#FF2222'; // red
         default:
             return '#FFFFFF'; // white
     }

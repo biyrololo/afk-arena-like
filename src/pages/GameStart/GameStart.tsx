@@ -40,8 +40,8 @@ export default function GameStart() {
     }, [chapterNumber, stageNumber]);
 
     const paginatedCharacters = useMemo(() => {
-        return characters.slice(page * PER_PAGE, page * PER_PAGE + PER_PAGE);
-    }, [characters, page]);
+        return [...characters].sort((a, b) => calculateCharacterPower(b) - calculateCharacterPower(a) ).slice(page * PER_PAGE, page * PER_PAGE + PER_PAGE);
+    }, [characters, page, PER_PAGE]);
 
     const isNextDisabled = useMemo(() => {
         return page * PER_PAGE + PER_PAGE >= characters.length;
@@ -86,7 +86,7 @@ export default function GameStart() {
     }, [selectedCharacters])
 
     const toogleCharacter = (character: PlayerCharacter) => {
-        const index = selectedCharacters.indexOf(character);
+        const index = selectedCharacters.findIndex(c => c?.key === character.key);
         if (index !== -1) {
             const newSelectedCharacters = [...selectedCharacters];
             newSelectedCharacters[index] = null;
@@ -128,13 +128,13 @@ export default function GameStart() {
                     <div className="w-[1000px] mx-auto flex flex-col gap-4">
                         <div className="flex flex-col gap-4 items-center">
                             <p className="text-white text-5xl">Этап {chapterNumber}-{stageNumber}</p>
-                            <div className="flex gap-4 justify-between w-full px-20">
-                                <p className="text-white text-2xl">Мощь отряда: {totalPower}</p>
-                                <p className="text-white text-2xl">Мощь врагов: {enemiesPower}</p>
+                            <div className="flex gap-4 justify-between w-full px-20 relative z-200">
+                                <p className="text-white text-2xl">Мощь отряда: <span className={`font-bold text-3xl ${totalPower < enemiesPower ? 'text-red-500' : totalPower > enemiesPower ? 'text-green-500 text-shadow-[0px_0px_10px_rgba(0,0,0,0.5)]' : ''}`}>{totalPower}</span></p>
+                                <p className="text-white text-2xl">Мощь врагов: <span className={`font-bold text-3xl`}>{enemiesPower}</span></p>
                             </div>
                         </div>
                         <div className="flex flex-col gap-4 items-center h-full">
-                            <section className="grid gap-4 grid-cols-4 bg-black/50 p-2 rounded-xl">
+                            <section className="grid gap-4 grid-cols-4 bg-black/50 p-2 rounded-xl relative z-100">
                                 {
                                     selectedCharacters.map((character, index) => {
                                         if(character) {
@@ -149,7 +149,7 @@ export default function GameStart() {
                                         return (
                                             <button 
                                             key={index}
-                                            className="size-[200px] bg-zinc-600 bg-cover cursor-pointer"
+                                            className="size-[200px] bg-stone-600/80 bg-cover cursor-pointer rounded-2xl"
                                             >                                                
                                             </button>
                                         )
@@ -164,7 +164,7 @@ export default function GameStart() {
                                             character={character}
                                             key={character.id}
                                             style={{
-                                                opacity: selectedCharacters.includes(character) ? 0.5 : 1,
+                                                opacity: selectedCharacters.some(c => c?.key === character.key) ? 0.5 : 1,
                                             }}
                                             onClick={() => toogleCharacter(character)}
                                             />

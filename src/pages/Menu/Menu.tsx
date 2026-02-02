@@ -1,22 +1,33 @@
 import { PlotModal } from "@/entities/plot/ui/PlotModal/PlotModal";
+import BootScene from "@/scenes/BootScene";
+import PhaserGame from "@/shared/ui/PhaserGame";
 import { ResponsiveUI } from "@/shared/ui/ResponsiveUI/ResponsiveUI";
+import { EventBus } from "@/utils/eventBus";
 import MenuUI from "@/widgets/MenuUI/MenuUI";
+import { useEffect } from "react";
 
 
 export default function Menu() {
+    useEffect(() => {
+        EventBus.emit('load:start')
+    }, [])
+
     return (
-        <ResponsiveUI>
-            <div
-            className={`
-                w-full h-full relative
-                bg-[url('assets/menu/menu.webp')]
-                bg-cover
-                bg-center
-            `}
-            >
-                <MenuUI />
-            </div>
-            <PlotModal />
-        </ResponsiveUI>
+        <>
+            <PhaserGame scenes={[BootScene]} />
+            <ResponsiveUI>
+                <div
+                className={`
+                    w-full h-full relative
+                    bg-[url('assets/menu/menu.webp')]
+                    bg-cover
+                    bg-center
+                `}
+                >
+                    <MenuUI />
+                </div>
+                <PlotModal />
+            </ResponsiveUI>
+        </>
     )
 }

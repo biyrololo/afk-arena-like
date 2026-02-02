@@ -50,35 +50,39 @@ export function generateFirewarrior(scene: GameScene, team: 'ally' | 'enemy', pr
         const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
         switch(attackName) {
             case 'attack1':
-                applyAttackDamage(scene, entity, enemies, 100, 0, 180, 200, baseDamage);
+                applyAttackDamage(scene, entity, enemies, 100, 0, 180, 200, baseDamage, CharacterModel.DamageType.FIRE);
                 break;
             case 'attack2':
-                applyAttackDamage(scene, entity, enemies, 100, 0, 180, 200, baseDamage);
+                applyAttackDamage(scene, entity, enemies, 100, 0, 180, 200, baseDamage, CharacterModel.DamageType.FIRE);
                 break;
             case 'attack3':
-                applyAttackDamage(scene, entity, enemies, 100, 20, 300, 100, baseDamage);
+                applyAttackDamage(scene, entity, enemies, 100, 20, 300, 100, baseDamage, CharacterModel.DamageType.FIRE);
                 break;
             case 'special':
-                applyAttackDamage(scene, entity, enemies, 200, 0, 400, 200, baseDamage / 3);
+                applyAttackDamage(scene, entity, enemies, 200, 0, 400, 200, baseDamage / 3, CharacterModel.DamageType.FIRE);
                 break;
         }
     }
 
     entity.setAttacksDistances({
         attack1: {
-            x: 120,
+            x: 200,
+            minX: 10,
             y: 200
         },
         attack2: {
-            x: 120,
+            x: 200,
+            minX: 10,
             y: 200
         },
         attack3: {
-            x: 120,
+            x: 200,
+            minX: 10,
             y: 200
         },
         special: {
-            x: 120,
+            x: 200,
+            minX: 10,
             y: 200
         }
     })
@@ -128,7 +132,7 @@ export function generateViking(scene: GameScene, team: 'ally' | 'enemy', props: 
     entity.setAttackHitFrames('attack1', [2]);
     entity.setAttackHitFrames('attack2', [2]);
     entity.setAttackHitFrames('attack3', [2]);
-    entity.setAttackHitFrames('special', [2, 3]);
+    entity.setAttackHitFrames('special', [3, 4]);
 
     const baseDamage = props.character.baseStats.attack;
 
@@ -136,35 +140,39 @@ export function generateViking(scene: GameScene, team: 'ally' | 'enemy', props: 
         const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
         switch(attackName) {
             case 'attack1':
-                applyAttackDamage(scene, entity, enemies, 100, 50, 180, 200, baseDamage);
+                applyAttackDamage(scene, entity, enemies, 100, 50, 180, 200, baseDamage, CharacterModel.DamageType.PHYSICAL);
                 break;
             case 'attack2':
-                applyAttackDamage(scene, entity, enemies, 100, 50, 180, 200, baseDamage);
+                applyAttackDamage(scene, entity, enemies, 100, 50, 180, 200, baseDamage, CharacterModel.DamageType.PHYSICAL);
                 break;
             case 'attack3':
-                applyAttackDamage(scene, entity, enemies, 100, 50, 220, 200, baseDamage);
+                applyAttackDamage(scene, entity, enemies, 100, 50, 220, 200, baseDamage, CharacterModel.DamageType.PHYSICAL);
                 break;
             case 'special':
-                applyAttackDamage(scene, entity, enemies, 0, 100, 500, 200, baseDamage);
+                applyAttackDamage(scene, entity, enemies, 0, 100, 500, 200, baseDamage, CharacterModel.DamageType.PHYSICAL);
                 break;
         }
     }
 
     entity.setAttacksDistances({
         attack1: {
-            x: 140,
+            x: 190,
+            minX: 10,
             y: 200
         },
         attack2: {
-            x: 140,
+            x: 190,
+            minX: 10,
             y: 200
         },
         attack3: {
-            x: 140,
+            x: 190,
+            minX: 10,
             y: 200
         },
         special: {
-            x: 140,
+            x: 190,
+            minX: 10,
             y: 200
         }
     })
@@ -221,35 +229,39 @@ export function generateSpearwoman(scene: GameScene, team: 'ally' | 'enemy', pro
         const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
         switch(attackName) {
             case 'attack1':
-                applyAttackDamage(scene, entity, enemies, 100, 100, 220, 150, baseDamage);
+                applyAttackDamage(scene, entity, enemies, 100, 100, 220, 150, baseDamage, CharacterModel.DamageType.MAGIC);
                 break;
             case 'attack2':
-                applyAttackDamage(scene, entity, enemies, 100, 100, 220, 150, baseDamage);
+                applyAttackDamage(scene, entity, enemies, 100, 100, 220, 150, baseDamage, CharacterModel.DamageType.MAGIC);
                 break;
             case 'attack3':
-                applyAttackDamage(scene, entity, enemies, 200, 100, 220, 150, baseDamage / 3);
+                applyAttackDamage(scene, entity, enemies, 200, 100, 220, 150, baseDamage / 3, CharacterModel.DamageType.MAGIC);
                 break;
             case 'special':
-                applyAttackDamage(scene, entity, enemies, 50, 200, 300, 200, baseDamage * 3);
+                applyAttackDamage(scene, entity, enemies, 50, 200, 300, 200, baseDamage * 3, CharacterModel.DamageType.MAGIC);
                 break;
         }
     }
 
     entity.setAttacksDistances({
         attack1: {
-            x: 120,
+            x: 250,
+            minX: 10,
             y: 200
         },
         attack2: {
-            x: 120,
+            x: 250,
+            minX: 10,
             y: 200
         },
         attack3: {
-            x: 120,
+            x: 250,
+            minX: 10,
             y: 200
         },
         special: {
-            x: 120,
+            x: 250,
+            minX: 10,
             y: 200
         }
     })
@@ -299,22 +311,24 @@ export function generateWarrior(scene: GameScene, team: 'ally' | 'enemy', props:
         const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
         switch(attackName) {
             case 'attack1':
-                applyAttackDamage(scene, entity, enemies, 100, 50, 200, 150, baseDamage);
+                applyAttackDamage(scene, entity, enemies, 100, 50, 200, 150, baseDamage, CharacterModel.DamageType.PHYSICAL);
                 break;
             case 'special':
-                applyAttackDamage(scene, entity, enemies, 100, 50, 200, 150, baseDamage * 2);
+                applyAttackDamage(scene, entity, enemies, 100, 50, 200, 150, baseDamage * 2, CharacterModel.DamageType.PHYSICAL);
                 break;
         }
     }
 
     entity.setAttacksDistances({
         attack1: {
-            x: 130,
-            y: 120
+            x: 150,
+            minX: 10,
+            y: 180
         },
         special: {
-            x: 130,
-            y: 120
+            x: 150,
+            minX: 10,
+            y: 180
         }
     })
 
@@ -354,7 +368,7 @@ export function generateCrystalKing(scene: GameScene, team: 'ally' | 'enemy', pr
     entity.createAnimation('attack4', 21*9, 21*9+16, 14, 0);
     entity.createAnimation('special', 21*10, 21*10+14, 14, 0);
 
-    entity.setHitbox(125, 187.5, 0, 200.5);
+    entity.setHitbox(125, 250, 0, 200.5);
     // entity.setDebugMode(true);
 
     entity.setAttackHitFrames('attack1', [5]);
@@ -371,43 +385,48 @@ export function generateCrystalKing(scene: GameScene, team: 'ally' | 'enemy', pr
         const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
         switch(attackName) {
             case 'attack1':
-                applyAttackDamage(scene, entity, enemies, 125, 187.5, 75, 125, baseDamage * 0.5);
+                applyAttackDamage(scene, entity, enemies, 125, 187.5, 75, 125, baseDamage * 0.5, CharacterModel.DamageType.PHYSICAL);
                 break;
             case 'attack2':
-                applyAttackDamage(scene, entity, enemies, 75, 187.5, 150, 125, baseDamage);
+                applyAttackDamage(scene, entity, enemies, 75, 187.5, 150, 125, baseDamage, CharacterModel.DamageType.PHYSICAL);
                 break;
             case 'attack3':
-                applyAttackDamage(scene, entity, enemies, 75, 125, 150, 187.5, baseDamage * 1.25);
+                applyAttackDamage(scene, entity, enemies, 75, 125, 150, 187.5, baseDamage * 1.25, CharacterModel.DamageType.PHYSICAL);
                 break;
             case 'attack4':
-                applyAttackDamage(scene, entity, enemies, 350, 125, 250, 225, baseDamage * 0.75);
+                applyAttackDamage(scene, entity, enemies, 350, 125, 250, 225, baseDamage * 0.75, CharacterModel.DamageType.PHYSICAL);
                 break;
             case 'special':
-                applyAttackDamage(scene, entity, enemies, 312.5, 125, 437.5, 225, baseDamage * 2);
+                applyAttackDamage(scene, entity, enemies, 312.5, 125, 437.5, 225, baseDamage * 2, CharacterModel.DamageType.MAGIC);
                 break;
         }
     }
 
     entity.setAttacksDistances({
         attack1: {
-            x: 125,
-            y: 187.5
+            x: 180,
+            minX: 20,
+            y: 200
         },
         attack2: {
-            x: 100,
-            y: 187.5
+            x: 160,
+            minX: 20,
+            y: 200
         },
         attack3: {
-            x: 100,
-            y: 187.5
+            x: 160,
+            minX: 20,
+            y: 200
         },
         attack4: {
-            x: 375,
-            y: 187.5
+            x: 425,
+            minX: 100,
+            y: 200
         },
         special: {
-            x: 125,
-            y: 187.5
+            x: 255,
+            minX: 230,
+            y: 200
         }
     })
 
@@ -445,7 +464,7 @@ export function generateFireKing(scene: GameScene, team: 'ally' | 'enemy', props
     entity.createAnimation('special', 28*10, 28*10+16, 12, 0);
     // entity.sprite.setFlipX(true);
 
-    entity.setHitbox(125, 187.5, 0, 162.5);
+    entity.setHitbox(125, 250, 0, 200);
     // entity.setDebugMode(true);
 
     entity.setAttacksConfig(1, true);
@@ -459,20 +478,22 @@ export function generateFireKing(scene: GameScene, team: 'ally' | 'enemy', props
         const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
         switch(attackName) {
             case 'attack1':
-                applyAttackDamage(scene, entity, enemies, 175, 225, 187.5, 75, baseDamage);
+                applyAttackDamage(scene, entity, enemies, 175, 225, 187.5, 75, baseDamage, CharacterModel.DamageType.PHYSICAL);
                 break;
             case 'special':
-                applyAttackDamage(scene, entity, enemies, 250, 187.5, 312.5, 162.5, baseDamage * 2);
+                applyAttackDamage(scene, entity, enemies, 250, 187.5, 312.5, 162.5, baseDamage * 2, CharacterModel.DamageType.FIRE);
         }
     }
 
     entity.setAttacksDistances({
         attack1: {
-            x: 125,
+            x: 230,
+            minX: 10,
             y: 250
         },
         special: {
-            x: 125,
+            x: 230,
+            minX: 60,
             y: 250
         }
     })
@@ -507,29 +528,35 @@ export function generateFrostGuardian(scene: GameScene, team: 'ally' | 'enemy', 
 
     // 16 кадров в ряду
     entity.createAnimation('idle', 0, 5, 8);
-    entity.createAnimation('walk', 16, 16+9, 12);
-    entity.createAnimation('attack1', 16*2, 16*2+13, 12, 0);
+    entity.createAnimation('walk', 16, 16+9, 8);
+    entity.createAnimation('attack1', 16*2, 16*2+13, 8, 0);
+    entity.createAnimation('special', 16*2, 16*2+13, 8, 0);
     entity.playAnimation('idle', 'idle');
 
     entity.setAttackHitFrames('attack1', [7]);
+    entity.setAttackHitFrames('special', [7]);
 
-    entity.setAttacksConfig(1, false);
+    entity.setAttacksConfig(1, true);
+
+    // entity.setDebugMode(true);
 
     const baseDamage = props.character.baseStats.attack;
 
     entity.onAttackFrame = (attackName: string, frameIndex: number): void => {
         const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
-        applyAttackDamage(scene, entity, enemies, 187.5, 25, 312.5, 125, baseDamage);
+        applyAttackDamage(scene, entity, enemies, 200, 40, 400, 200, attackName === 'special' ? baseDamage * 2 : baseDamage, CharacterModel.DamageType.PHYSICAL);
     }
 
     entity.setAttacksDistances({
         attack1: {
-            x: 125,
+            x: 400,
+            minX: 10,
             y: 250
         },
         special: {
-            x: 0,
-            y: 0
+            x: 400,
+            minX: 10,
+            y: 250
         }
     });
 

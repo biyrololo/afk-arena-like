@@ -84,6 +84,8 @@ export default function GameUI() {
                     )}
                     style={{
                         backgroundImage: `url(${Avatars[h.texture as keyof typeof Avatars]})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
                         cursor: h.energy < h.maxEnergy ? 'not-allowed' : 'pointer',
                         ...(h.energy >= h.maxEnergy && { 
                             scale: 1.1
