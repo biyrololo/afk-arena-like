@@ -20,10 +20,10 @@ export default function Menu() {
                 <div
                 className={`
                     w-full h-full relative
-                    bg-[url(${menu})]
                     bg-cover
                     bg-center
                 `}
+                style={{ backgroundImage: `url(${menu})` }}
                 >
                     <MenuUI />
                 </div>

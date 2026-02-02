@@ -50,7 +50,7 @@ export function applyAttackDamage(
     });
 
     if(hit && !(attacker.characterState === 'special')) {
-        attacker.gainEnergy(stats.energyRegen * 100);
+        attacker.gainEnergy(stats.energyRegen);
     }
 }
 
