@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 
 import type { PlayerCharacter } from "@/shared/types/PlayerCharacter"
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -6,7 +6,7 @@ import usePlayerCharactersStore from "@/shared/store/PlayerCharactersStore";
 import { ResponsiveUI } from "@/shared/ui/ResponsiveUI/ResponsiveUI";
 import { HeroMiniCard } from "@/entities/character/ui/HeroMiniCard/HeroMiniCard";
 import { Button } from "@/shared/ui/Button/Button";
-import { usePlayerStore } from "@/entities/player/model/player.store";
+import { usePlayerStore, type SquadList } from "@/entities/player/model/player.store";
 import { useShallow } from "zustand/shallow";
 import { findStage } from "@/entities/chapter/lib/chapters";
 
@@ -27,11 +27,21 @@ export default function GameStart() {
     ]);
     const { characters } = usePlayerCharactersStore();
 
-    const [chapterNumber, stageNumber] = usePlayerStore(useShallow(state => [
+    const [chapterNumber, stageNumber, lastSquad, setLastSquad] = usePlayerStore(useShallow(state => [
         state.chapterNumber,
-        state.stageNumber
+        state.stageNumber,
+        state.lastSquad,
+        state.setLastSquad,
     ]))
 
+    useEffect(() => {
+        setSelectedCharacters(
+            lastSquad.map((id) => {
+                if(!id) return null;
+                return characters.find((character) => character.id === id) ?? null;
+            })
+        )
+    }, [lastSquad, setSelectedCharacters])
 
     const enemiesPower = useMemo(() => {
         const stage = findStage(chapterNumber, stageNumber);
@@ -70,6 +80,7 @@ export default function GameStart() {
     }
 
     const handleStart = () => {
+        setLastSquad(selectedCharacters.map((character) => character?.id ?? null) as SquadList);
         setSelectedCharacters([null,null,null,null]);
         navitate('/game', {
             replace: true,

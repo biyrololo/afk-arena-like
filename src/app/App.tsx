@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
 
 import Game from "@/pages/Game/Game";
 import GameStart from "@/pages/GameStart/GameStart";
@@ -11,14 +11,15 @@ import { MyEquipmentPage } from "@/pages/MyEquipment/MyEquipment";
 import { MyEquipmentItemPage } from "@/pages/MyEquipment/[id]";
 import { ShopPage } from "@/pages/Shop";
 import { Loader } from "@/widgets/Loader/Loader";
+import { Wrapper } from "@/widgets/Wrapper/Wrapper";
 
 export default function App() {
     return (
-        <BrowserRouter>
+        <MemoryRouter>
             <main className="relative">
                 <Loader />
                 <Routes>
-                    <Route path="">
+                    <Route path="" Component={Wrapper}>
                         <Route index Component={Menu} />
                         <Route path="my-characters">
                             <Route path="" Component={MyCharacters} />
@@ -38,6 +39,6 @@ export default function App() {
                     </Route>
                 </Routes>
             </main>
-        </BrowserRouter>
+        </MemoryRouter>
     )
 }

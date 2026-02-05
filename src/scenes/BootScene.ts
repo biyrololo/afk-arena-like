@@ -13,6 +13,10 @@ import menuBg from '@/assets/menu/menu.webp';
 import magic_field_bg from '@/assets/backgrounds/magic_field.png';
 import { EventBus } from '@/utils/eventBus';
 
+import { Avatars } from '@/shared/avatars';
+import { Icons } from '@/shared/icons';
+import { Backgrounds } from '@/shared/backgrounds';
+
 export default class BootScene extends Phaser.Scene {
     preload(): void {
         EventBus.emit('load:start')
@@ -49,6 +53,18 @@ export default class BootScene extends Phaser.Scene {
         this.load.image('magic_field_bg', magic_field_bg);
         this.load.image('summonBg', summonBg);
         this.load.image('menuBg', menuBg);
+
+        for (const avatar in Avatars) {
+            this.load.image(`avatar_${avatar}`, Avatars[avatar as keyof typeof Avatars]);
+        }
+
+        for (const icon in Icons) {
+            this.load.image(`icon_${icon}`, Icons[icon as keyof typeof Icons]);
+        }
+
+        for(const bg in Backgrounds) {
+            this.load.image(`bg_${bg}`, Backgrounds[bg as keyof typeof Backgrounds]);
+        }
         
         this.load.on('progress', (value: number) => {
             EventBus.emit('load:progress', value)

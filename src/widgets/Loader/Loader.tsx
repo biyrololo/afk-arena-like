@@ -6,7 +6,7 @@ import { EventBus } from "@/utils/eventBus";
 
 export const Loader: FC = () => {
     const [isLoaded, setIsLoaded] = useState(false);
-    const [progress, setProgress] = useState(0);
+    const [progress, setProgress] = useState(0); // 0 -> 1
 
     useEffect(() => {
         const onStart = () => {
