@@ -2,9 +2,8 @@ import { create } from "zustand";
 import type { IStatement, IPlot, IPlotScene, IPlotStore } from "./plot.model";
 import { devtools, subscribeWithSelector } from "zustand/middleware";
 
-import avatarFireKing from '@/assets/fireKingMini.png';
-import bg from '@/assets/backgrounds/game_background_1.png';
 import { usePlayerStore } from "@/entities/player/model/player.store";
+import { Avatars } from "@/shared/avatars";
 
 const greeting: IPlotScene = {
     id: "greeting",
@@ -13,30 +12,30 @@ const greeting: IPlotScene = {
             id: "greeting-1",
             author: "NPC",
             color: "green",
-            text: "Привет! Это тестовая реплика с аватаром и фоном. Нажми куда-нибудь для продолжения...",
-            avatar: avatarFireKing,
-            backgroundImage: bg,
+            text: "Привет! Игра хайп!",
+            avatar: Avatars.crystalKing,
         },
         {
             id: "greeting-2",
             author: "NPC 2",
             color: "red",
-            text: "Это реплика с аватаром справа и без фона",
-            avatar: avatarFireKing,
+            text: "Чтобы начать играть, нажми на 'В бой'!",
+            avatar: Avatars.fireKing,
             authorPosition: "right",
         },
         {
             id: "greeting-3",
             author: "NPC 3",
             color: "blue",
-            text: "Это реплика без аватара и с фоном",
-            backgroundImage: bg,
+            text: "Так же можно играть в режиме выживания, чтобы фармить ресурсы для прокачки",
+            avatar: Avatars.frostGuardian,
         },
         {
             id: "greeting-4",
             author: "NPC 4",
             color: "purple",
-            text: "Эта реплика только текст",
+            text: "В меню призыва можно призвать новых крутых героев",
+            avatar: Avatars.spearwoman,
         },
     ],
 };
@@ -60,7 +59,10 @@ const afterFight: IPlotScene = {
 };
 
 const PLOT: IPlot = {
-    scenes: [],
+    scenes: [
+        greeting,
+        afterFight,
+    ],
 };
 
 const isAvailableStatement = (statement: IStatement) => {

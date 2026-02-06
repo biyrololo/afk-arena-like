@@ -4,27 +4,32 @@ import { Outlet } from "react-router-dom";
 import PhaserGame from "@/shared/ui/PhaserGame";
 import BootScene from "@/scenes/BootScene";
 import { EventBus } from "@/utils/eventBus";
+import { Loader, PermanentLoader } from "../Loader/Loader";
 
 export const Wrapper: FC = () => {
-    const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
 
-    useEffect(() => {
-        const onEnd = () => {
-            setIsLoaded(true);
-        };
+  useEffect(() => {
+    const onEnd = () => {
+      setIsLoaded(true);
+    };
 
-        EventBus.on('load:end', onEnd)
+    EventBus.on("load:end", onEnd);
 
-        return () => {
-            EventBus.off('load:end', onEnd)
-        };
-    }, [])
+    return () => {
+      EventBus.off("load:end", onEnd);
+    };
+  }, []);
 
-    if(!isLoaded) {
-        return (
-            <PhaserGame scenes={[BootScene]} />
-        )
-    }
+  if (!isLoaded) {
+    return (
+      <>
+        <PhaserGame scenes={[BootScene]} />
+        <PermanentLoader />
+        <Loader />
+      </>
+    );
+  }
 
-    return <Outlet />
-}
+  return <Outlet />;
+};

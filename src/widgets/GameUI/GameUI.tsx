@@ -1,112 +1,124 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "react";
 
 import { EventBus } from "@/utils/eventBus";
-import classes from './GameUI.module.css'
-import cn from 'classnames'
+import classes from "./GameUI.module.css";
+import cn from "classnames";
 import { Avatars } from "@/shared/avatars";
 
 interface Hero {
-    texture: string;
-    energy: number;
-    maxEnergy: number;
-    hp: number;
-    maxHp: number;
+  texture: string;
+  energy: number;
+  maxEnergy: number;
+  hp: number;
+  maxHp: number;
 }
 
-const MAX_ENERGY = 50
+const MAX_ENERGY = 50;
 
 export default function GameUI() {
-    const [heroes, setHeroes] = useState<Hero[]>([]);
+  const [heroes, setHeroes] = useState<Hero[]>([]);
 
-    useEffect(() => {
-        EventBus.on('allyEnergyChange', (data: {index: number, energy: number}) => {
-            setHeroes(prev => {
-                const newHeroes = [...prev];
-                newHeroes[data.index].energy = data.energy;
-                return newHeroes
-            })
-        })
+  useEffect(() => {
+    EventBus.on(
+      "allyEnergyChange",
+      (data: { index: number; energy: number }) => {
+        setHeroes((prev) => {
+          const newHeroes = [...prev];
+          newHeroes[data.index].energy = data.energy;
+          return newHeroes;
+        });
+      },
+    );
 
-        return () => {
-            EventBus.removeListener('allyEnergyChange');
-        }
-    }, [])
+    return () => {
+      EventBus.removeListener("allyEnergyChange");
+    };
+  }, []);
 
-    useEffect(() => {
-        EventBus.on('allyUpdateHP', (data: {index: number, hp: number}) => {
-            setHeroes(prev => {
-                const newHeroes = [...prev];
-                newHeroes[data.index].hp = data.hp;
-                return newHeroes
-            })
-        })
+  useEffect(() => {
+    EventBus.on("allyUpdateHP", (data: { index: number; hp: number }) => {
+      setHeroes((prev) => {
+        const newHeroes = [...prev];
+        newHeroes[data.index].hp = data.hp;
+        return newHeroes;
+      });
+    });
 
-        return () => {
-            EventBus.removeListener('allyUpdateHP');
-        }
-    })
+    return () => {
+      EventBus.removeListener("allyUpdateHP");
+    };
+  });
 
-    useEffect(() => {
-        EventBus.on('createdAllies', (data: Hero[]) => {
-            console.log(data);
-            setHeroes(data);
-        })
+  useEffect(() => {
+    EventBus.on("createdAllies", (data: Hero[]) => {
+      console.log(data);
+      setHeroes(data);
+    });
 
-        return () => {
-            EventBus.removeListener('createdAllies');
-        }
-    }, [])
+    return () => {
+      EventBus.removeListener("createdAllies");
+    };
+  }, []);
 
-    const handleClick = (index: number) => {
-        EventBus.emit('useAllySpecialAttack', index);
+  const handleClick = (index: number) => {
+    if (
+      heroes[index].hp > 0 &&
+      heroes[index].energy >= heroes[index].maxEnergy
+    ) {
+      EventBus.emit("useAllySpecialAttack", index);
     }
+  };
 
-    return (
-        <div className={`
+  return (
+    <div
+      className={`
             text-white absolute bottom-0 h-[250px] bg-zinc-700/80 w-full
             flex
             items-center
             gap-10
             p-10
-        `}>
-            {
-                heroes.map((h, i) => (
-                    <button
-                    key={i}
-                    className={cn(`
-                        w-50 h-50  
+        `}
+    >
+      {heroes.map((h, i) => (
+        <button
+          key={i}
+          className={cn(
+            `
+                        w-50 h-50
                         bg-cover
                         relative
                         `,
-                        {
-                            [classes['burning-border']]: h.energy >= h.maxEnergy
-                        }
-                    )}
-                    style={{
-                        backgroundImage: `url(${Avatars[h.texture as keyof typeof Avatars]})`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                        cursor: h.energy < h.maxEnergy ? 'not-allowed' : 'pointer',
-                        ...(h.energy >= h.maxEnergy && { 
-                            scale: 1.1
-                         })
-                    }}
-                    onClick={() => handleClick(i)}
-                    disabled={h.energy < h.maxEnergy}
-                    >
-                        <div className={`absolute
+            {
+              [classes["burning-border"]]: h.energy >= h.maxEnergy,
+            },
+          )}
+          style={{
+            backgroundImage: `url(${Avatars[h.texture as keyof typeof Avatars]})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            cursor:
+              h.energy < h.maxEnergy || h.hp <= 0 ? "not-allowed" : "pointer",
+            ...(h.energy >= h.maxEnergy && {
+              scale: 1.1,
+            }),
+          }}
+          onClick={() => handleClick(i)}
+          disabled={h.energy < h.maxEnergy || h.hp <= 0}
+        >
+          <div
+            className={`absolute
                             w-full
                             top-0
                             bg-zinc-700/60
                             transition-all
                             duration-500
                         `}
-                        style={{
-                            height: `${(1 - h.energy / h.maxEnergy) * 100}%`
-                        }}    
-                        />
-                        <div 
-                        className={`
+            style={{
+              height: `${(1 - h.energy / h.maxEnergy) * 100}%`,
+            }}
+          />
+          <div
+            className={`
                             absolute
                             left-0
                             bottom-0
@@ -114,23 +126,22 @@ export default function GameUI() {
                             bg-zinc-800
                             h-3
                         `}
-                        >
-                            <div
-                            className={`
+          >
+            <div
+              className={`
                                 absolute
                                 left-0
                                 bottom-0
                                 h-full
                                 bg-red-500
                             `}
-                            style={{
-                                width: `${h.hp / h.maxHp * 100}%`
-                            }}
-                            />
-                        </div>
-                    </button>
-                ))
-            }
-        </div>
-    )
+              style={{
+                width: `${(h.hp / h.maxHp) * 100}%`,
+              }}
+            />
+          </div>
+        </button>
+      ))}
+    </div>
+  );
 }

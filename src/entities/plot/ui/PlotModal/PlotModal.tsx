@@ -78,7 +78,7 @@ export const PlotModal: FC = () => {
                     <img 
                     src={statement.avatar}
                     alt={statement.author}
-                    className="size-50 rounded-t-2xl border-2 border-stone-700 mt-auto mx-20"
+                    className="size-50 object-cover object-center rounded-t-2xl border-2 border-stone-700 mt-auto mx-20"
                     style={{
                         alignSelf: statement.authorPosition === 'right' ? 'flex-end' : 'flex-start',
                         transform: statement.authorPosition === 'right' ? 'rotateY(180deg)' : ''

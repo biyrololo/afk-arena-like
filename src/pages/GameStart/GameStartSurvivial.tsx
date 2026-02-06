@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 
 import type { PlayerCharacter } from "@/shared/types/PlayerCharacter";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import usePlayerCharactersStore from "@/shared/store/PlayerCharactersStore";
 import { ResponsiveUI } from "@/shared/ui/ResponsiveUI/ResponsiveUI";
 import { HeroMiniCard } from "@/entities/character/ui/HeroMiniCard/HeroMiniCard";
@@ -11,17 +11,20 @@ import {
   type SquadList,
 } from "@/entities/player/model/player.store";
 import { useShallow } from "zustand/shallow";
-import { findStage } from "@/entities/chapter/lib/chapters";
+import { SURVIVAL_CHAPTERS } from "@/entities/chapter/lib/chapters";
 
 import background from "@/assets/backgrounds/gamestart.webp";
 import { calculateCharacterPower } from "@/shared/types/develop";
+import { StageTypeEnum } from "@/entities/chapter/lib/chapter.model";
 
 const PER_PAGE = 4 * 3;
 
-export default function GameStart() {
+export default function GameStartSurvivial() {
   const navitate = useNavigate();
 
   const [params, setParams] = useSearchParams();
+
+  const { stageNumber } = useParams();
 
   const page = parseInt(params.get("page") ?? "0") ?? 0;
 
@@ -30,13 +33,8 @@ export default function GameStart() {
   >([null, null, null, null]);
   const { characters } = usePlayerCharactersStore();
 
-  const [chapterNumber, stageNumber, lastSquad, setLastSquad] = usePlayerStore(
-    useShallow((state) => [
-      state.chapterNumber,
-      state.stageNumber,
-      state.lastSquad,
-      state.setLastSquad,
-    ]),
+  const [lastSquad, setLastSquad] = usePlayerStore(
+    useShallow((state) => [state.lastSquad, state.setLastSquad]),
   );
 
   useEffect(() => {
@@ -49,12 +47,15 @@ export default function GameStart() {
   }, [lastSquad, setSelectedCharacters]);
 
   const enemiesPower = useMemo(() => {
-    const stage = findStage(chapterNumber, stageNumber);
+    if (!stageNumber) return 0;
+    const stage = SURVIVAL_CHAPTERS.find(
+      (chapter) => chapter.stageNumber === +stageNumber,
+    );
     if (!stage) return 0;
     return stage.enemies
       .map((e) => calculateCharacterPower(e))
       .reduce((acc, power) => acc + power, 0);
-  }, [chapterNumber, stageNumber]);
+  }, [stageNumber]);
 
   const paginatedCharacters = useMemo(() => {
     return [...characters]
@@ -97,7 +98,7 @@ export default function GameStart() {
       replace: true,
       state: {
         characters: selectedCharacters,
-        chapter: chapterNumber,
+        stageType: StageTypeEnum.SURVIVAL,
         stage: stageNumber,
       },
     });
@@ -166,7 +167,7 @@ export default function GameStart() {
           <div className="w-[1000px] mx-auto flex flex-col gap-4">
             <div className="flex flex-col gap-4 items-center">
               <p className="text-white text-5xl">
-                Этап {chapterNumber}-{stageNumber}
+                Выживание: этап {stageNumber}
               </p>
               <div className="flex gap-4 justify-between w-full px-20 relative z-200">
                 <p className="text-white text-2xl">
