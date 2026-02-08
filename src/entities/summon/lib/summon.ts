@@ -1,14 +1,75 @@
+import { AllEquipment } from "@/entities/character/lib/equipmentList";
 import { usePlayerStore } from "@/entities/player/model/player.store";
 import usePlayerCharactersStore, { mockCharacters } from "@/shared/store/PlayerCharactersStore"
-import { calculateCharacterPower } from "@/shared/types/develop";
+import { Character } from "@/shared/types/character";
+import { calculateCharacterPower, calculateEquipmentPower } from "@/shared/types/develop";
 import { v4 } from "uuid";
 
-const summonOnce = () => {
-    const hero = mockCharacters[Math.floor(Math.random() * mockCharacters.length)]
-    return structuredClone(hero)
+export enum DropType {
+    CHARACTER = 'character',
+    EQUIPMENT = 'equipment'
 }
 
-export const summon = (amount: 1 | 10) => {
+export type DropItem = {
+    type: DropType.CHARACTER;
+    item: Character.Character;
+    weight: number;
+} | {
+    type: DropType.EQUIPMENT;
+    item: Character.Equipment;
+    weight: number;
+}
+
+
+const ALL_DROP: DropItem[] = [
+    ...mockCharacters.map(c => ({
+        type: DropType.CHARACTER,
+        item: c,
+        weight: calculateCharacterPower(c)
+    })),
+    ...Object.values(AllEquipment.EQUIPMENT)
+    .map(e => Object.values(e))
+    .flat()
+    .map(e => ({
+        type: DropType.EQUIPMENT,
+        item: e,
+        weight: calculateEquipmentPower(e) * 1.2
+    }))
+]
+
+const EQUIPMENT_DROP = Object.values(AllEquipment.EQUIPMENT)
+    .map(e => Object.values(e))
+    .flat()
+    .filter((e: Character.Equipment) => e.rarity !== Character.Rarity.COMMON)
+    .map(e => ({
+        type: DropType.EQUIPMENT,
+        item: e,
+        weight: calculateEquipmentPower(e)
+    }))
+
+const prepareDrop = (drops: DropItem[]) => {
+    const sum = drops.reduce((acc, cur) => acc + 1 / (cur.weight || 1), 0);
+    drops.forEach(drop => drop.weight /= sum);
+}
+
+prepareDrop(ALL_DROP);
+prepareDrop(EQUIPMENT_DROP);
+
+const DROPS_BY_ID = {
+    "all": ALL_DROP,
+    "equipment": EQUIPMENT_DROP
+}
+
+const summonOnce = (drops: DropItem[]) => {
+    const result = drops[Math.floor(Math.random() * drops.length)]
+    return structuredClone(result)
+}
+
+export const summon = (amount: 1 | 10, id: string) => {
+    const drops = DROPS_BY_ID[id as keyof typeof DROPS_BY_ID];
+    if(!drops) {
+        throw new Error("Invalid drop id");
+    }
     const balances = usePlayerStore.getState().balances;
 
     if(balances.summons < amount) return []
@@ -20,20 +81,31 @@ export const summon = (amount: 1 | 10) => {
 
     const result = []
     for (let i = 0; i < amount; i++) {
-        const r = summonOnce()
-        r.power = calculateCharacterPower(r)
-        r.id = v4();
+        const r = summonOnce(drops)
+        if (r.type === DropType.CHARACTER) {
+            r.item.power = calculateCharacterPower(r.item)
+            r.item.id = v4();
+        } else if (r.type === DropType.EQUIPMENT) {
+            r.item.id = v4();
+            r.item.equippedCharacterId = undefined;
+        }
         result.push(r)
     }
-
-    result.sort((a, b) => a.power - b.power)
 
     usePlayerCharactersStore
     .getState()
     .setCharacters(
         usePlayerCharactersStore
         .getState()
-        .characters.concat(result)
+        .characters.concat(result.filter(r => r.type === DropType.CHARACTER).map(r => r.item))
+    )
+
+    usePlayerCharactersStore
+    .getState()
+    .setEquipment(
+        usePlayerCharactersStore
+        .getState()
+        .equipment.concat(result.filter(r => r.type === DropType.EQUIPMENT).map(r => r.item))
     )
 
     return result

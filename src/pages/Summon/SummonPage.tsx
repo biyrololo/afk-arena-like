@@ -7,7 +7,7 @@ import { AllBanners } from "@/entities/summon/lib/summon.store";
 import { SummonBanner } from "./ui/Banner/Banner";
 import { Character } from "@/shared/types/character";
 import { SummonResult } from "./ui/SummonResult/SummonResult";
-import { summon } from "@/entities/summon/lib/summon";
+import { summon, type DropItem } from "@/entities/summon/lib/summon";
 
 import bg from "@/assets/backgrounds/summon.webp";
 import { AnimatePresence } from "framer-motion";
@@ -22,11 +22,11 @@ export const SummonPage: FC = () => {
   };
 
   const [summonResult, setSummonResult] = useState<
-    Character.Character[] | null
+    DropItem[] | null
   >(null);
 
   const handleSummon = (amount: 1 | 10) => {
-    setSummonResult(summon(amount));
+    setSummonResult(summon(amount, AllBanners[currentBanner].id));
   };
 
   const nextSummon = () => {

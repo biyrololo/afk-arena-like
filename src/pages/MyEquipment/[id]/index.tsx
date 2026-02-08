@@ -55,6 +55,8 @@ export const MyEquipmentItemPage: FC = () => {
                 <Balances />
                 <button 
                     className="
+                        relative
+                        top-4 left-4
                         px-6 py-3
                         bg-gradient-to-r from-amber-700 to-amber-900
                         text-white text-2xl font-bold
@@ -72,7 +74,7 @@ export const MyEquipmentItemPage: FC = () => {
                     <span className="text-3xl">←</span>
                     Назад
                 </button>
-                <div className="w-[2000px] mx-auto mt-24 flex flex-col gap-12 items-center">
+                <div className="w-[1600px] mx-auto mt-24 flex flex-col gap-12 items-center">
                     <div className={cn(`
                         bg-gradient-to-br from-gray-900 to-gray-800 
                         border-4 border-amber-900/50

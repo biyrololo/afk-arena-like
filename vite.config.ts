@@ -7,9 +7,13 @@ export default defineConfig({
   server: {
     allowedHosts: true
   },
+  base: './',
   resolve: {
     alias: {
       '@': '/src',
     },
+  },
+  build: {
+    outDir: 'dist'
   }
 });
