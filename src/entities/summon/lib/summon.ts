@@ -14,6 +14,7 @@ export type DropItem = {
     type: DropType.CHARACTER;
     item: Character.Character;
     weight: number;
+    ascension?: number;
 } | {
     type: DropType.EQUIPMENT;
     item: Character.Equipment;
@@ -27,14 +28,14 @@ const ALL_DROP: DropItem[] = [
         item: c,
         weight: calculateCharacterPower(c)
     })),
-    ...Object.values(AllEquipment.EQUIPMENT)
-    .map(e => Object.values(e))
-    .flat()
-    .map(e => ({
-        type: DropType.EQUIPMENT,
-        item: e,
-        weight: calculateEquipmentPower(e) * 1.2
-    }))
+    // ...Object.values(AllEquipment.EQUIPMENT)
+    // .map(e => Object.values(e))
+    // .flat()
+    // .map(e => ({
+    //     type: DropType.EQUIPMENT,
+    //     item: e,
+    //     weight: calculateEquipmentPower(e) * 1.2
+    // }))
 ]
 
 const EQUIPMENT_DROP = Object.values(AllEquipment.EQUIPMENT)
@@ -70,7 +71,7 @@ export const summon = (amount: 1 | 10, id: string) => {
     if(!drops) {
         throw new Error("Invalid drop id");
     }
-    const balances = usePlayerStore.getState().balances;
+    let balances = usePlayerStore.getState().balances;
 
     if(balances.summons < amount) return []
 
@@ -92,13 +93,41 @@ export const summon = (amount: 1 | 10, id: string) => {
         result.push(r)
     }
 
+    const newCharacters = result.filter(r => r.type === DropType.CHARACTER).map(r => r.item);
+
+    const currentCharacters = usePlayerCharactersStore
+        .getState()
+        .characters;
+    
+    let totalGemsBonus = 0;
+
+    result.forEach(r => {
+        if(r.type === DropType.CHARACTER) {
+            const newCharacter = r.item;
+            const c = currentCharacters.find(ch => ch.key === newCharacter.key)
+            if(c) {
+                r.ascension = c.progression.ascension + 1;
+                if(c.progression.ascension < 5) {
+                    c.progression.ascension++;
+                } else {
+                    totalGemsBonus += 20;
+                }
+            }
+        }
+    })
+
     usePlayerCharactersStore
     .getState()
     .setCharacters(
-        usePlayerCharactersStore
-        .getState()
-        .characters.concat(result.filter(r => r.type === DropType.CHARACTER).map(r => r.item))
+        currentCharacters.concat(newCharacters.filter(c => !currentCharacters.some(ch => ch.key === c.key)))
     )
+
+    balances = usePlayerStore.getState().balances;
+
+    usePlayerStore.getState().setBalances({
+        ...balances,
+        gems: balances.gems + totalGemsBonus
+    })
 
     usePlayerCharactersStore
     .getState()

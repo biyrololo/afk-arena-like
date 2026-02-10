@@ -60,8 +60,8 @@ const afterFight: IPlotScene = {
 
 const PLOT: IPlot = {
     scenes: [
-        greeting,
-        afterFight,
+        // greeting,
+        // afterFight,
     ],
 };
 

@@ -331,7 +331,7 @@ export const MyCharacterPage: FC = () => {
                 </span>
               </div>
               <div className="grid grid-cols-2 gap-2 w-full px-2 pt-4 pb-2 border-b-2 border-amber-900">
-                <span className="text-4xl text-white">
+                <span className="text-2xl text-white">
                   Восстановление энергии
                 </span>
                 <span className="text-3xl text-white text-right flex justify-end">
@@ -341,16 +341,12 @@ export const MyCharacterPage: FC = () => {
                       totalNewStats.advancedStats?.energyRegen && (
                       <span className="block mr-6 text-green-600">
                         {Math.floor(
-                          (totalNewStats.advancedStats?.energyRegen || 0.01) *
-                            100,
+                          totalNewStats.advancedStats?.energyRegen || 1,
                         )}
-                        % {"<"}
+                        {"<"}
                       </span>
                     )}
-                  {Math.floor(
-                    (totalStats.advancedStats?.energyRegen || 1) * 100,
-                  )}
-                  %
+                  {Math.floor(totalStats.advancedStats?.energyRegen || 1)}
                 </span>
               </div>
               <div className="grid grid-cols-2 gap-2 w-full px-2 pt-4 pb-2 border-b-2 border-amber-900">

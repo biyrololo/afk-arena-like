@@ -89,7 +89,7 @@ export default function GameUI() {
                         relative
                         `,
             {
-              [classes["burning-border"]]: h.energy >= h.maxEnergy,
+              [classes["burning-border"]]: h.energy >= h.maxEnergy && h.hp > 0,
             },
           )}
           style={{
@@ -98,8 +98,13 @@ export default function GameUI() {
             backgroundPosition: "center",
             cursor:
               h.energy < h.maxEnergy || h.hp <= 0 ? "not-allowed" : "pointer",
-            ...(h.energy >= h.maxEnergy && {
-              scale: 1.1,
+            ...(h.energy >= h.maxEnergy &&
+              h.hp > 0 && {
+                scale: 1.1,
+              }),
+            ...(h.hp <= 0 && {
+              opacity: 0.5,
+              filter: "grayscale(100%)",
             }),
           }}
           onClick={() => handleClick(i)}
@@ -114,7 +119,7 @@ export default function GameUI() {
                             duration-500
                         `}
             style={{
-              height: `${(1 - h.energy / h.maxEnergy) * 100}%`,
+              height: `${h.hp > 0 ? (1 - h.energy / h.maxEnergy) * 100 : 0}%`,
             }}
           />
           <div

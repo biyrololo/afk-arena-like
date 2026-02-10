@@ -1,13 +1,23 @@
-import { useEffect, useLayoutEffect, useState, type FC, type PropsWithChildren } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useState,
+  type FC,
+  type PropsWithChildren,
+} from "react";
 
 const ASPECT_RATIO = 16 / 9;
 const LOGICAL_WIDTH = 1920;
 const LOGICAL_HEIGHT = LOGICAL_WIDTH / ASPECT_RATIO; // ≈ 787.5
 
-export const ResponsiveUI: FC<PropsWithChildren<{ zIndex?: number }>> = ({ children, zIndex = 10 }) => {
+export const ResponsiveUI: FC<PropsWithChildren<{ zIndex?: number }>> = ({
+  children,
+  zIndex = 10,
+}) => {
   const [scale, setScale] = useState(1);
 
   const [marginLeft, setMarginLeft] = useState(0);
+  const [marginTop, setMarginTop] = useState(0);
 
   useLayoutEffect(() => {
     const updateScale = () => {
@@ -31,15 +41,20 @@ export const ResponsiveUI: FC<PropsWithChildren<{ zIndex?: number }>> = ({ child
 
       // 🔥 Убираем ограничение — масштабируем ВСЕГДА (вверх и вниз)
       setScale(newScale);
-      setMarginLeft(Math.max(0, window.innerWidth - LOGICAL_WIDTH * newScale) / 2);
+      setMarginLeft(
+        Math.max(0, window.innerWidth - LOGICAL_WIDTH * newScale) / 2,
+      );
+      setMarginTop(
+        Math.max(0, window.innerHeight - LOGICAL_HEIGHT * newScale) / 2,
+      );
     };
 
     updateScale();
-    window.addEventListener('resize', updateScale);
-    return () => window.removeEventListener('resize', updateScale);
+    window.addEventListener("resize", updateScale);
+    return () => window.removeEventListener("resize", updateScale);
   }, []);
 
-  console.log(LOGICAL_WIDTH * scale, window.innerWidth, scale)
+  console.log(LOGICAL_WIDTH * scale, window.innerWidth, scale);
 
   return (
     <div
@@ -51,9 +66,10 @@ export const ResponsiveUI: FC<PropsWithChildren<{ zIndex?: number }>> = ({ child
           width: LOGICAL_WIDTH,
           height: LOGICAL_HEIGHT,
           transform: `scale(${scale})`,
-          transformOrigin: 'top left',
-          position: 'relative',
-          marginLeft: `${marginLeft}px`
+          transformOrigin: "top left",
+          position: "relative",
+          marginLeft: `${marginLeft}px`,
+          // marginTop: `${marginTop}px`,
         }}
       >
         {children}

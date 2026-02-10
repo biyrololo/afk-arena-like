@@ -14,7 +14,7 @@ import { useShallow } from "zustand/shallow";
 import { findStage } from "@/entities/chapter/lib/chapters";
 
 import background from "@/assets/backgrounds/gamestart.webp";
-import { calculateCharacterPower } from "@/shared/types/develop";
+import { calculateCharacterPower, calculateStatsWithEquipment } from "@/shared/types/develop";
 
 const PER_PAGE = 4 * 3;
 
@@ -52,13 +52,13 @@ export default function GameStart() {
     const stage = findStage(chapterNumber, stageNumber);
     if (!stage) return 0;
     return stage.enemies
-      .map((e) => calculateCharacterPower(e))
+      .map((e) => calculateStatsWithEquipment(e).power)
       .reduce((acc, power) => acc + power, 0);
   }, [chapterNumber, stageNumber]);
 
   const paginatedCharacters = useMemo(() => {
     return [...characters]
-      .sort((a, b) => calculateCharacterPower(b) - calculateCharacterPower(a))
+      .sort((a, b) => calculateStatsWithEquipment(b).power - calculateStatsWithEquipment(a).power)
       .slice(page * PER_PAGE, page * PER_PAGE + PER_PAGE);
   }, [characters, page, PER_PAGE]);
 
@@ -126,7 +126,7 @@ export default function GameStart() {
 
   const totalPower = useMemo(() => {
     return selectedCharacters.reduce((acc, character) => {
-      return acc + (character?.power || 0);
+      return acc + (character ? calculateStatsWithEquipment(character).power : 0);
     }, 0);
   }, [selectedCharacters]);
 

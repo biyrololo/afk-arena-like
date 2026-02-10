@@ -1,15 +1,13 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
 import usePlayerCharactersStore from "@/shared/store/PlayerCharactersStore";
 import { ResponsiveUI } from "@/shared/ui/ResponsiveUI/ResponsiveUI";
-import { getRarityColor } from "@/entities/character/lib/getRarityColor";
 import { Balances } from "@/widgets/Balances/Balances";
 import { HeroMiniCard } from "@/entities/character/ui/HeroMiniCard/HeroMiniCard";
 import { useMemo } from "react";
 import { Button } from "@/shared/ui/Button/Button";
 
 import bg from '@/assets/backgrounds/characters.webp';
-import { calculateCharacterPower } from "@/shared/types/develop";
-import { EventBus } from "@/utils/eventBus";
+import { calculateStatsWithEquipment } from "@/shared/types/develop";
 
 const PER_PAGE = 4 * 4;
 
@@ -22,7 +20,7 @@ export function MyCharacters() {
     const { characters } = usePlayerCharactersStore();
 
     const paginatedCharacters = useMemo(() => {
-        return [...characters].sort((a, b) => calculateCharacterPower(b) - calculateCharacterPower(a) ).slice(page * PER_PAGE, page * PER_PAGE + PER_PAGE);
+        return [...characters].sort((a, b) => calculateStatsWithEquipment(b).power - calculateStatsWithEquipment(a).power ).slice(page * PER_PAGE, page * PER_PAGE + PER_PAGE);
     }, [characters, page, PER_PAGE]);
 
     const isNextDisabled = useMemo(() => {
@@ -87,7 +85,7 @@ export function MyCharacters() {
                     <div className="w-[1000px] mx-auto mt-24 flex flex-col gap-12 items-center">
                         <section className="grid grid-cols-4 gap-4">
                             {
-                                paginatedCharacters.map((character, index) => {
+                                paginatedCharacters.map((character) => {
                                     return (
                                         <HeroMiniCard 
                                         character={character}

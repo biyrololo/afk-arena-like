@@ -140,6 +140,24 @@ export const EQUIPMENT_UPGRADE_COSTS: { balances: PlayerBalances }[] = [
   { balances: { gold: 4950, gems: 495, summons: 0 } }, // Level 99 → 100
 ];
 
+function updateStatsWithAscension(character: Character.Character) {
+  const { ascension } = character.progression;
+
+  character.baseStats.attack *= (1 + ascension * 0.2)
+  character.baseStats.defense *= (1 + ascension * 0.2)
+  character.baseStats.maxHp *= (1 + ascension * 0.2)
+  character.baseStats.attack = Math.floor(character.baseStats.attack)
+  character.baseStats.defense = Math.floor(character.baseStats.defense)
+  character.baseStats.maxHp = Math.floor(character.baseStats.maxHp)
+
+  character.advancedStats.critChance += ascension * 0.02;
+  character.advancedStats.critDamage += ascension * 0.05;
+
+  character.advancedStats.dodge += ascension * 0.02;
+  character.advancedStats.accuracy += ascension * 0.02;
+  character.advancedStats.energyRegen += ascension * 2;
+}
+
 const increaseWithFloor = (value: number, x: number) => Math.floor(value * x);
 
 export function calculateCharacterPower(
@@ -390,10 +408,14 @@ export const calculateEquipmentUpgradeStats = (
   Object.keys(copy.stats).forEach((statKey) => {
     const statValue = copy.stats[statKey as keyof typeof copy.stats];
     if (typeof statValue === "number") {
-      copy.stats[statKey as keyof typeof copy.stats] = increaseWithFloor(
-        statValue,
-        1.03,
-      );
+      if (copy.stats[statKey as keyof typeof copy.stats]! >= 1) {
+        copy.stats[statKey as keyof typeof copy.stats] = increaseWithFloor(
+          statValue,
+          1.1,
+        );
+      } else if (nextLevel % 2 === 0) {
+        copy.stats[statKey as keyof typeof copy.stats]! += 0.01;
+      }
     }
   });
 
@@ -416,6 +438,7 @@ export const calculateStatsWithEquipment = (
   character: Character.Character,
 ): Character.Character => {
   const copy = structuredClone(character);
+  updateStatsWithAscension(copy);
 
   const equipment = getCharacterEquipment(character.id);
 
