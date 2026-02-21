@@ -1,0 +1,96 @@
+.fire-card {
+  position: relative;
+  z-index: 2;
+}
+
+/* огненное кольцо */
+.fire-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 24px;
+  background:
+    conic-gradient(
+      from 0deg,
+      rgba(255, 60, 0, 0.9),
+      rgba(255, 140, 0, 1),
+      rgba(255, 0, 0, 0.9),
+      rgba(255, 200, 0, 1),
+      rgba(255, 60, 0, 0.9)
+    );
+  filter: blur(18px);
+  animation: fire-spin 3s linear infinite;
+  z-index: -2;
+}
+
+/* языки пламени / пульсация */
+.fire-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 28px;
+  background:
+    radial-gradient(
+      ellipse at 50% 120%,
+      rgba(255, 100, 0, 0.9),
+      rgba(255, 0, 0, 0.6),
+      transparent 70%
+    );
+  filter: blur(25px);
+  animation: fire-pulse 2.2s ease-in-out infinite;
+  z-index: -2;
+}
+
+/* дополнительный glow */
+.fire-card {
+  box-shadow:
+    0 0 25px rgba(255, 80, 0, 0.8),
+    0 0 60px rgba(255, 0, 0, 0.7),
+    0 0 120px rgba(255, 60, 0, 0.6);
+  animation: fire-flicker 1.5s infinite alternate;
+}
+
+/* 🔁 анимации */
+@keyframes fire-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fire-pulse {
+  0%, 100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+}
+
+@keyframes fire-flicker {
+  from {
+    box-shadow:
+      0 0 20px rgba(255, 60, 0, 0.7),
+      0 0 50px rgba(255, 0, 0, 0.6),
+      0 0 100px rgba(255, 80, 0, 0.5);
+  }
+  to {
+    box-shadow:
+      0 0 35px rgba(255, 120, 0, 1),
+      0 0 80px rgba(255, 60, 0, 0.9),
+      0 0 160px rgba(255, 200, 0, 0.7);
+  }
+}
+
+
+.epic-wrapper {
+    box-shadow: 0 0 30px 10px #9425d9;
+}
+
+.rare-wrapper {
+    box-shadow: 0 0 30px 4px #EDAD2DAA;
+}

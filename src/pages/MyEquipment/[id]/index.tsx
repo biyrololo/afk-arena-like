@@ -13,6 +13,7 @@ import { useShallow } from "zustand/shallow";
 import { Icon } from "@/shared/ui/Icon/Icon";
 import { assets } from "@/shared/assets";
 import { getRarityColor } from "@/entities/character/lib/getRarityColor";
+import { Avatars } from "@/shared/avatars";
 
 export const MyEquipmentItemPage: FC = () => {
     const { id } = useParams();
@@ -33,7 +34,7 @@ export const MyEquipmentItemPage: FC = () => {
     const canUpgrade = isEnoughResources(resources, balances);
 
     const char = characters.find(c => c.id === currentEquipment?.equippedCharacterId);
-    const avatar = char ? assets[`${char.key}Mini` as keyof typeof assets] : undefined;
+    const avatar = char ? Avatars[char.key as keyof typeof Avatars] : undefined;
 
     if(!currentEquipment) {
         navitate(-1);

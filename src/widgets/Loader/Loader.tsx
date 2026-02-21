@@ -19,7 +19,8 @@ export const Loader: FC = () => {
     };
 
     const onProgress = (progress: number) => {
-      console.log(`Loading progress:`, progress);
+      // progress = 0 to 1
+      // console.log(`Loading progress:`, progress);
       setProgress(progress * 100);
       // if(progress === 1) {
       //     onEnd();

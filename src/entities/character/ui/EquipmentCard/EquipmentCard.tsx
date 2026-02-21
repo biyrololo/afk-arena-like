@@ -1,7 +1,9 @@
 import type { Icons } from "@/shared/icons";
-import type { Character } from "@/shared/types/character";
+import { Character } from "@/shared/types/character";
 import { Icon } from "@/shared/ui/Icon/Icon";
 import { getRarityColor } from "../../lib/getRarityColor";
+
+import styles from "./EquipmentCard.module.css";
 
 export interface IEquipmentCardProps {
     equipment?: Character.Equipment;
@@ -25,6 +27,9 @@ export const EquipmentCard = ({ equipment, onClick, size = 120, iconSize = 80, w
         flex items-center justify-center
         border-stone-500
         ${onClick ? 'transition-colors' : ''}
+        ${equipment?.rarity === Character.Rarity.LEGENDARY ? styles["fire-card"] : ""}
+        ${equipment?.rarity === Character.Rarity.EPIC ? styles["epic-wrapper"] : ""}
+        ${equipment?.rarity === Character.Rarity.RARE ? styles["rare-wrapper"] : ""}
         `}
         style={{ 
             width: size, 

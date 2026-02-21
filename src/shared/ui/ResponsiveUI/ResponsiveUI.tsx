@@ -54,7 +54,7 @@ export const ResponsiveUI: FC<PropsWithChildren<{ zIndex?: number }>> = ({
     return () => window.removeEventListener("resize", updateScale);
   }, []);
 
-  console.log(LOGICAL_WIDTH * scale, window.innerWidth, scale);
+  // console.log(LOGICAL_WIDTH * scale, window.innerWidth, scale);
 
   return (
     <div

@@ -14,6 +14,15 @@ import warrior from "@/assets/characters/warrior.png";
 import spearwoman from "@/assets/characters/spearwoman.png";
 import viking from "@/assets/characters/viking.png";
 import firewarrior from "@/assets/characters/firewarrior.png";
+import demonSlime from "@/assets/characters/demonSlime.png";
+import elementalWind from "@/assets/characters/elementalWind.png";
+import groundMonk from "@/assets/characters/groundMonk.png";
+import waterPriestess from "@/assets/characters/waterPriestess.png";
+import blueSlime from "@/assets/characters/blueSlime.png";
+import greenSlime from "@/assets/characters/greenSlime.png";
+import purpleSlime from "@/assets/characters/purpleSlime.png";
+import fantasyWarrior from "@/assets/characters/fantasyWarrior.png";
+import kitsune from "@/assets/characters/kitsune.png";
 
 import magic_field_bg from "@/assets/backgrounds/magic_field.png";
 import castle_bg from "@/assets/backgrounds/castle.webp";
@@ -93,6 +102,42 @@ export default class GameScene extends Phaser.Scene {
     this.load.spritesheet("firewarrior", firewarrior, {
       frameWidth: 144,
       frameHeight: 80,
+    });
+    this.load.spritesheet("demonSlime", demonSlime, {
+      frameWidth: 288,
+      frameHeight: 160,
+    });
+    this.load.spritesheet("elementalWind", elementalWind, {
+      frameWidth: 288,
+      frameHeight: 128,
+    });
+    this.load.spritesheet("groundMonk", groundMonk, {
+      frameWidth: 288,
+      frameHeight: 128,
+    });
+    this.load.spritesheet("waterPriestess", waterPriestess, {
+      frameWidth: 288,
+      frameHeight: 128,
+    });
+    this.load.spritesheet("blueSlime", blueSlime, {
+      frameWidth: 80,
+      frameHeight: 80,
+    });
+    this.load.spritesheet("greenSlime", greenSlime, {
+      frameWidth: 80,
+      frameHeight: 80,
+    });
+    this.load.spritesheet("purpleSlime", purpleSlime, {
+      frameWidth: 80,
+      frameHeight: 80,
+    });
+    this.load.spritesheet("fantasyWarrior", fantasyWarrior, {
+      frameWidth: 162,
+      frameHeight: 162,
+    });
+    this.load.spritesheet("kitsune", kitsune, {
+      frameWidth: 128,
+      frameHeight: 128,
     });
 
     this.load.font("Birthstone", "assets/fonts/Birthstone-Regular.ttf");
@@ -233,11 +278,11 @@ export default class GameScene extends Phaser.Scene {
     });
 
     this.allies.forEach((ally) => {
-      this.bots.push(new BotController(this, ally, this.enemies, 2000));
+      this.bots.push(new BotController(this, ally, this.enemies, ally.getCooldownAttack()));
     });
 
     this.enemies.forEach((enemy) => {
-      this.bots.push(new BotController(this, enemy, this.allies, 2000));
+      this.bots.push(new BotController(this, enemy, this.allies, enemy.getCooldownAttack()));
     });
 
     // this.bots.push(

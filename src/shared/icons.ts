@@ -226,3 +226,5 @@ export const Icons = {
   iron_boots,
   iron_brown_boots,
 };
+
+export type IconKey = keyof typeof Icons;

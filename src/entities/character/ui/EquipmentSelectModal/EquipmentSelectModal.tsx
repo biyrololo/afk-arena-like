@@ -15,6 +15,7 @@ import { usePlayerStore } from "@/entities/player/model/player.store";
 import { useShallow } from "zustand/shallow";
 import { useNavigate } from "react-router-dom";
 import usePlayerCharactersStore from "@/shared/store/PlayerCharactersStore";
+import { AnimatePresence, motion } from "framer-motion";
 
 export interface IEquipmentSelectModalProps {
   currentEquipment?: Character.Equipment;
@@ -35,6 +36,7 @@ export const EquipmentSelectModal: FC<IEquipmentSelectModalProps> = ({
 }) => {
   const navigate = useNavigate();
   const [page, setPage] = useState(0);
+  const [direction, setDirection] = useState(1);
 
   useEffect(() => {
     setPage(0);
@@ -65,10 +67,12 @@ export const EquipmentSelectModal: FC<IEquipmentSelectModalProps> = ({
   const handleNextClick = () => {
     if (isNextDisabled) return;
     setPage((prevPage) => prevPage + 1);
+    setDirection(1);
   };
   const handlePrevClick = () => {
     if (isPrevDisabled) return;
     setPage((prevPage) => prevPage - 1);
+    setDirection(-1);
   };
 
   const handleUpgradeClick = () => {
@@ -118,15 +122,25 @@ export const EquipmentSelectModal: FC<IEquipmentSelectModalProps> = ({
               ТЕКУЩАЯ ЭКИПИРОВКА
             </h3>
             <div className="flex flex-col items-center gap-4 grow">
-              <EquipmentFullCard
-                withDescription
-                equipment={currentEquipment}
-                withStats
-                onClick={() =>
-                  navigate(`/my-equipment/${currentEquipment?.id}`)
-                }
-                isWithUpgradeStats={canUpgrade}
-              />
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentEquipment?.id}
+                  initial={{ opacity: 0, scale: 0.8, y: 20 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 1.1, filter: "brightness(2)" }}
+                  transition={{ duration: 0.2, ease: "easeOut" }}
+                >
+                  <EquipmentFullCard
+                    withDescription
+                    equipment={currentEquipment}
+                    withStats
+                    onClick={() =>
+                      navigate(`/my-equipment/${currentEquipment?.id}`)
+                    }
+                    isWithUpgradeStats={canUpgrade}
+                  />
+                </motion.div>
+              </AnimatePresence>
               <div className="flex gap-4 justify-between w-full mt-auto">
                 <Button
                   onClick={() => onSelect(undefined)}
@@ -167,7 +181,10 @@ export const EquipmentSelectModal: FC<IEquipmentSelectModalProps> = ({
             <h3 className="text-2xl text-amber-200 mb-4 text-center">
               ДОСТУПНАЯ ЭКИПИРОВКА
             </h3>
-            <div className="grid grid-rows-2 gap-6 grow mb-8">
+            <AnimatePresence>
+
+            </AnimatePresence>
+            <div className="grid grid-rows-2 gap-6 grow mb-8 relative overflow-hidden">
               {paginatedList.map((equipment) => (
                 <div
                   key={equipment.id}

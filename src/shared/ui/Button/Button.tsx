@@ -20,7 +20,7 @@ export const Button: FC<ButtonProps> = ({
     <button
       className={cn(
         `
-        bg-blue-500 cursor-pointer flex items-center gap-4 hover:bg-blue-700 text-white font-bold text-2xl py-4 px-8 rounded disabled:opacity-50
+        bg-blue-500 cursor-pointer flex items-center gap-4 hover:not-disabled:bg-blue-700 text-white font-bold text-2xl py-4 px-8 rounded disabled:opacity-50
         `,
         className,
       )}

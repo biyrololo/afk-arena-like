@@ -141,6 +141,8 @@ export default class Character extends Phaser.GameObjects.Container {
 
   private spriteOffsetX: number = 0;
 
+  private cooldownAttack: number = 2000;
+
   constructor(
     scene: Phaser.Scene,
     x: number,
@@ -834,5 +836,13 @@ export default class Character extends Phaser.GameObjects.Container {
     this.hpText = undefined!;
 
     super.destroy(fromScene);
+  }
+
+  public getCooldownAttack(): number {
+    return this.cooldownAttack;
+  }
+
+  public setCooldownAttack(cooldownAttack: number): void {
+    this.cooldownAttack = cooldownAttack;
   }
 }

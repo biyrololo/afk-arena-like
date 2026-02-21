@@ -124,10 +124,10 @@ export const usePlotStore = create<IPlotStore>()(
                         }
                     );
 
-                    console.log(
-                        completedScenes,
-                        availableScenes
-                    )
+                    // console.log(
+                    //     completedScenes,
+                    //     availableScenes
+                    // )
 
                     if(!availableScenes) return;
 

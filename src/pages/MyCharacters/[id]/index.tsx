@@ -158,12 +158,25 @@ export const MyCharacterPage: FC = () => {
                             py-1
                         `}
             >
-              <span
-                className="text-white text-2xl"
+              <div
+                className="text-white text-2xl flex items-center gap-4"
                 style={{ color: getRarityColor(totalStats.rarity) }}
               >
                 {getRarityName(totalStats.rarity)}
-              </span>
+                {
+                  current && (
+                    <div className="flex gap-1 items-center">
+                      {
+                        Array.from({ length: current.progression.ascension })
+                        .map((_, i) => (
+                          <Icon icon="star" key={i} size={30} />
+                        ))
+                      }
+                    </div>
+                  )
+
+                }
+              </div>
             </div>
             <div className="px-10 mt-4">
               <p

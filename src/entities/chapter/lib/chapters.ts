@@ -1,12 +1,21 @@
 import { type IChapter, type IStage, StageTypeEnum } from "./chapter.model";
 
 import {
+  BLUE_SLIME_CHARACTER,
+  PURPLE_SLIME_CHARACTER,
+  
   CRYSTAL_KING,
+  DEMON_SLIME,
+  ELEMENTAL_WIND_CHARACTER,
   FIRE_KING_CHARACTER,
   FIREWARRIOR_CHARACTER,
   FROST_GUARDIAN,
+  GREEN_SLIME_CHARACTER,
+  GROUND_MONK_CHARACTER,
   SPEARWOMAN_CHARACTER,
   WARRIOR_CHARACTER,
+  WATER_PRIESTESS_CHARACTER,
+  FANTASY_WARRIOR_CHARACTER,
 } from "@/entities/character/lib/allCharacters";
 import { createEquipment } from "@/entities/character/lib/allEquipment";
 import {
@@ -67,7 +76,16 @@ export const CHAPTERS: IChapter[] = [
         chapterNumber: 1,
         stageNumber: 1,
         background: "magic_field_bg",
-        enemies: [cloneCharacter(FIREWARRIOR_CHARACTER, 1)],
+        enemies: [
+          // cloneCharacter(FIREWARRIOR_CHARACTER, 1),
+          // cloneCharacter(DEMON_SLIME, 1),
+          // cloneCharacter(FANTASY_WARRIOR_CHARACTER, 1),
+          // cloneCharacter(WATER_PRIESTESS_CHARACTER, 1),
+          // cloneCharacter(GREEN_SLIME_CHARACTER, 1),
+          cloneCharacter(BLUE_SLIME_CHARACTER, 1),
+          // cloneCharacter(GREEN_SLIME_CHARACTER, 1),
+          // cloneCharacter(PURPLE_SLIME_CHARACTER, 1),
+        ],
         rewards: {
           balances: { gold: 100, gems: 10, summons: 1 },
           equipment: [
@@ -82,8 +100,9 @@ export const CHAPTERS: IChapter[] = [
         stageNumber: 2,
         background: "magic_field_bg",
         enemies: [
-          cloneCharacter(FIREWARRIOR_CHARACTER, 1),
-          cloneCharacter(CRYSTAL_KING, 2),
+          cloneCharacter(GREEN_SLIME_CHARACTER, 1),
+          cloneCharacter(BLUE_SLIME_CHARACTER, 1),
+          cloneCharacter(PURPLE_SLIME_CHARACTER, 1),
         ],
         rewards: {
           balances: { gold: 200, gems: 10, summons: 1 },
@@ -95,6 +114,7 @@ export const CHAPTERS: IChapter[] = [
         stageNumber: 3,
         background: "magic_field_bg",
         enemies: [
+          cloneCharacter(PURPLE_SLIME_CHARACTER, 1),
           cloneCharacter(FIREWARRIOR_CHARACTER, 2),
           cloneCharacter(WARRIOR_CHARACTER, 2),
         ],
@@ -122,9 +142,7 @@ export const CHAPTERS: IChapter[] = [
         stageNumber: 5,
         background: "magic_field_bg",
         enemies: [
-          cloneCharacter(WARRIOR_CHARACTER, 3),
-          cloneCharacter(SPEARWOMAN_CHARACTER, 3),
-          cloneCharacter(FIREWARRIOR_CHARACTER, 3),
+          cloneCharacter(DEMON_SLIME, 1)
         ],
         rewards: {
           balances: { gold: 500, gems: 20, summons: 1 },

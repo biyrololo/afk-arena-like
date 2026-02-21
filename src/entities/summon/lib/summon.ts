@@ -28,14 +28,14 @@ const ALL_DROP: DropItem[] = [
         item: c,
         weight: calculateCharacterPower(c)
     })),
-    // ...Object.values(AllEquipment.EQUIPMENT)
-    // .map(e => Object.values(e))
-    // .flat()
-    // .map(e => ({
-    //     type: DropType.EQUIPMENT,
-    //     item: e,
-    //     weight: calculateEquipmentPower(e) * 1.2
-    // }))
+    ...Object.values(AllEquipment.EQUIPMENT)
+    .map(e => Object.values(e))
+    .flat()
+    .map(e => ({
+        type: DropType.EQUIPMENT,
+        item: e,
+        weight: calculateEquipmentPower(e) * 1.2
+    }))
 ]
 
 const EQUIPMENT_DROP = Object.values(AllEquipment.EQUIPMENT)

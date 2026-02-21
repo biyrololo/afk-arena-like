@@ -1,4 +1,4 @@
-import { MemoryRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, MemoryRouter, Route, Routes } from "react-router-dom";
 
 import Game from "@/pages/Game/Game";
 import GameStart from "@/pages/GameStart/GameStart";
@@ -17,7 +17,7 @@ import { GameEndSurvivial } from "@/pages/GameEnd/GameEndSurvivial";
 
 export default function App() {
   return (
-    <MemoryRouter>
+    <BrowserRouter>
       <main className="relative">
         <Loader />
         <Routes>
@@ -48,6 +48,6 @@ export default function App() {
           </Route>
         </Routes>
       </main>
-    </MemoryRouter>
+    </BrowserRouter>
   );
 }

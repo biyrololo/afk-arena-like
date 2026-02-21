@@ -9,6 +9,7 @@ import { Button } from "@/shared/ui/Button/Button";
 import { EquipmentFullCard } from "@/entities/character/ui/EquipmentCard/EquipmentFullCard";
 import { assets } from "@/shared/assets";
 import { calculateEquipmentPower } from "@/shared/types/develop";
+import { Avatars } from "@/shared/avatars";
 
 const PER_PAGE = 3 * 3;
 
@@ -100,9 +101,7 @@ export const MyEquipmentPage: FC = () => {
                   equipment={eq}
                   withEquipedCharacter={
                     equippedCharacter
-                      ? assets[
-                          `${equippedCharacter.key}Mini` as keyof typeof assets
-                        ]
+                      ? Avatars[equippedCharacter.key as keyof typeof Avatars]
                       : undefined
                   }
                   onClick={() => navitate(`/my-equipment/${eq.id}`)}

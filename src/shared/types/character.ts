@@ -45,6 +45,7 @@ export namespace Character {
         lifesteal: number;    // %
         accuracy: number;     // %
         energyRegen: number;
+        cooldownAttack: number; // in ms, for instance, 1000 ms = 1 second
     }
 
     export interface CharacterProgression {

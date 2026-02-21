@@ -63,53 +63,54 @@ export const PlotModal: FC = () => {
     if(!statement) return null;
 
     return (
-        <div
-        className="absolute inset-0 bg-black/50 flex flex-col cursor-pointer justify-end"
-        style={{
-            pointerEvents: 'all',
-            backgroundImage: statement.backgroundImage ? `url(${statement.backgroundImage})` : '',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-        }}
-        onClick={handleClick}
-        >
-            {
-                statement.avatar && (
-                    <img 
-                    src={statement.avatar}
-                    alt={statement.author}
-                    className="size-50 object-cover object-center rounded-t-2xl border-2 border-stone-700 mt-auto mx-20"
-                    style={{
-                        alignSelf: statement.authorPosition === 'right' ? 'flex-end' : 'flex-start',
-                        transform: statement.authorPosition === 'right' ? 'rotateY(180deg)' : ''
-                    }}
-                    />
-                )
-            }
             <div
-            className={`
-                bg-stone-900 p-8 rounded-xl border-2 border-stone-700 mx-10 mb-10
-                flex flex-col gap-4
-                `}
+            className="absolute inset-0 bg-black/50 flex flex-col cursor-pointer justify-end"
+            style={{
+                pointerEvents: 'all',
+                backgroundImage: statement.backgroundImage ? `url(${statement.backgroundImage})` : '',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+            }}
+            onClick={handleClick}
             >
-                <span
-                className="font-bold text-5xl"
-                style={{
-                    color: statement.color,
-                    alignSelf: statement.authorPosition === 'right' ? 'flex-end' : 'flex-start'
-                }}
+                {
+                    statement.avatar && (
+                        <img 
+                        key={statement.id}
+                        src={statement.avatar}
+                        alt={statement.author}
+                        className="size-50 object-cover object-center rounded-t-2xl border-2 border-stone-700 mt-auto mx-20"
+                        style={{
+                            alignSelf: statement.authorPosition === 'right' ? 'flex-end' : 'flex-start',
+                            transform: statement.authorPosition === 'right' ? 'rotateY(180deg)' : ''
+                        }}
+                        />
+                    )
+                }
+                <div
+                className={`
+                    bg-stone-900 p-8 rounded-xl border-2 border-stone-700 mx-10 mb-10
+                    flex flex-col gap-4
+                    `}
                 >
-                    {statement.author}
-                </span>
-                <p className="text-white text-2xl">
-                    {
-                        typeof statement.text === 'string' ?
-                        statement.text.substring(0, writtenIndex) :
-                        statement.text
-                    }
-                </p>
+                    <span
+                    className="font-bold text-5xl"
+                    style={{
+                        color: statement.color,
+                        alignSelf: statement.authorPosition === 'right' ? 'flex-end' : 'flex-start'
+                    }}
+                    >
+                        {statement.author}
+                    </span>
+                    <p className="text-white text-2xl">
+                        {
+                            typeof statement.text === 'string' ?
+                            statement.text.substring(0, writtenIndex) :
+                            statement.text
+                        }
+                    </p>
+                </div>
             </div>
-        </div>
     )
 
 } 

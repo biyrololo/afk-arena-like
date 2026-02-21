@@ -16,6 +16,8 @@ interface PlayerStore {
     setChapterNumber: (chapterNumber: number) => void;
     setStageNumber: (stageNumber: number) => void;
     setAssetsLoaded: (assetsLoaded: boolean) => void;
+    spend: (key: keyof PlayerBalances, amount: number) => void;
+    addBalance: (key: keyof PlayerBalances, amount: number) => void;
 }
 
 export const usePlayerStore = create<PlayerStore>()(
@@ -35,7 +37,14 @@ export const usePlayerStore = create<PlayerStore>()(
                 setAssetsLoaded: (assetsLoaded: boolean) => set(() => ({ assetsLoaded })),
                 setChapterNumber: (chapterNumber: number) => set(() => ({ chapterNumber })),
                 setStageNumber: (stageNumber: number) => set(() => ({ stageNumber })),
-                setBalances: (balances: PlayerBalances) => set(() => ({ balances }))
+                setBalances: (balances: PlayerBalances) => set(() => ({ balances })),
+                spend: (key: keyof PlayerBalances, amount: number) => set((state) => {
+                    if(state.balances[key] < amount) {
+                        throw new Error(`Not enough ${key}: ${state.balances[key]} < ${amount}`);
+                    }
+                    return { balances: { ...state.balances, [key]: state.balances[key] - amount } }
+                }),
+                addBalance: (key: keyof PlayerBalances, amount: number) => set((state) => ({ balances: { ...state.balances, [key]: state.balances[key] + amount } })),
             })
         ),
         {

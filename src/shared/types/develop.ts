@@ -168,7 +168,7 @@ export function calculateCharacterPower(
   // 1. Base stats score
   let baseScore =
     baseStats.maxHp * 0.2 +
-    baseStats.attack * 1.5 +
+    baseStats.attack * (1000 / advancedStats.cooldownAttack) +
     baseStats.defense * 1.2 +
     baseStats.speed * 0.2;
 

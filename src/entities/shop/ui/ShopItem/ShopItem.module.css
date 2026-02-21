@@ -1,0 +1,9 @@
+.shop-item {
+    border-color: var(--border-color);
+    background-color: var(--background-color);
+}
+
+.shop-item:hover {
+    border-color: var(--border-color-hover);
+    background-color: var(--background-color-hover);   
+}

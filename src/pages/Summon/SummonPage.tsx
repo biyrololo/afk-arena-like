@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import { Balances } from "@/widgets/Balances/Balances";
 import { AllBanners } from "@/entities/summon/lib/summon.store";
 import { SummonBanner } from "./ui/Banner/Banner";
-import { Character } from "@/shared/types/character";
 import { SummonResult } from "./ui/SummonResult/SummonResult";
 import { summon, type DropItem } from "@/entities/summon/lib/summon";
 
