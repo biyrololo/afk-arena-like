@@ -27,6 +27,13 @@ import kitsune from "@/assets/characters/kitsune.png";
 import magic_field_bg from "@/assets/backgrounds/magic_field.png";
 import castle_bg from "@/assets/backgrounds/castle.webp";
 
+import flamie_bg from "@/assets/backgrounds/flamie_bg.webp";
+import ice_bg from "@/assets/backgrounds/ice_bg.webp";
+import abyss_bg from "@/assets/backgrounds/abyss_bg.webp";
+import sand_bg from "@/assets/backgrounds/sand_bg.webp";
+import crystal_bg from "@/assets/backgrounds/crystal_bg.webp";
+import grass_bg from "@/assets/backgrounds/grass_bg.webp";
+
 export default class GameScene extends Phaser.Scene {
   private background!: Phaser.GameObjects.Image;
 
@@ -141,8 +148,16 @@ export default class GameScene extends Phaser.Scene {
     });
 
     this.load.font("Birthstone", "assets/fonts/Birthstone-Regular.ttf");
+
     this.load.image("magic_field_bg", magic_field_bg);
     this.load.image("castle_bg", castle_bg);
+
+    this.load.image("grass_bg", grass_bg);
+    this.load.image("flamie_bg", flamie_bg);
+    this.load.image("ice_bg", ice_bg);
+    this.load.image("abyss_bg", abyss_bg);
+    this.load.image("sand_bg", sand_bg);
+    this.load.image("crystal_bg", crystal_bg);
 
     this.load.on("progress", (value: number) => {
       EventBus.emit("load:progress", value);
@@ -241,6 +256,14 @@ export default class GameScene extends Phaser.Scene {
   private handleStart(stage: IStage) {
     this.stage = stage;
     this.background.setTexture(stage.background);
+    // масштаб по высоте
+    // let scale = this.scale.width / this.background.width;
+    // if(this.background.height * scale < this.scale.height) {
+    //   scale = this.scale.height / this.background.height;
+    // }
+    const scale = this.scale.height / this.background.height;
+    this.background.setScale(scale);
+
     console.log("handleStart");
     console.log("this.allies", this.allies);
 

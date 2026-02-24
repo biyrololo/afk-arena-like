@@ -1214,10 +1214,83 @@ export function generateFantasyWarrior(scene: GameScene, team: 'ally' | 'enemy',
     return entity;
 }
 
+export function generateKitsune(scene: GameScene, team: 'ally' | 'enemy', props: CharacterProps): Character {
+    const entity = new Character(scene, props.x || 1000, props.y || 200, props.character.baseStats.speed, 
+        props.textureKey || 'kitsune', 
+        props.character.baseStats,
+        props.character.advancedStats,
+        props.frameWidth || 128, props.frameHeight || 128, props.displayWidth ?? 64*(props.scale || 5), props.displayHeight ?? 64*(props.scale || 5), props.uiOffsetY || -70);
+
+    entity.setMaxHP(props.character.baseStats.maxHp);
+    entity.setCooldownAttack(props.character.advancedStats.cooldownAttack);
+
+    // 10 кадров в ряду
+    entity.createAnimation('idle', 0, 7, 6, -1);
+    entity.createAnimation('walk', 10, 10 + 7, 6, -1);
+    entity.createAnimation('attack1', 10 * 2, 10 * 2 + 9, 10, 0);
+    entity.createAnimation('special', 10 * 3, 10 * 3 + 9, 10, 0);
+
+    entity.setAttacksConfig(1, true);
+
+    const hitBoxScale = (props.scale || 5) / 5;
+
+    entity.setHitbox(100 * hitBoxScale, 200 * hitBoxScale, 0, 64);
+
+    entity.setAttackHitFrames('attack1', [8]);
+    entity.setAttackHitFrames('special', [7]);
+
+    const baseDamage = props.character.baseStats.attack;
+
+    entity.onAttackFrame = (attackName: string, frameIndex: number): void => {
+        const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
+        switch(attackName) {
+            case 'attack1': {
+                const dmg = baseDamage;
+                applyAttackDamage(scene, entity, enemies, 100, 60, 200, 200, dmg, CharacterModel.DamageType.MAGIC);
+                break;
+            }
+            case 'special':
+                applyAttackDamage(scene, entity, enemies, 100, 60, 200, 200, baseDamage * 2, CharacterModel.DamageType.MAGIC);
+        }
+    }
+
+    entity.setAttacksDistances({
+        attack1: {
+            x: 150,
+            minX: 10,
+            y: 200
+        },
+        special: {
+            x: 150,
+            minX: 10,
+            y: 200
+        }
+    });
+
+    // entity.setDebugMode(true);
+
+    if(team === 'ally') {
+        scene.addAlly(entity);
+        entity.onEnergyChange = (energy: number) => {
+            EventBus.emit('allyEnergyChange', {
+                index: scene.getAllies().indexOf(entity),
+                energy
+            });
+        }
+    } else {
+        scene.addEnemy(entity);
+        entity.setFlipX(true);
+    }
+
+    entity.playAnimation('idle', 'idle', true);
+
+    return entity;
+}
+
 type AviableCharacter = 'firewarrior' | 'viking' | 'fireKing' | 'frostGuardian' | 'crystalKing' | 'warrior'
  | 'spearwoman' | 'demonSlime' | 'elementalWind'
  | 'groundMonk' | 'waterPriestess' | 'blueSlime' | 'greenSlime' | 'purpleSlime' 
- | 'fantasyWarrior';
+ | 'fantasyWarrior' | 'kitsune';
 
 export default function generateCharacter(scene: GameScene, team: 'ally' | 'enemy', character: AviableCharacter, props: CharacterProps): Character {
     switch(character) {
@@ -1251,6 +1324,8 @@ export default function generateCharacter(scene: GameScene, team: 'ally' | 'enem
             return generatePurpleSlime(scene, team, props);
         case 'fantasyWarrior':
             return generateFantasyWarrior(scene, team, props);
+        case 'kitsune':
+            return generateKitsune(scene, team, props);
         default:
             const _: never = character;
             throw new Error('Unknown character: ' + character);

@@ -510,6 +510,40 @@ export const FANTASY_WARRIOR_CHARACTER: Character.Character = {
   skills: [],
 };
 
+export const KITSUNE_CHARACTER: Character.Character = {
+  id: "9",
+  key: "kitsune",
+  name: "Китайская сорока",
+  rarity: Character.Rarity.EPIC,
+  role: Character.Role.DPS,
+  faction: Character.Faction.NATURE,
+  damageType: Character.DamageType.PHYSICAL,
+  power: 100,
+
+  baseStats: {
+    maxHp: 500,
+    attack: 300,
+    speed: 250,
+    defense: 50,
+  },
+  progression: {
+    level: 1,
+    maxLevel: 999,
+    stars: 0,
+    ascension: 0,
+  },
+  advancedStats: {
+    critChance: 0.5,
+    critDamage: 0.5,
+    dodge: 0.1,
+    lifesteal: 0.5,
+    accuracy: 0.1,
+    energyRegen: 35,
+    cooldownAttack: 3000
+  },
+  skills: [],
+};
+
 export const ALL_CHARACTERS: Character.Character[] = [
   FIRE_KING_CHARACTER,
   CRYSTAL_KING,

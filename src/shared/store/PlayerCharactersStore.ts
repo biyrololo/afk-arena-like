@@ -1,10 +1,9 @@
-import { v4 } from "uuid";
 import { Character, cloneCharacter } from "../types/character";
 import { calculateCharacterPower } from "../types/develop";
 import type { PlayerCharacter } from "../types/PlayerCharacter";
 import { create } from "zustand";
 import { createEquipment } from "@/entities/character/lib/allEquipment";
-import { BLUE_SLIME_CHARACTER, GREEN_SLIME_CHARACTER, PURPLE_SLIME_CHARACTER, CRYSTAL_KING, DEMON_SLIME, ELEMENTAL_WIND_CHARACTER, FIRE_KING_CHARACTER, FIREWARRIOR_CHARACTER, FROST_GUARDIAN, GROUND_MONK_CHARACTER, SPEARWOMAN_CHARACTER, VIKING_CHARACTER, WARRIOR_CHARACTER, WATER_PRIESTESS_CHARACTER, FANTASY_WARRIOR_CHARACTER } from "@/entities/character/lib/allCharacters";
+import { KITSUNE_CHARACTER, BLUE_SLIME_CHARACTER, GREEN_SLIME_CHARACTER, PURPLE_SLIME_CHARACTER, CRYSTAL_KING, DEMON_SLIME, ELEMENTAL_WIND_CHARACTER, FIRE_KING_CHARACTER, FIREWARRIOR_CHARACTER, FROST_GUARDIAN, GROUND_MONK_CHARACTER, SPEARWOMAN_CHARACTER, VIKING_CHARACTER, WARRIOR_CHARACTER, WATER_PRIESTESS_CHARACTER, FANTASY_WARRIOR_CHARACTER } from "@/entities/character/lib/allCharacters";
 import { Accessories, AllEquipment, Weapons } from "@/entities/character/lib/equipmentList";
 
 interface PlayerCharactersStore {
@@ -31,6 +30,7 @@ export const mockCharacters: Character.Character[] = [
     cloneCharacter(GREEN_SLIME_CHARACTER),
     cloneCharacter(PURPLE_SLIME_CHARACTER),
     cloneCharacter(FANTASY_WARRIOR_CHARACTER),
+    cloneCharacter(KITSUNE_CHARACTER),
 ];
 
 const usePlayerCharactersStore = create<PlayerCharactersStore>((set) => ({

@@ -418,7 +418,7 @@ export default class Character extends Phaser.GameObjects.Container {
    */
   private createHPBar(): void {
     const barWidth: number = 100;
-    const barHeight: number = 20;
+    const barHeight: number = 10;
     const offsetY: number = this.uiOffsetY;
 
     // Фон полоски HP
@@ -470,7 +470,7 @@ export default class Character extends Phaser.GameObjects.Container {
     } else {
       this.hpBar.fillStyle(0xff0000, 1); // Красный
     }
-    this.hpBar.fillRect(-barWidth / 2, offsetY, barWidth * hpPercent, 20);
+    this.hpBar.fillRect(-barWidth / 2, offsetY, barWidth * hpPercent, 10);
 
     // Обновляем текст
     this.hpText.setText(

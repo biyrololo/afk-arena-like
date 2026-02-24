@@ -16,6 +16,7 @@ import {
   WARRIOR_CHARACTER,
   WATER_PRIESTESS_CHARACTER,
   FANTASY_WARRIOR_CHARACTER,
+  KITSUNE_CHARACTER,
 } from "@/entities/character/lib/allCharacters";
 import { createEquipment } from "@/entities/character/lib/allEquipment";
 import {
@@ -75,14 +76,15 @@ export const CHAPTERS: IChapter[] = [
       {
         chapterNumber: 1,
         stageNumber: 1,
-        background: "magic_field_bg",
+        background: "grass_bg",
         enemies: [
           // cloneCharacter(FIREWARRIOR_CHARACTER, 1),
           // cloneCharacter(DEMON_SLIME, 1),
           // cloneCharacter(FANTASY_WARRIOR_CHARACTER, 1),
+          // cloneCharacter(KITSUNE_CHARACTER, 1),
           // cloneCharacter(WATER_PRIESTESS_CHARACTER, 1),
-          // cloneCharacter(GREEN_SLIME_CHARACTER, 1),
-          cloneCharacter(BLUE_SLIME_CHARACTER, 1),
+          cloneCharacter(GREEN_SLIME_CHARACTER, 1),
+          // cloneCharacter(BLUE_SLIME_CHARACTER, 1),
           // cloneCharacter(GREEN_SLIME_CHARACTER, 1),
           // cloneCharacter(PURPLE_SLIME_CHARACTER, 1),
         ],
@@ -98,7 +100,7 @@ export const CHAPTERS: IChapter[] = [
       {
         chapterNumber: 1,
         stageNumber: 2,
-        background: "magic_field_bg",
+        background: "flamie_bg",
         enemies: [
           cloneCharacter(GREEN_SLIME_CHARACTER, 1),
           cloneCharacter(BLUE_SLIME_CHARACTER, 1),
@@ -112,7 +114,7 @@ export const CHAPTERS: IChapter[] = [
       {
         chapterNumber: 1,
         stageNumber: 3,
-        background: "magic_field_bg",
+        background: "ice_bg",
         enemies: [
           cloneCharacter(PURPLE_SLIME_CHARACTER, 1),
           cloneCharacter(FIREWARRIOR_CHARACTER, 2),
@@ -126,7 +128,7 @@ export const CHAPTERS: IChapter[] = [
       {
         chapterNumber: 1,
         stageNumber: 4,
-        background: "magic_field_bg",
+        background: "abyss_bg",
         enemies: [
           cloneCharacter(FIREWARRIOR_CHARACTER, 2),
           cloneCharacter(SPEARWOMAN_CHARACTER, 3),
@@ -140,7 +142,7 @@ export const CHAPTERS: IChapter[] = [
       {
         chapterNumber: 1,
         stageNumber: 5,
-        background: "magic_field_bg",
+        background: "sand_bg",
         enemies: [
           cloneCharacter(DEMON_SLIME, 1)
         ],
@@ -152,7 +154,7 @@ export const CHAPTERS: IChapter[] = [
       {
         chapterNumber: 1,
         stageNumber: 6,
-        background: "magic_field_bg",
+        background: "crystal_bg",
         enemies: [
           cloneCharacter(FIREWARRIOR_CHARACTER, 4),
           cloneCharacter(WARRIOR_CHARACTER, 3),
