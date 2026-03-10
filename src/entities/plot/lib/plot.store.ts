@@ -5,68 +5,19 @@ import { devtools, subscribeWithSelector } from "zustand/middleware";
 import { usePlayerStore } from "@/entities/player/model/player.store";
 import { Avatars } from "@/shared/avatars";
 
-const greeting: IPlotScene = {
-    id: "greeting",
-    statements: [
-        {
-            id: "greeting-1",
-            author: "NPC",
-            color: "green",
-            text: "Привет! Игра хайп!",
-            avatar: Avatars.crystalKing,
-        },
-        {
-            id: "greeting-2",
-            author: "NPC 2",
-            color: "red",
-            text: "Чтобы начать играть, нажми на 'В бой'!",
-            avatar: Avatars.fireKing,
-            authorPosition: "right",
-        },
-        {
-            id: "greeting-3",
-            author: "NPC 3",
-            color: "blue",
-            text: "Так же можно играть в режиме выживания, чтобы фармить ресурсы для прокачки",
-            avatar: Avatars.frostGuardian,
-        },
-        {
-            id: "greeting-4",
-            author: "NPC 4",
-            color: "purple",
-            text: "В меню призыва можно призвать новых крутых героев",
-            avatar: Avatars.spearwoman,
-        },
-    ],
-};
-
-const afterFight: IPlotScene = {
-    id: "after-fight",
-    statements: [
-        {
-            id: "after-fight-1",
-            author: "NPC",
-            color: "green",
-            text: "Супер. Вы выиграли первую битву",
-            isAvailable: () => {
-                const chapterNumber = usePlayerStore.getState().chapterNumber;
-                const stageNumber = usePlayerStore.getState().stageNumber;
-
-                return chapterNumber === 1 && stageNumber === 2;
-            }
-        },
-    ],
-};
+import * as CHARACTERS from '@/entities/character/lib/allCharacters'
+import { CHAPTER_1_SCENES } from "./scenes/chapter-1-scenes";
+import { CHAPTER_2_SCENES } from "./scenes/chapter-2-scenes";
 
 const PLOT: IPlot = {
     scenes: [
-        // greeting,
-        // afterFight,
+        ...CHAPTER_1_SCENES,
+        ...CHAPTER_2_SCENES
     ],
 };
 
 const isAvailableStatement = (statement: IStatement) => {
-    if(statement.isAvailable) return statement.isAvailable();
+    if (statement.isAvailable) return statement.isAvailable();
     return true;
 };
 
@@ -74,7 +25,7 @@ const findScene = (id: string) => PLOT.scenes.find((scene) => scene.id === id);
 
 export const findStatement = (sceneId: string, statementId: string) => {
     const scene = findScene(sceneId);
-    if(!scene) return undefined;
+    if (!scene) return undefined;
     return scene.statements.find((statement) => statement.id === statementId);
 };
 
@@ -94,7 +45,7 @@ export const usePlotStore = create<IPlotStore>()(
                 nextStatement: () => {
                     const sceneId = get().currentSceneId;
                     const scene = sceneId && findScene(sceneId);
-                    if(!scene) {
+                    if (!scene) {
                         get().reset();
                         return;
                     }
@@ -103,10 +54,11 @@ export const usePlotStore = create<IPlotStore>()(
                     );
 
                     if (index === -1 || index === scene.statements.length - 1) {
+                        scene.onComplete?.();
                         get().reset()
                         return;
                     }
-                    if(isAvailableStatement(scene.statements[index + 1])) {
+                    if (isAvailableStatement(scene.statements[index + 1])) {
                         set(() => ({
                             currentStatementId: scene.statements[index + 1].id,
                         }));
@@ -115,11 +67,11 @@ export const usePlotStore = create<IPlotStore>()(
                     }
                 },
                 startScene: () => {
-                    if(get().currentSceneId) return;
+                    if (get().currentSceneId) return;
                     const completedScenes = get().completedScenes;
                     const availableScenes = PLOT.scenes.find(
                         (scene) => {
-                            if(completedScenes.includes(scene.id)) return false;
+                            if (completedScenes.includes(scene.id)) return false;
                             return scene.statements[0] && isAvailableStatement(scene.statements[0]);
                         }
                     );
@@ -129,7 +81,7 @@ export const usePlotStore = create<IPlotStore>()(
                     //     availableScenes
                     // )
 
-                    if(!availableScenes) return;
+                    if (!availableScenes) return;
 
                     set(() => ({
                         currentSceneId: availableScenes.id,

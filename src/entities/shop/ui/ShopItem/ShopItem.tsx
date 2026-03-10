@@ -1,5 +1,5 @@
-import type { CSSProperties, FC } from "react";
-import type { IShopItem } from "../../model/shop.model";
+import { useState, type CSSProperties, type FC } from "react";
+import { ShopPriceType, type IShopItem } from "../../model/shop.model";
 import { Icon } from "@/shared/ui/Icon/Icon";
 import { Button } from "@/shared/ui/Button/Button";
 import { getRarityColor } from "@/entities/character/lib/getRarityColor";
@@ -19,9 +19,16 @@ export const ShopItem: FC<Props> = ({
     buy,
 }) => {
     const controls = useAnimation();
+    const [bought, setBought] = useState(false);
+
+    const isAlreadyBought = item.alreadyBought?.() || false;
 
     const handleBuy = async () => {
         buy();
+        setBought(true);
+        setTimeout(() => {
+            setBought(false);
+        }, 1000);
         await controls.start({
             y: [0, -20, 0],
             transition: { duration: 0.4 }
@@ -51,7 +58,11 @@ export const ShopItem: FC<Props> = ({
         >
             <motion.div 
             animate={controls}
-            className="my-4 w-full grow flex items-center justify-center">
+            className={
+                `my-4 w-full grow flex items-center justify-center
+                ${isAlreadyBought ? 'opacity-50' : ''}
+                `
+            }>
                 {item.item}
             </motion.div>
             <div className="flex justify-between items-center mt-4 pt-4 border-t-2"
@@ -59,30 +70,72 @@ export const ShopItem: FC<Props> = ({
                 borderColor: getRarityColor(item.rarity),
             }}
             >
-                <div className="flex gap-3">
-                    <div
-                    className="flex items-center gap-1"
-                    >
-                        <Icon icon={item.priceType} size={64} />
-                        <div className="text-white text-3xl font-bold">
-                            {item.price}
+                {
+                    item.priceType === ShopPriceType.Ad ? (
+                        <Button
+                            onClick={() => {
+                                if(!isAlreadyBought)
+                                    handleBuy()
+                            }}
+                            disabled={!affordable}
+                            className={`
+                                px-4 py-2 text-3xl font-bold
+                                w-full
+                                text-center
+                                justify-center
+                                ${
+                                affordable ?
+                                bought || isAlreadyBought ? "bg-gradient-to-r from-orange-500 to-orange-700 hover:from-orange-600 hover:to-orange-800" :
+                                    "bg-gradient-to-r from-amber-500 to-amber-700 hover:from-amber-600 hover:to-amber-800"
+                                    : "bg-gray-600 cursor-not-allowed"
+                                }
+                                ${
+                                    isAlreadyBought ? 'opacity-50' : ''
+                                }
+                            `}
+                            >
+                            {
+                                bought || isAlreadyBought ? "Не доступно" : "Реклама"
+                            }
+                        </Button>
+                    ) : (
+                        <>
+                        <div className="flex gap-3">
+                            <div
+                            className="flex items-center gap-1"
+                            >
+                                <Icon icon={item.priceType} size={64} />
+                                <div className="text-white text-3xl font-bold">
+                                    {item.price}
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <Button
-                    onClick={() => handleBuy()}
-                    disabled={!affordable}
-                    className={`
-                        px-4 py-2 text-xl font-bold
-                        ${
-                        affordable
-                            ? "bg-gradient-to-r from-amber-500 to-amber-700 hover:from-amber-600 hover:to-amber-800"
-                            : "bg-gray-600 cursor-not-allowed"
-                        }
-                    `}
-                    >
-                    Купить
-                </Button>
+                        <Button
+                            onClick={() => {
+                                if(!isAlreadyBought)
+                                    handleBuy()
+                            }}
+                            disabled={!affordable}
+                            className={`
+                                px-4 py-2 text-xl font-bold
+                                ${
+                                affordable ?
+                                bought || isAlreadyBought ? "bg-gradient-to-r from-orange-500 to-orange-700 hover:from-orange-600 hover:to-orange-800" :
+                                    "bg-gradient-to-r from-amber-500 to-amber-700 hover:from-amber-600 hover:to-amber-800"
+                                    : "bg-gray-600 cursor-not-allowed"
+                                }
+                                ${
+                                    isAlreadyBought ? 'opacity-50' : ''
+                                }
+                            `}
+                            >
+                            {
+                                bought || isAlreadyBought ? "Куплено" : "Купить"
+                            }
+                        </Button>
+                        </>
+                    )
+                }
             </div>
             
         </div>

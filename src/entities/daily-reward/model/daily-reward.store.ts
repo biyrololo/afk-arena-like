@@ -4,20 +4,65 @@ import { usePlayerStore } from "@/entities/player/model/player.store";
 import { create } from "zustand";
 import { devtools, subscribeWithSelector } from "zustand/middleware";
 
+
 export const getDailyRewards = (): IDailyReward[] => { 
-    return Array.from({
-        length: 21
-    }).map((_, index) => {
-        return {
-            icon: 'gems',
-            rarity: Character.Rarity.EPIC,
-            count: 100 + index,
-            day: index + 1,
-            onClaim: () => {
-                usePlayerStore.getState().addBalance('gems', 100 + index);
-            }
+    const cycleIndex = Math.floor(useDailyRewardsStore.getState().currentDay / 21);
+    
+    // Определяем "Настроение" цикла на 21 день
+    // 0: Алмазный шторм (больше гемов)
+    // 1: Призыв титанов (больше свитков)
+    // 2: Золотая лихорадка (огромные куши золота)
+    const currentCycleType = cycleIndex % 3;
+
+    return Array.from({ length: 21 }).map((_, index) => {
+        const day = index + 1;
+        let type: 'gems' | 'gold' | 'summons' = 'gems';
+        let count = 0;
+        let rarity = Character.Rarity.RARE;
+
+        // --- ЛОГИКА ГЛАВНЫХ ПРИЗОВ (Дни 7, 14, 21) ---
+        if (day === 21) {
+            type = 'summons';
+            count = 10; // Всегда десятка в конце
+            rarity = Character.Rarity.LEGENDARY;
+        } 
+        else if (day % 7 === 0) {
+            type = 'summons';
+            // В цикле "Призыв титанов" (1) даем больше свитков на промежуточных этапах
+            count = currentCycleType === 1 ? 5 : 3; 
+            rarity = Character.Rarity.EPIC;
         }
-    })
+        // --- ЛОГИКА БУДНЕЙ ---
+        else if (day % 2 === 0) {
+            // Четные дни: Гемы
+            type = 'gems';
+            const baseGems = 160;
+            // В алмазном цикле (0) насыпаем +50% гемов
+            const bonus = currentCycleType === 0 ? 80 : 0;
+            count = baseGems + bonus + (Math.floor(index / 2) * 10);
+            rarity = Character.Rarity.EPIC;
+        } 
+        else {
+            // Нечетные дни: Золото
+            type = 'gold';
+            const baseGold = 1000;
+            // В золотом цикле (2) удваиваем награду
+            const multiplier = currentCycleType === 2 ? 2.5 : 1;
+            count = Math.floor((baseGold + (index * 5000)) * multiplier);
+            rarity = Character.Rarity.RARE;
+        }
+
+        return {
+            icon: type,
+            rarity: rarity,
+            count: count,
+            day: day,
+            onClaim: () => {
+                const state = usePlayerStore.getState();
+                state.addBalance(type, count);
+            }
+        };
+    });
 }
 
 interface IDailyRewardsStore {
@@ -33,7 +78,7 @@ interface IDailyRewardsStore {
 export const useDailyRewardsStore = create<IDailyRewardsStore>()(
     devtools(
         subscribeWithSelector((set, get) => ({   
-            currentDay: 2,
+            currentDay: 1,
             lastClaimedAt: new Date(Date.now() - 86400000).toISOString(),
             isOpenedModal: false,
             setIsOpenedModal: (isOpened: boolean) => {

@@ -1,4 +1,5 @@
 import { v4 } from "uuid";
+import type { PlayerCharacterState, PlayerCharacterWithState } from "./PlayerCharacter";
 
 export namespace Character {
     export enum Rarity {
@@ -11,18 +12,18 @@ export namespace Character {
 
     export enum Role {
         TANK = 'tank',
-        DPS = 'dps',
-        SUPPORT = 'support',
+        WARRIOR = 'warrior',
+        ASSASSIN = 'assassin',
         // HEALER = 'healer'
     }
 
     export enum Faction {
-        LIGHT = 'light',
-        DARK = 'dark',
-        NATURE = 'nature',
-        FIRE = 'fire',
-        ICE = 'ice',
-        UNDEAD = 'undead'
+        FIRE = 'fire', // Орден Феникса
+        ICE = 'ice', // Ледяные Стражи
+        CRYSTAL = 'crystal', // Мистики Кристалла
+        NATURE = 'nature', // Вечное Равновесие
+        CORRUPTION = 'corruption', // Искажённые
+        ORDEN = 'orden'
     }
 
     export enum DamageType {
@@ -93,17 +94,18 @@ export namespace Character {
     }
 
     export type CharacterEquipment = Partial<Record<EquipmentSlot, Equipment>>;
-    
+
     export interface Character {
         id: string;
         key: string;
         name: string;
+        description?: string;
 
         rarity: Rarity;
         role: Role;
         faction: Faction;
         damageType: DamageType;
-        
+
         power: number;
 
         baseStats: BaseStats;
@@ -119,30 +121,35 @@ export namespace Character {
 const levelUp = (character: Character.Character) => {
     character.progression.level++;
 
-    character.baseStats.attack = Math.floor(character.baseStats.attack * 1.05);
-    character.baseStats.defense = Math.floor(character.baseStats.defense * 1.05);
-    character.baseStats.maxHp = Math.floor(character.baseStats.maxHp * 1.05);
+    character.baseStats.attack = Math.floor(character.baseStats.attack * 1.03);
+    character.baseStats.defense = Math.floor(character.baseStats.defense * 1.03);
+    character.baseStats.maxHp = Math.floor(character.baseStats.maxHp * 1.03);
 
-    if(character.progression.level % 5 === 0) {
-        if(character.advancedStats?.dodge) {
-            character.advancedStats.dodge+=0.05;
+    if (character.progression.level % 5 === 0) {
+        if (character.advancedStats.accuracy) {
+            character.advancedStats.accuracy += 0.02;
         }
-        if(character.advancedStats?.critChance) {
-            character.advancedStats.critChance+=0.02;
+        if (character.advancedStats?.dodge) {
+            character.advancedStats.dodge += 0.01;
         }
-        if(character.advancedStats?.critDamage) {
-            character.advancedStats.critDamage+=0.05;
+        if (character.advancedStats?.critChance) {
+            character.advancedStats.critChance += 0.02;
+        }
+        if (character.advancedStats?.critDamage) {
+            character.advancedStats.critDamage += 0.05;
         }
     }
 }
 
-export const cloneCharacter = (character: Character.Character, withLevel?: number, withStats?: unknown) => {
-    const copy = structuredClone(character);
-    if(withLevel) {
-        for(let i = 0; i < withLevel; i++) {
+export const cloneCharacter = (character: Character.Character, withLevel?: number, state?: PlayerCharacterState) => {
+    const copy: PlayerCharacterWithState = structuredClone(character);
+    if (withLevel) {
+        for (let i = 1; i < withLevel; i++) {
             levelUp(copy);
         }
     }
     copy.id = v4();
+    if (state)
+        copy.state = state;
     return copy;
 }

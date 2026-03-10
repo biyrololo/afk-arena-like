@@ -9,6 +9,7 @@ import {
 } from "@/shared/types/develop";
 import { Avatars } from "@/shared/avatars";
 import { useNavigate } from "react-router-dom";
+import { useSmoothCounter } from "@/shared/hooks/useSmoothCounter";
 
 export interface IEquipmentFullCardProps {
   equipment?: Character.Equipment;
@@ -42,9 +43,14 @@ export const EquipmentFullCard = ({
 
   const power = equipment ? calculateEquipmentPower(equipment) : 0;
 
-  const newStats = equipment ? calculateEquipmentUpgradeStats(equipment) : null;
+  const animatedPower = useSmoothCounter(power, { speed: 25 });
 
-  const newPower = newStats ? calculateEquipmentPower(newStats) : null;
+  const isAnimatingPower = animatedPower !== power.toString();
+
+  const newStats = equipment && !isAnimatingPower ? calculateEquipmentUpgradeStats(equipment) : null;
+
+  const newPower = newStats && !isAnimatingPower ? calculateEquipmentPower(newStats) : null;
+
 
   return (
     <div
@@ -67,10 +73,16 @@ export const EquipmentFullCard = ({
               {equipment?.name}
             </p>
             <p className="text-white font-bold text-4xl mb-4">
-              МОЩЬ:{" "}
+              МОЩЬ:
               <div className="text-amber-400 inline-block">
-                {power}{" "}
-                {isWithUpgradeStats && newPower && power !== newPower && (
+                <span 
+                  className="transition-all inline-block mx-2"
+                  style={{
+                    color: isAnimatingPower ? "var(--color-green-600)" : undefined,
+                    transform: isAnimatingPower ? 'scale(1.1)' : undefined,
+                  }}
+                >{" "}{animatedPower}{" "}</span>
+                {isWithUpgradeStats && newPower && !isAnimatingPower && power !== newPower && (
                   <span className="inline-block ml-auto text-green-600">
                     {">"} {newPower}
                   </span>
@@ -91,7 +103,13 @@ export const EquipmentFullCard = ({
               }}
             >
               <span className="text-4xl mr-2">Уровень:</span>{" "}
-              <b>{equipment?.level || 0}</b>
+              <b
+                className="transition-all inline-block"
+                style={{
+                  color: isAnimatingPower ? "var(--color-green-600)" : undefined,
+                  transform: isAnimatingPower ? 'scale(1.15)' : undefined,
+                }}
+              >{equipment?.level || 0}</b>
               {isWithUpgradeStats &&
                 newStats &&
                 newStats.level !== equipment.level && (

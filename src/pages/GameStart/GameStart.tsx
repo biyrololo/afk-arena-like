@@ -15,6 +15,7 @@ import { findStage } from "@/entities/chapter/lib/chapters";
 
 import background from "@/assets/backgrounds/gamestart.webp";
 import { calculateCharacterPower, calculateStatsWithEquipment } from "@/shared/types/develop";
+import { AnimatePresence, motion } from "framer-motion";
 
 const PER_PAGE = 4 * 3;
 
@@ -52,6 +53,7 @@ export default function GameStart() {
     const stage = findStage(chapterNumber, stageNumber);
     if (!stage) return 0;
     return stage.enemies
+      .filter((e) => e !== undefined)
       .map((e) => calculateStatsWithEquipment(e).power)
       .reduce((acc, power) => acc + power, 0);
   }, [chapterNumber, stageNumber]);
@@ -185,53 +187,69 @@ export default function GameStart() {
             </div>
             <div className="flex flex-col gap-4 items-center h-full">
               <section className="grid gap-4 grid-cols-4 bg-black/50 p-2 rounded-xl relative z-100">
-                {selectedCharacters.map((character, index) => {
-                  if (character) {
+                {selectedCharacters.map((character, index) => (
+                  <div key={index} className="size-[200px] relative bg-stone-600/80">
+                    <AnimatePresence>
+                      {
+                        character && (
+                          <motion.div
+                          key={character.id}
+                          initial={{ scale: 0.5, opacity: 0 }}
+                          animate={{ scale: 1, opacity: 1 }}
+                          exit={{ scale: 0, opacity: 0 }}
+                          >
+                            <HeroMiniCard
+                              character={character}
+                              onClick={() => toogleCharacter(character)}
+                            />
+                          </motion.div>
+
+                        )
+                      }
+                    </AnimatePresence>
+                  </div>
+                ))}
+              </section>
+              <AnimatePresence mode="wait">
+                <motion.section className="grid grid-cols-4 gap-x-4 gap-y-2"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                transition={{ duration: 0.2 }}
+                key={page}
+                >
+                  {paginatedCharacters.map((character, index) => {
                     return (
                       <HeroMiniCard
                         character={character}
-                        key={index}
+                        key={character.id}
+                        style={{
+                          opacity: selectedCharacters.some(
+                            (c) => c?.key === character.key,
+                          )
+                            ? 0.5
+                            : 1,
+                        }}
                         onClick={() => toogleCharacter(character)}
                       />
                     );
-                  }
-                  return (
-                    <button
-                      key={index}
-                      className="size-[200px] bg-stone-600/80 bg-cover cursor-pointer rounded-2xl"
-                    ></button>
-                  );
-                })}
-              </section>
-              <section className="grid grid-cols-4 gap-4">
-                {paginatedCharacters.map((character, index) => {
-                  return (
-                    <HeroMiniCard
-                      character={character}
-                      key={character.id}
-                      style={{
-                        opacity: selectedCharacters.some(
-                          (c) => c?.key === character.key,
-                        )
-                          ? 0.5
-                          : 1,
-                      }}
-                      onClick={() => toogleCharacter(character)}
-                    />
-                  );
-                })}
-              </section>
+                  })}
+                </motion.section>
+              </AnimatePresence>
               <div className="flex gap-4 justify-between w-full px-20 mt-auto">
                 <Button onClick={handlePrevious} disabled={isPreviousDisabled}>
                   {"<"}
                 </Button>
+                <p className="text-white text-2xl flex items-center">
+                  {page + 1} / {Math.ceil(characters.length / PER_PAGE)}
+                </p>
                 <Button onClick={handleNext} disabled={isNextDisabled}>
                   {">"}
                 </Button>
               </div>
             </div>
           </div>
-          <button
+          <Button
             className="text-3xl absolute top-4 right-4 text-white cursor-pointer"
             style={{
               opacity: isStartDisabled ? 0.5 : 1,
@@ -240,7 +258,10 @@ export default function GameStart() {
             onClick={handleStart}
           >
             Начать
-          </button>
+          </Button>
+          <p className="text-white text-3xl absolute top-31 left-4 w-[450px] text-shadow-[0px_0px_4px_rgba(0,0,0,0.5)]">
+            Это классический режим игры, в котором вы продвигаетесь по сюжету, боритесь с врагами и получаете опыт и ресурсы.
+          </p>
         </div>
       </div>
     </ResponsiveUI>

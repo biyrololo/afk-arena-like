@@ -4,20 +4,22 @@ import { EventBus } from "@/utils/eventBus";
 import GameScene from "@/scenes/GameScene";
 import GameUI from "@/widgets/GameUI/GameUI";
 import PhaserGame from "@/shared/ui/PhaserGame";
-import type { PlayerCharacter } from "@/shared/types/PlayerCharacter";
-import { useEffect } from "react";
+import type { PlayerCharacter, PlayerCharacterWithState } from "@/shared/types/PlayerCharacter";
+import { useEffect, useState } from "react";
 import { ResponsiveUI } from "@/shared/ui/ResponsiveUI/ResponsiveUI";
 import { findStage, SURVIVAL_CHAPTERS } from "@/entities/chapter/lib/chapters";
 import {
   StageTypeEnum,
   type IStage,
 } from "@/entities/chapter/lib/chapter.model";
+import { useBackgroundMusic } from "@/shared/hooks/useBackgroundMusic";
+import { MUSIC } from "@/assets/music/music";
 
 export default function Game() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const characters: Array<PlayerCharacter | null> | undefined =
+  const characters: Array<PlayerCharacterWithState | null> | undefined =
     location.state?.characters;
   const chapter: number | undefined = location.state?.chapter;
   const stageType: StageTypeEnum | undefined = location.state?.stageType;
@@ -32,6 +34,20 @@ export default function Game() {
       EventBus.emit("load:start");
     }
   }, []);
+
+  const ost = stage && chapter && stageType !== StageTypeEnum.SURVIVAL
+    ? findStage(chapter, stage)?.ost
+    : undefined;
+
+  const musicSource = ost && MUSIC[ost as keyof typeof MUSIC] ? MUSIC[ost as keyof typeof MUSIC] : undefined;
+
+  const music = useBackgroundMusic(musicSource ?? MUSIC.battle3, { loop: true, volume: 0.2 });
+  useEffect(() => {
+    music.play();
+    return () => {
+      music.stop();
+    };
+  }, [music.play]);
 
   useEffect(() => {
     if (!characters || (!chapter && !stageType) || !stage) return;
@@ -71,12 +87,14 @@ export default function Game() {
         navigate("/game/survival/end", {
           state: {
             ...data,
+            characters
           },
         });
       } else {
         navigate("/game/end", {
           state: {
             ...data,
+            characters
           },
         });
       }

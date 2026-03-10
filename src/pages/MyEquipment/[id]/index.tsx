@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import usePlayerCharactersStore from "@/shared/store/PlayerCharactersStore";
 import { ResponsiveUI } from "@/shared/ui/ResponsiveUI/ResponsiveUI";
 import { Balances } from "@/widgets/Balances/Balances";
-import { type FC } from "react";
+import { useEffect, type FC } from "react";
 
 import cn from "classnames";
 import { EquipmentFullCard } from "@/entities/character/ui/EquipmentCard/EquipmentFullCard";
@@ -14,8 +14,14 @@ import { Icon } from "@/shared/ui/Icon/Icon";
 import { assets } from "@/shared/assets";
 import { getRarityColor } from "@/entities/character/lib/getRarityColor";
 import { Avatars } from "@/shared/avatars";
+import { useBackgroundMusic } from "@/shared/hooks/useBackgroundMusic";
+import { MUSIC } from "@/assets/music/music";
+import { useSoundEffects } from "@/shared/hooks/useSoundEffects";
+import { SOUNDS } from "@/assets/sound/sounds";
 
 export const MyEquipmentItemPage: FC = () => {
+    const sounds = useSoundEffects(SOUNDS);
+    const music = useBackgroundMusic(MUSIC.menu, { loop: true, volume: 0.2 });
     const { id } = useParams();
 
     const navitate = useNavigate();
@@ -36,12 +42,20 @@ export const MyEquipmentItemPage: FC = () => {
     const char = characters.find(c => c.id === currentEquipment?.equippedCharacterId);
     const avatar = char ? Avatars[char.key as keyof typeof Avatars] : undefined;
 
+    useEffect(() => {
+        music.play();
+        return () => {
+            music.stop();
+        };
+    }, [music.play]);
+
     if(!currentEquipment) {
         navitate(-1);
         return null;
     }
 
     const handleUpgradeClick = () => {
+        sounds.playSound("weapon_upgrade", 0.5);
         upgradeEquipment(currentEquipment!.id);
     };
 
@@ -75,7 +89,7 @@ export const MyEquipmentItemPage: FC = () => {
                     <span className="text-3xl">←</span>
                     Назад
                 </button>
-                <div className="w-[1600px] mx-auto mt-24 flex flex-col gap-12 items-center">
+                <div className="w-[1800px] mx-auto mt-24 flex flex-col gap-12 items-center">
                     <div className={cn(`
                         bg-gradient-to-br from-gray-900 to-gray-800 
                         border-4 border-amber-900/50
@@ -108,7 +122,7 @@ export const MyEquipmentItemPage: FC = () => {
                                         </div>
                                     )
                                 }
-                                <EquipmentFullCard equipment={currentEquipment} withStats />
+                                <EquipmentFullCard className="w-full" equipment={currentEquipment} withStats isWithUpgradeStats={canUpgrade} />
                                 <div className="flex gap-4 justify-end w-full">
                                     <Button 
                                         onClick={() => handleUpgradeClick()}

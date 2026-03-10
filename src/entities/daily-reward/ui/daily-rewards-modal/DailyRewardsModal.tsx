@@ -48,13 +48,15 @@ export const DailyRewardsModal: FC = () => {
             title: 'text-4xl',
             container: 'px-8 gap-12 pb-8'
         }}
+        maxWidth="90%"
         >
             <section
-            className="grid grid-cols-7 gap-8"
+            className="grid grid-cols-7 gap-8 w-full"
             >
                 {
                     rewards.map(reward => (
                         <DailyReward 
+                        key={reward.day}
                         dailyReward={reward}
                         available={isAvailable(reward.day)}
                         claimed={claimed(reward.day)}

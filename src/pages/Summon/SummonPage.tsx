@@ -1,5 +1,5 @@
 import { ResponsiveUI } from "@/shared/ui/ResponsiveUI/ResponsiveUI";
-import { useState, type FC } from "react";
+import { useEffect, useState, type FC } from "react";
 import { Actions } from "./ui/Actions/Actions";
 import { useNavigate } from "react-router-dom";
 import { Balances } from "@/widgets/Balances/Balances";
@@ -10,8 +10,14 @@ import { summon, type DropItem } from "@/entities/summon/lib/summon";
 
 import bg from "@/assets/backgrounds/summon.webp";
 import { AnimatePresence } from "framer-motion";
+import { useBackgroundMusic } from "@/shared/hooks/useBackgroundMusic";
+import { MUSIC } from "@/assets/music/music";
+import { useSoundEffects } from "@/shared/hooks/useSoundEffects";
+import { SOUNDS } from "@/assets/sound/sounds";
 
 export const SummonPage: FC = () => {
+  const sounds = useSoundEffects(SOUNDS);
+  const music = useBackgroundMusic(MUSIC.summon, { loop: true, volume: 0.2 });
   const navigate = useNavigate();
 
   const [currentBanner, setCurrentBanner] = useState(0);
@@ -25,6 +31,7 @@ export const SummonPage: FC = () => {
   >(null);
 
   const handleSummon = (amount: 1 | 10) => {
+    sounds.playSound('sci_fi_confirm', 0.6)
     setSummonResult(summon(amount, AllBanners[currentBanner].id));
   };
 
@@ -34,6 +41,14 @@ export const SummonPage: FC = () => {
       return prev.slice(1);
     });
   };
+
+  useEffect(() => {
+    music.play();
+
+    return () => {
+      music.stop();
+    };
+  }, [music.play]);
 
   return (
     <ResponsiveUI>
@@ -50,7 +65,7 @@ export const SummonPage: FC = () => {
           <>
             <SummonResult result={summonResult[0]} />
             <button
-              className="absolute bottom-10 right-10 text-white text-5xl font-bold py-2 px-4 rounded bg-black/60 hover:bg-black/80 cursor-pointer"
+              className="absolute bottom-10 right-10 text-white text-6xl font-bold py-8 px-10 rounded bg-black/60 hover:bg-black/80 cursor-pointer"
               onClick={nextSummon}
             >
               Дальше
@@ -106,7 +121,7 @@ export const SummonPage: FC = () => {
               />
             </AnimatePresence>
             <Balances />
-            <Actions summon={handleSummon} />
+            <Actions summon={handleSummon} bannerId={AllBanners[currentBanner]?.id} />
           </>
         )}
       </div>

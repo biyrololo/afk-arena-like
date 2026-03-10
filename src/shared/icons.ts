@@ -114,6 +114,17 @@ import steel_gold_boots from "@/assets/equipment/fc1950.png";
 import iron_boots from "@/assets/equipment/fc1951.png";
 import iron_brown_boots from "@/assets/equipment/fc1952.png";
 
+import faction_corruption from '@/assets/factions/corruption.webp';
+import faction_crystal from '@/assets/factions/crystal.webp';
+import faction_ice from '@/assets/factions/ice.webp';
+import faction_fire from '@/assets/factions/fire.webp';
+import faction_nature from '@/assets/factions/nature.webp';
+import faction_orden from '@/assets/factions/orden.png';
+
+import role_tank from '@/assets/roles/tank.webp'
+import role_warrior from '@/assets/roles/warrior.webp'
+import role_assassin from '@/assets/roles/assassin.webp'
+
 export const Icons = {
   gold: fc160,
   gems: fc167,
@@ -225,6 +236,17 @@ export const Icons = {
   steel_gold_boots,
   iron_boots,
   iron_brown_boots,
+
+  faction_corruption,
+  faction_crystal,
+  faction_ice,
+  faction_fire,
+  faction_nature,
+  faction_orden,
+
+  role_tank,
+  role_warrior,
+  role_assassin,
 };
 
 export type IconKey = keyof typeof Icons;

@@ -20,6 +20,15 @@ import greenSlime from "@/assets/characters/greenSlime.png";
 import purpleSlime from "@/assets/characters/purpleSlime.png";
 import fantasyWarrior from "@/assets/characters/fantasyWarrior.png";
 import kitsune from "@/assets/characters/kitsune.png";
+import minotaur from "@/assets/characters/minotaur.png";
+import bringerOfDeath from "@/assets/characters/bringerOfDeath.png";
+import nightBorne from "@/assets/characters/nightBorne.png";
+import knight from '@/assets/characters/knight.png'
+import steelKnight from '@/assets/characters/steelKnight.png'
+import heroKnight from '@/assets/characters/heroKnight.png'
+import martialHero from '@/assets/characters/martialHero.png'
+import oldGolem from '@/assets/characters/oldGolem.png'
+import oldGuardian from '@/assets/characters/oldGuardian.png'
 
 import magic_field_bg from '@/assets/backgrounds/magic_field.png';
 
@@ -98,6 +107,42 @@ export default class CharacterViewScene extends Phaser.Scene {
             frameWidth: 128,
             frameHeight: 128,
         });
+        this.load.spritesheet("minotaur", minotaur, {
+            frameWidth: 128,
+            frameHeight: 128,
+        });
+        this.load.spritesheet("bringerOfDeath", bringerOfDeath, {
+            frameWidth: 140,
+            frameHeight: 93,
+        });
+        this.load.spritesheet("nightBorne", nightBorne, {
+            frameWidth: 80,
+            frameHeight: 80,
+        });
+        this.load.spritesheet("knight", knight, {
+            frameWidth: 135,
+            frameHeight: 135,
+        });
+        this.load.spritesheet("steelKnight", steelKnight, {
+            frameWidth: 180,
+            frameHeight: 180,
+        });
+        this.load.spritesheet("heroKnight", heroKnight, {
+            frameWidth: 140,
+            frameHeight: 140,
+        });
+        this.load.spritesheet("martialHero", martialHero, {
+            frameWidth: 200,
+            frameHeight: 200,
+        });
+        this.load.spritesheet("oldGolem", oldGolem, {
+            frameWidth: 160,
+            frameHeight: 160,
+        });
+        this.load.spritesheet("oldGuardian", oldGuardian, {
+            frameWidth: 120,
+            frameHeight: 120,
+        });
         
 
         this.load.image('magic_field_bg', magic_field_bg);
@@ -167,7 +212,13 @@ export default class CharacterViewScene extends Phaser.Scene {
             x: 1920 * 2 / 3,
             y: 1080 * 1 / 2,
             scale: 10,
-            character: char
+            character: {
+                ...char,
+                progression: {
+                    ...char.progression,
+                    level: 0
+                }
+            }
         }).hideHPBar()
 
         const hbh = c.getHitbox().centerY;
@@ -175,6 +226,9 @@ export default class CharacterViewScene extends Phaser.Scene {
 
         c.setY(
             c.getY() + (centerY - hbh)
+        )
+        c.setX(
+            c.getX() + (1400 - c.getHitbox().centerX)
         )
     }
 

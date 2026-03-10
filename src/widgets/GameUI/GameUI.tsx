@@ -24,7 +24,9 @@ export default function GameUI() {
       (data: { index: number; energy: number }) => {
         setHeroes((prev) => {
           const newHeroes = [...prev];
-          newHeroes[data.index].energy = data.energy;
+          if (newHeroes[data.index]) {
+            newHeroes[data.index].energy = data.energy;
+          }
           return newHeroes;
         });
       },
@@ -138,7 +140,7 @@ export default function GameUI() {
                                 left-0
                                 bottom-0
                                 h-full
-                                bg-red-500
+                                bg-green-500
                             `}
               style={{
                 width: `${(h.hp / h.maxHp) * 100}%`,

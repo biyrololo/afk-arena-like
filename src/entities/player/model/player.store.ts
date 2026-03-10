@@ -11,6 +11,7 @@ interface PlayerStore {
     stageNumber: number;
     assetsLoaded: boolean;
     lastSquad: SquadList;
+    usedPromocodes: string[];
     setLastSquad: (lastSquad: SquadList) => void;
     setBalances: (balances: PlayerBalances) => void;
     setChapterNumber: (chapterNumber: number) => void;
@@ -18,6 +19,8 @@ interface PlayerStore {
     setAssetsLoaded: (assetsLoaded: boolean) => void;
     spend: (key: keyof PlayerBalances, amount: number) => void;
     addBalance: (key: keyof PlayerBalances, amount: number) => void;
+    setUsedPromocodes: (usedPromocodes: string[]) => void;
+    addUsedPromocode: (usedPromocode: string) => void;
 }
 
 export const usePlayerStore = create<PlayerStore>()(
@@ -25,26 +28,30 @@ export const usePlayerStore = create<PlayerStore>()(
         subscribeWithSelector(
             (set, get) => ({
                 balances: {
-                    gold: 1e6,
-                    gems: 1e6,
+                    gold: 100,
+                    gems: 160,
                     summons: 1000
                 },
                 chapterNumber: 1,
                 stageNumber: 1,
                 assetsLoaded: false,
                 lastSquad: [null, null, null, null],
+                usedPromocodes: [],
+
                 setLastSquad: (lastSquad: [(string | null), (string | null), (string | null), (string | null)]) => set(() => ({ lastSquad })),
                 setAssetsLoaded: (assetsLoaded: boolean) => set(() => ({ assetsLoaded })),
                 setChapterNumber: (chapterNumber: number) => set(() => ({ chapterNumber })),
                 setStageNumber: (stageNumber: number) => set(() => ({ stageNumber })),
                 setBalances: (balances: PlayerBalances) => set(() => ({ balances })),
                 spend: (key: keyof PlayerBalances, amount: number) => set((state) => {
-                    if(state.balances[key] < amount) {
+                    if (state.balances[key] < amount) {
                         throw new Error(`Not enough ${key}: ${state.balances[key]} < ${amount}`);
                     }
                     return { balances: { ...state.balances, [key]: state.balances[key] - amount } }
                 }),
                 addBalance: (key: keyof PlayerBalances, amount: number) => set((state) => ({ balances: { ...state.balances, [key]: state.balances[key] + amount } })),
+                setUsedPromocodes: (usedPromocodes: string[]) => set(() => ({ usedPromocodes })),
+                addUsedPromocode: (usedPromocode: string) => set((state) => ({ usedPromocodes: [...state.usedPromocodes, usedPromocode] })),
             })
         ),
         {

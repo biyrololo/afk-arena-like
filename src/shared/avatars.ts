@@ -14,6 +14,15 @@ import greenSlime from '@/assets/avatars/greenSlime.webp'
 import purpleSlime from '@/assets/avatars/purpleSlime.webp'
 import fantasyWarrior from '@/assets/avatars/fantasyWarrior.webp'
 import kitsune from '@/assets/avatars/kitsune.webp'
+import minotaur from '@/assets/avatars/minotaur.png'
+import bringerOfDeath from '@/assets/avatars/bringerOfDeath.png'
+import nightBorne from '@/assets/avatars/nightBorne.png'
+import knight from '@/assets/avatars/knight.png'
+import steelKnight from '@/assets/avatars/steelKnight.png'
+import heroKnight from '@/assets/avatars/heroKnight.png'
+import martialHero from '@/assets/avatars/martialHero.png'
+import oldGolem from '@/assets/avatars/oldGolem.png'
+import oldGuardian from '@/assets/avatars/oldGuardian.png'
 
 export const Avatars = {
     firewarrior,
@@ -31,5 +40,14 @@ export const Avatars = {
     greenSlime,
     purpleSlime,
     fantasyWarrior,
-    kitsune
+    kitsune,
+    minotaur,
+    bringerOfDeath,
+    nightBorne,
+    knight,
+    steelKnight,
+    heroKnight,
+    martialHero,
+    oldGolem,
+    oldGuardian
 } as const;

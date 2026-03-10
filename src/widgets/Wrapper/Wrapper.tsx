@@ -5,9 +5,14 @@ import PhaserGame from "@/shared/ui/PhaserGame";
 import BootScene from "@/scenes/BootScene";
 import { EventBus } from "@/utils/eventBus";
 import { Loader, PermanentLoader } from "../Loader/Loader";
+import { useShallow } from "zustand/shallow";
+import { SDK } from "@/entities/sdk/model/sdk";
+import { useGameStateStore } from "@/entities/game/model/game-state.store";
+import { Observer } from "@/entities/game/ui/Observer";
 
 export const Wrapper: FC = () => {
   const [isLoaded, setIsLoaded] = useState(false);
+  const [inited] = useGameStateStore(useShallow((state) => [state.inited]));
 
   useEffect(() => {
     const onEnd = () => {
@@ -21,7 +26,19 @@ export const Wrapper: FC = () => {
     };
   }, []);
 
-  if (!isLoaded) {
+  useEffect(() => {
+    if(isLoaded) {
+      SDK.getInstance()
+        .gameReady()
+    }
+    if(isLoaded && inited) {
+      SDK.getInstance()
+        .gameStart()
+      useGameStateStore.getState().setLastAdAt(new Date().getTime());
+    }
+  }, [isLoaded, inited])
+
+  if (!isLoaded || !inited) {
     return (
       <>
         <PhaserGame scenes={[BootScene]} />
@@ -31,5 +48,8 @@ export const Wrapper: FC = () => {
     );
   }
 
-  return <Outlet />;
+  return <>
+    <Observer />
+    <Outlet />
+  </>;
 };

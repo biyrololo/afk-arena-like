@@ -14,8 +14,9 @@ import { useShallow } from "zustand/shallow";
 import { SURVIVAL_CHAPTERS } from "@/entities/chapter/lib/chapters";
 
 import background from "@/assets/backgrounds/gamestart.webp";
-import { calculateCharacterPower } from "@/shared/types/develop";
+import { calculateCharacterPower, calculateStatsWithEquipment } from "@/shared/types/develop";
 import { StageTypeEnum } from "@/entities/chapter/lib/chapter.model";
+import { AnimatePresence, motion } from "framer-motion";
 
 const PER_PAGE = 4 * 3;
 
@@ -53,6 +54,7 @@ export default function GameStartSurvivial() {
     );
     if (!stage) return 0;
     return stage.enemies
+      .filter((e) => e !== undefined)
       .map((e) => calculateCharacterPower(e))
       .reduce((acc, power) => acc + power, 0);
   }, [stageNumber]);
@@ -126,8 +128,12 @@ export default function GameStartSurvivial() {
   };
 
   const totalPower = useMemo(() => {
-    return selectedCharacters.reduce((acc, character) => {
-      return acc + (character?.power || 0);
+    return selectedCharacters
+    .filter(c => c !== null)
+    .map((character) => calculateStatsWithEquipment(character))
+    .map(c => calculateCharacterPower(c))
+    .reduce((acc, power) => {
+      return acc + (power || 0);
     }, 0);
   }, [selectedCharacters]);
 
@@ -186,42 +192,55 @@ export default function GameStartSurvivial() {
             </div>
             <div className="flex flex-col gap-4 items-center h-full">
               <section className="grid gap-4 grid-cols-4 bg-black/50 p-2 rounded-xl relative z-100">
-                {selectedCharacters.map((character, index) => {
-                  if (character) {
+                {selectedCharacters.map((character, index) => (
+                  <div key={index} className="size-[200px] relative bg-stone-600/80">
+                    <AnimatePresence>
+                      {
+                        character && (
+                          <motion.div
+                          key={character.id}
+                          initial={{ scale: 0.5, opacity: 0 }}
+                          animate={{ scale: 1, opacity: 1 }}
+                          exit={{ scale: 0, opacity: 0 }}
+                          >
+                            <HeroMiniCard
+                              character={character}
+                              onClick={() => toogleCharacter(character)}
+                            />
+                          </motion.div>
+
+                        )
+                      }
+                    </AnimatePresence>
+                  </div>
+                ))}
+              </section>
+              <AnimatePresence mode="wait">
+                <motion.section className="grid grid-cols-4 gap-x-4 gap-y-2"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                transition={{ duration: 0.2 }}
+                key={page}
+                >
+                  {paginatedCharacters.map((character, index) => {
                     return (
                       <HeroMiniCard
                         character={character}
-                        key={index}
+                        key={character.id}
+                        style={{
+                          opacity: selectedCharacters.some(
+                            (c) => c?.key === character.key,
+                          )
+                            ? 0.5
+                            : 1,
+                        }}
                         onClick={() => toogleCharacter(character)}
                       />
                     );
-                  }
-                  return (
-                    <button
-                      key={index}
-                      className="size-[200px] bg-stone-600/80 bg-cover cursor-pointer rounded-2xl"
-                    ></button>
-                  );
-                })}
-              </section>
-              <section className="grid grid-cols-4 gap-4">
-                {paginatedCharacters.map((character, index) => {
-                  return (
-                    <HeroMiniCard
-                      character={character}
-                      key={character.id}
-                      style={{
-                        opacity: selectedCharacters.some(
-                          (c) => c?.key === character.key,
-                        )
-                          ? 0.5
-                          : 1,
-                      }}
-                      onClick={() => toogleCharacter(character)}
-                    />
-                  );
-                })}
-              </section>
+                  })}
+                </motion.section>
+              </AnimatePresence>
               <div className="flex gap-4 justify-between w-full px-20 mt-auto">
                 <Button onClick={handlePrevious} disabled={isPreviousDisabled}>
                   {"<"}
@@ -232,16 +251,21 @@ export default function GameStartSurvivial() {
               </div>
             </div>
           </div>
-          <button
-            className="text-3xl absolute top-4 right-4 text-white cursor-pointer"
+          <div>
+            <Button
+            className="absolute top-4 right-4"
             style={{
               opacity: isStartDisabled ? 0.5 : 1,
             }}
             disabled={isStartDisabled}
             onClick={handleStart}
-          >
-            Начать
-          </button>
+            >
+              Начать
+            </Button>
+            <p className="text-white text-3xl absolute top-31 left-4 w-[450px] text-shadow-[0px_0px_4px_rgba(0,0,0,0.5)]">
+              В этом режиме вы можете бесконечно проходить этапы с самого первого и получать за это ресурсы! Противники, их сила и награды за каждый этап увеличиваются по мере усиления вашего отряда.
+            </p>
+          </div>
         </div>
       </div>
     </ResponsiveUI>

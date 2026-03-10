@@ -15,8 +15,19 @@ import { useShallow } from "zustand/shallow";
 import { openQuestsModal, QUESTS, useQuestsStore } from "@/entities/quest/model/quest.store";
 import { QuestsModal } from "@/entities/quest/ui/QuestsModal/QuestsModal";
 import { DailyRewardsModal } from "@/entities/daily-reward/ui/daily-rewards-modal";
+import { useBackgroundMusic } from "@/shared/hooks/useBackgroundMusic";
+import { MUSIC } from "@/assets/music/music";
+import { useEffect } from "react";
+import { useGameStateStore } from "@/entities/game/model/game-state.store";
+import { AdModal } from "../AdModal/AdModal";
 
 export default function MenuUI() {
+  const [clicked, clickDone] = useGameStateStore(useShallow(state => [
+    state.clicked,
+    state.clickDone
+  ]))
+  const music = useBackgroundMusic(MUSIC.menu, { loop: true, volume: 0.5 })
+
   const navigate = useNavigate();
 
   const handleStartGame = () => {
@@ -40,8 +51,23 @@ export default function MenuUI() {
     useShallow((state) => [state.chapterNumber, state.stageNumber]),
   );
 
+  useEffect(() => {
+    if(clicked) {
+      music.play();
+    }
+    return () => {
+      music.stop();
+    }
+  }, [music.stop, clicked])
+
   return (
-    <div className="absolute inset-0">
+    <div className="absolute inset-0"
+    onClick={e => {
+      if(e.target === e.currentTarget) {
+        clickDone();
+      }
+    }}
+    >
       <Balances />
       <div
         className={`${classes["magic-glow"]}`}
@@ -176,6 +202,7 @@ export default function MenuUI() {
       </div>
       <QuestsModal />
       <DailyRewardsModal />
+      <AdModal />
     </div>
   );
 }

@@ -4,6 +4,7 @@ import type { JSX } from "react";
 export enum ShopPriceType {
     Gold = "gold",
     Gems = "gems",
+    Ad = "ad",
 }
 
 export interface IShopItem {
@@ -12,4 +13,5 @@ export interface IShopItem {
     priceType: ShopPriceType;
     onBuy: () => void;
     rarity: Character.Rarity;
+    alreadyBought?: () => boolean;
 }

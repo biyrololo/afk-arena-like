@@ -33,7 +33,11 @@ export const SummonResult: FC<{
                             <div className="flex flex-col relative z-100">
                                 <span className="text-white text-center font-bold text-5xl text-shadow-[0_0_4px_rgba(0,0,0,0.5)]" style={{ color: getRarityColor(result.item.rarity) }}>{result.item.name}</span>
                                 <span className="text-white text-center font-bold text-3xl text-shadow-[0_0_4px_rgba(0,0,0,0.5)]" style={{ color: getRarityColor(result.item.rarity) }}>{getRarityName(result.item.rarity)}</span>
-                                <p className="text-white text-center font-bold text-5xl mt-4 text-shadow-[0_0_4px_rgba(0,0,0,0.5)]">Дубликат!</p>
+                                {
+                                    Boolean(result.ascension) && (
+                                        <p className="text-white text-center font-bold text-5xl mt-4 text-shadow-[0_0_4px_rgba(0,0,0,0.5)]">Дубликат!</p>
+                                    )
+                                }
                             </div>
                             {
                                 Boolean(result.ascension) && (

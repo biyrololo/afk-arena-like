@@ -2,7 +2,7 @@ import type { JSX } from "react";
 
 export interface IStatement {
     id: string;
-    author: string;
+    author?: string;
     color: string;
     avatar?: string;
     authorPosition?: 'left' | 'right';
@@ -14,6 +14,7 @@ export interface IStatement {
 export interface IPlotScene {
     id: string;
     statements: IStatement[];
+    onComplete?: () => void;
 }
 
 export interface IPlot {

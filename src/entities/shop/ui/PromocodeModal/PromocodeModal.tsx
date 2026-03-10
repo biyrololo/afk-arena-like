@@ -4,6 +4,8 @@ import type { FC, JSX } from "react";
 import { useState } from "react";
 import { testPromocode } from "../../model/promocodes.store";
 import { motion } from "framer-motion";
+import { usePlayerStore } from "@/entities/player/model/player.store";
+import { useShallow } from "zustand/shallow";
 
 interface PromocodeModalProps {
     isOpened: boolean;
@@ -17,11 +19,20 @@ export const PromocodeModal: FC<PromocodeModalProps> = ({
     const [error, setError] = useState<string>("");
     const [message, setMessage] = useState<string | JSX.Element>("");
     const [code, setCode] = useState<string>("");
+    const [ usedPromocodes, addUsedPromocode ] = usePlayerStore(useShallow(state => [
+        state.usedPromocodes,
+        state.addUsedPromocode
+    ]))
 
     const handleSubmit = () => {
         if(!code) {
             setMessage("");
             setError("Введите промокод");
+            return;
+        }
+        if(usedPromocodes.includes(code)) {
+            setMessage("");
+            setError("Промокод уже использован");
             return;
         }
         const promocodeObject = testPromocode(code);
@@ -40,6 +51,7 @@ export const PromocodeModal: FC<PromocodeModalProps> = ({
         setError("");
         setCode("");
         setMessage(promocodeObject.action());
+        addUsedPromocode(code);
     };
 
     return (

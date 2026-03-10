@@ -1,5 +1,6 @@
 import type { PlayerBalances } from "@/entities/player/model/player.model";
 import type { Character } from "@/shared/types/character";
+import type { PlayerCharacterWithState } from "@/shared/types/PlayerCharacter";
 
 export interface IStageReward {
   balances: PlayerBalances;
@@ -16,7 +17,8 @@ export interface IStage {
   stageNumber: number;
 
   background: string;
-  enemies: Character.Character[];
+  ost?: string;
+  enemies: (PlayerCharacterWithState | undefined)[];
   rewards: IStageReward;
   type?: StageTypeEnum;
 }

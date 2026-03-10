@@ -5,139 +5,84 @@ import usePlayerCharactersStore from "../store/PlayerCharactersStore";
 import { getCharacterEquipment } from "@/entities/character/lib/allCharacters";
 
 export const RESOURES_FOR_LEVEL: { balances: PlayerBalances }[] = [
-  { balances: { gold: 100, gems: 10, summons: 0 } }, // 1 → 2
-  { balances: { gold: 200, gems: 20, summons: 0 } }, // 2 → 3
-  { balances: { gold: 300, gems: 30, summons: 0 } }, // 3 → 4
-  { balances: { gold: 400, gems: 40, summons: 0 } }, // 4 → 5
-  { balances: { gold: 500, gems: 50, summons: 0 } }, // 5 → 6
-  { balances: { gold: 600, gems: 60, summons: 0 } }, // 6 → 7
-  { balances: { gold: 700, gems: 70, summons: 0 } }, // 7 → 8
-  { balances: { gold: 800, gems: 80, summons: 0 } }, // 8 → 9
-  { balances: { gold: 900, gems: 90, summons: 0 } }, // 9 → 10
-  { balances: { gold: 1000, gems: 100, summons: 0 } }, // 10 → 11
-  { balances: { gold: 1100, gems: 110, summons: 0 } }, // 11 → 12
-  { balances: { gold: 1200, gems: 120, summons: 0 } }, // 12 → 13
-  { balances: { gold: 1300, gems: 130, summons: 0 } }, // 13 → 14
-  { balances: { gold: 1400, gems: 140, summons: 0 } }, // 14 → 15
-  { balances: { gold: 1500, gems: 150, summons: 0 } }, // 15 → 16
-  { balances: { gold: 1600, gems: 160, summons: 0 } }, // 16 → 17
-  { balances: { gold: 1700, gems: 170, summons: 0 } }, // 17 → 18
-  { balances: { gold: 1800, gems: 180, summons: 0 } }, // 18 → 19
-  { balances: { gold: 1900, gems: 190, summons: 0 } }, // 19 → 20
-  { balances: { gold: 2000, gems: 200, summons: 0 } }, // 20 → 21
-  { balances: { gold: 2100, gems: 210, summons: 0 } }, // 21 → 22
-  { balances: { gold: 2200, gems: 220, summons: 0 } }, // 22 → 23
-  { balances: { gold: 2300, gems: 230, summons: 0 } }, // 23 → 24
-  { balances: { gold: 2400, gems: 240, summons: 0 } }, // 24 → 25
-  { balances: { gold: 2500, gems: 250, summons: 0 } }, // 25 → 26
-  { balances: { gold: 2600, gems: 260, summons: 0 } }, // 26 → 27
-  { balances: { gold: 2700, gems: 270, summons: 0 } }, // 27 → 28
-  { balances: { gold: 2800, gems: 280, summons: 0 } }, // 28 → 29
-  { balances: { gold: 2900, gems: 290, summons: 0 } }, // 29 → 30
-  { balances: { gold: 3000, gems: 300, summons: 0 } }, // 30 → 31
-  { balances: { gold: 3100, gems: 310, summons: 0 } }, // 31 → 32
-];
+  // --- УРОВНИ 1-10 (Вступление) ---
+  { balances: { gold: 100, gems: 0, summons: 0 } },   // 1 → 2
+  { balances: { gold: 250, gems: 0, summons: 0 } },   // 2 → 3
+  { balances: { gold: 500, gems: 0, summons: 0 } },   // 3 → 4
+  { balances: { gold: 1000, gems: 50, summons: 0 } },  // 4 → 5 (Первый порог гемов)
+  { balances: { gold: 1500, gems: 0, summons: 0 } },  // 5 → 6
+  { balances: { gold: 2200, gems: 0, summons: 0 } },  // 6 → 7
+  { balances: { gold: 3000, gems: 0, summons: 0 } },  // 7 → 8
+  { balances: { gold: 4000, gems: 0, summons: 0 } },  // 8 → 9
+  { balances: { gold: 5500, gems: 100, summons: 1 } }, // 9 → 10 (Чекпоинт)
 
+  // --- УРОВНИ 11-30 (Разгон) ---
+  ...Array.from({ length: 20 }, (_, i) => {
+    const lvl = i + 11;
+    const isGemStep = lvl % 5 === 0;
+    // Квадратичный рост золота: (lvl^2) * множитель
+    const goldAmount = Math.round((Math.pow(lvl, 2.2) * 25) / 100) * 100;
+    // Медленный рост гемов: +10-20 за каждые 5 уровней
+    const gemAmount = isGemStep ? 100 + (Math.floor(lvl / 5) * 10) : 0;
+
+    return { balances: { gold: goldAmount, gems: gemAmount, summons: 0 } };
+  }),
+
+  // --- УРОВНИ 31-60 (Мид-гейм) ---
+  ...Array.from({ length: 30 }, (_, i) => {
+    const lvl = i + 31;
+    const isGemStep = lvl % 5 === 0;
+    const goldAmount = Math.round((Math.pow(lvl, 2.5) * 15) / 500) * 500;
+    const gemAmount = isGemStep ? 150 + (Math.floor(lvl / 10) * 20) : 0;
+
+    return { balances: { gold: goldAmount, gems: gemAmount, summons: 0 } };
+  }),
+
+  // --- УРОВНИ 61-100 (Лейт-гейм / Энд-гейм) ---
+  ...Array.from({ length: 40 }, (_, i) => {
+    const lvl = i + 61;
+    const isGemStep = lvl % 5 === 0;
+    // Резкое удорожание золота
+    const goldAmount = Math.round((Math.pow(lvl, 2.8) * 10) / 1000) * 1000;
+    // Гемы остаются ценными и не инфлируют слишком сильно
+    const gemAmount = isGemStep ? 250 + (Math.floor(lvl / 20) * 50) : 0;
+
+    return { balances: { gold: goldAmount, gems: gemAmount, summons: isGemStep ? 1 : 0 } };
+  })
+];
 export const EQUIPMENT_UPGRADE_COSTS: { balances: PlayerBalances }[] = [
-  { balances: { gold: 50, gems: 5, summons: 0 } }, // Level 1 → 2
-  { balances: { gold: 100, gems: 10, summons: 0 } }, // Level 2 → 3
-  { balances: { gold: 150, gems: 15, summons: 0 } }, // Level 3 → 4
-  { balances: { gold: 200, gems: 20, summons: 0 } }, // Level 4 → 5
-  { balances: { gold: 250, gems: 25, summons: 0 } }, // Level 5 → 6
-  { balances: { gold: 300, gems: 30, summons: 0 } }, // Level 6 → 7
-  { balances: { gold: 350, gems: 35, summons: 0 } }, // Level 7 → 8
-  { balances: { gold: 400, gems: 40, summons: 0 } }, // Level 8 → 9
-  { balances: { gold: 450, gems: 45, summons: 0 } }, // Level 9 → 10
-  { balances: { gold: 500, gems: 50, summons: 0 } }, // Level 10 → 11
-  { balances: { gold: 550, gems: 55, summons: 0 } }, // Level 11 → 12
-  { balances: { gold: 600, gems: 60, summons: 0 } }, // Level 12 → 13
-  { balances: { gold: 650, gems: 65, summons: 0 } }, // Level 13 → 14
-  { balances: { gold: 700, gems: 70, summons: 0 } }, // Level 14 → 15
-  { balances: { gold: 750, gems: 75, summons: 0 } }, // Level 15 → 16
-  { balances: { gold: 800, gems: 80, summons: 0 } }, // Level 16 → 17
-  { balances: { gold: 850, gems: 85, summons: 0 } }, // Level 17 → 18
-  { balances: { gold: 900, gems: 90, summons: 0 } }, // Level 18 → 19
-  { balances: { gold: 950, gems: 95, summons: 0 } }, // Level 19 → 20
-  { balances: { gold: 1000, gems: 100, summons: 0 } }, // Level 20 → 21
-  { balances: { gold: 1050, gems: 105, summons: 0 } }, // Level 21 → 22
-  { balances: { gold: 1100, gems: 110, summons: 0 } }, // Level 22 → 23
-  { balances: { gold: 1150, gems: 115, summons: 0 } }, // Level 23 → 24
-  { balances: { gold: 1200, gems: 120, summons: 0 } }, // Level 24 → 25
-  { balances: { gold: 1250, gems: 125, summons: 0 } }, // Level 25 → 26
-  { balances: { gold: 1300, gems: 130, summons: 0 } }, // Level 26 → 27
-  { balances: { gold: 1350, gems: 135, summons: 0 } }, // Level 27 → 28
-  { balances: { gold: 1400, gems: 140, summons: 0 } }, // Level 28 → 29
-  { balances: { gold: 1450, gems: 145, summons: 0 } }, // Level 29 → 30
-  { balances: { gold: 1500, gems: 150, summons: 0 } }, // Level 30 → 31
-  { balances: { gold: 1550, gems: 155, summons: 0 } }, // Level 31 → 32
-  { balances: { gold: 1600, gems: 160, summons: 0 } }, // Level 32 → 33
-  { balances: { gold: 1650, gems: 165, summons: 0 } }, // Level 33 → 34
-  { balances: { gold: 1700, gems: 170, summons: 0 } }, // Level 34 → 35
-  { balances: { gold: 1750, gems: 175, summons: 0 } }, // Level 35 → 36
-  { balances: { gold: 1800, gems: 180, summons: 0 } }, // Level 36 → 37
-  { balances: { gold: 1850, gems: 185, summons: 0 } }, // Level 37 → 38
-  { balances: { gold: 1900, gems: 190, summons: 0 } }, // Level 38 → 39
-  { balances: { gold: 1950, gems: 195, summons: 0 } }, // Level 39 → 40
-  { balances: { gold: 2000, gems: 200, summons: 0 } }, // Level 40 → 41
-  { balances: { gold: 2050, gems: 205, summons: 0 } }, // Level 41 → 42
-  { balances: { gold: 2100, gems: 210, summons: 0 } }, // Level 42 → 43
-  { balances: { gold: 2150, gems: 215, summons: 0 } }, // Level 43 → 44
-  { balances: { gold: 2200, gems: 220, summons: 0 } }, // Level 44 → 45
-  { balances: { gold: 2250, gems: 225, summons: 0 } }, // Level 45 → 46
-  { balances: { gold: 2300, gems: 230, summons: 0 } }, // Level 46 → 47
-  { balances: { gold: 2350, gems: 235, summons: 0 } }, // Level 47 → 48
-  { balances: { gold: 2400, gems: 240, summons: 0 } }, // Level 48 → 49
-  { balances: { gold: 2450, gems: 245, summons: 0 } }, // Level 49 → 50
-  { balances: { gold: 2500, gems: 250, summons: 0 } }, // Level 50 → 51
-  { balances: { gold: 2550, gems: 255, summons: 0 } }, // Level 51 → 52
-  { balances: { gold: 2600, gems: 260, summons: 0 } }, // Level 52 → 53
-  { balances: { gold: 2650, gems: 265, summons: 0 } }, // Level 53 → 54
-  { balances: { gold: 2700, gems: 270, summons: 0 } }, // Level 54 → 55
-  { balances: { gold: 2750, gems: 275, summons: 0 } }, // Level 55 → 56
-  { balances: { gold: 2800, gems: 280, summons: 0 } }, // Level 56 → 57
-  { balances: { gold: 2850, gems: 285, summons: 0 } }, // Level 57 → 58
-  { balances: { gold: 2900, gems: 290, summons: 0 } }, // Level 58 → 59
-  { balances: { gold: 2950, gems: 295, summons: 0 } }, // Level 59 → 60
-  { balances: { gold: 3000, gems: 300, summons: 0 } }, // Level 60 → 61
-  { balances: { gold: 3050, gems: 305, summons: 0 } }, // Level 61 → 62
-  { balances: { gold: 3100, gems: 310, summons: 0 } }, // Level 62 → 63
-  { balances: { gold: 3150, gems: 315, summons: 0 } }, // Level 63 → 64
-  { balances: { gold: 3200, gems: 320, summons: 0 } }, // Level 64 → 65
-  { balances: { gold: 3250, gems: 325, summons: 0 } }, // Level 65 → 66
-  { balances: { gold: 3300, gems: 330, summons: 0 } }, // Level 66 → 67
-  { balances: { gold: 3350, gems: 335, summons: 0 } }, // Level 67 → 68
-  { balances: { gold: 3400, gems: 340, summons: 0 } }, // Level 68 → 69
-  { balances: { gold: 3450, gems: 345, summons: 0 } }, // Level 69 → 70
-  { balances: { gold: 3500, gems: 350, summons: 0 } }, // Level 70 → 71
-  { balances: { gold: 3550, gems: 355, summons: 0 } }, // Level 71 → 72
-  { balances: { gold: 3600, gems: 360, summons: 0 } }, // Level 72 → 73
-  { balances: { gold: 3650, gems: 365, summons: 0 } }, // Level 73 → 74
-  { balances: { gold: 3700, gems: 370, summons: 0 } }, // Level 74 → 75
-  { balances: { gold: 3750, gems: 375, summons: 0 } }, // Level 75 → 76
-  { balances: { gold: 3800, gems: 380, summons: 0 } }, // Level 76 → 77
-  { balances: { gold: 3850, gems: 385, summons: 0 } }, // Level 77 → 78
-  { balances: { gold: 3900, gems: 390, summons: 0 } }, // Level 78 → 79
-  { balances: { gold: 3950, gems: 395, summons: 0 } }, // Level 79 → 80
-  { balances: { gold: 4000, gems: 400, summons: 0 } }, // Level 80 → 81
-  { balances: { gold: 4050, gems: 405, summons: 0 } }, // Level 81 → 82
-  { balances: { gold: 4100, gems: 410, summons: 0 } }, // Level 82 → 83
-  { balances: { gold: 4150, gems: 415, summons: 0 } }, // Level 83 → 84
-  { balances: { gold: 4200, gems: 420, summons: 0 } }, // Level 84 → 85
-  { balances: { gold: 4250, gems: 425, summons: 0 } }, // Level 85 → 86
-  { balances: { gold: 4300, gems: 430, summons: 0 } }, // Level 86 → 87
-  { balances: { gold: 4350, gems: 435, summons: 0 } }, // Level 87 → 88
-  { balances: { gold: 4400, gems: 440, summons: 0 } }, // Level 88 → 89
-  { balances: { gold: 4450, gems: 445, summons: 0 } }, // Level 89 → 90
-  { balances: { gold: 4500, gems: 450, summons: 0 } }, // Level 90 → 91
-  { balances: { gold: 4550, gems: 455, summons: 0 } }, // Level 91 → 92
-  { balances: { gold: 4600, gems: 460, summons: 0 } }, // Level 92 → 93
-  { balances: { gold: 4650, gems: 465, summons: 0 } }, // Level 93 → 94
-  { balances: { gold: 4700, gems: 470, summons: 0 } }, // Level 94 → 95
-  { balances: { gold: 4750, gems: 475, summons: 0 } }, // Level 95 → 96
-  { balances: { gold: 4800, gems: 480, summons: 0 } }, // Level 96 → 97
-  { balances: { gold: 4850, gems: 485, summons: 0 } }, // Level 97 → 98
-  { balances: { gold: 4900, gems: 490, summons: 0 } }, // Level 98 → 99
-  { balances: { gold: 4950, gems: 495, summons: 0 } }, // Level 99 → 100
+  // --- УРОВНИ 1-10 (Начало: дешево и быстро) ---
+  { balances: { gold: 50, gems: 0, summons: 0 } },    // 1 → 2
+  { balances: { gold: 120, gems: 0, summons: 0 } },   // 2 → 3
+  { balances: { gold: 250, gems: 0, summons: 0 } },   // 3 → 4
+  { balances: { gold: 450, gems: 15, summons: 0 } },  // 4 → 5 (Первый порог)
+  { balances: { gold: 700, gems: 0, summons: 0 } },   // 5 → 6
+  { balances: { gold: 1000, gems: 0, summons: 0 } },  // 6 → 7
+  { balances: { gold: 1400, gems: 0, summons: 0 } },  // 7 → 8
+  { balances: { gold: 1900, gems: 0, summons: 0 } },  // 8 → 9
+  { balances: { gold: 2500, gems: 30, summons: 0 } }, // 9 → 10 (Оружие требует заточки)
+
+  // --- УРОВНИ 11-100 (Генерация прогрессии) ---
+  ...Array.from({ length: 90 }, (_, i) => {
+    const lvl = i + 11;
+    const isGemStep = lvl % 5 === 0;
+
+    // Золото: Скейлинг заметный, но мягче, чем у уровней игрока
+    // Формула дает ~200k на 100 уровне (в 2-2.5 раза меньше уровня персонажа)
+    const goldAmount = Math.round((Math.pow(lvl, 2.15) * 10) / 100) * 100;
+
+    // Гемы: Редкие траты, фиксированный медленный рост
+    // На 100 уровне будет просить всего ~150 гемов за шаг
+    const gemAmount = isGemStep ? Math.floor(25 + (lvl * 1.2)) : 0;
+
+    return {
+      balances: {
+        gold: goldAmount,
+        gems: gemAmount,
+        summons: 0
+      }
+    };
+  })
 ];
 
 function updateStatsWithAscension(character: Character.Character) {
@@ -167,16 +112,17 @@ export function calculateCharacterPower(
 
   // 1. Base stats score
   let baseScore =
-    baseStats.maxHp * 0.2 +
-    baseStats.attack * (1000 / advancedStats.cooldownAttack) +
-    baseStats.defense * 1.2 +
-    baseStats.speed * 0.2;
+    baseStats.maxHp * 0.3 * (1 + baseStats.defense / 200) +
+    baseStats.attack * (2000 / advancedStats.cooldownAttack) * (
+      advancedStats.critChance * advancedStats.critDamage + 1
+    ) +
+    baseStats.speed * 0.1;
 
   // 2. Role modifiers
   const roleModifiers: Record<Character.Role, number> = {
-    [Character.Role.TANK]: 1.1,
-    [Character.Role.DPS]: 1.15,
-    [Character.Role.SUPPORT]: 1.05,
+    [Character.Role.TANK]: 1,
+    [Character.Role.WARRIOR]: 1.05,
+    [Character.Role.ASSASSIN]: 1.1,
   };
 
   baseScore *= roleModifiers[role];
@@ -185,19 +131,16 @@ export function calculateCharacterPower(
   let advancedMultiplier = 1;
 
   advancedMultiplier +=
-    advancedStats.critChance * 0.3 +
-    advancedStats.critDamage * 0.2 +
-    advancedStats.dodge * 0.2 +
-    advancedStats.lifesteal * 0.2 +
+    advancedStats.dodge * 0.5 +
+    advancedStats.lifesteal * 0 +
     advancedStats.accuracy * 0.2 +
-    advancedStats.energyRegen * 0.05;
+    advancedStats.energyRegen * 0.005 * (2000 / advancedStats.cooldownAttack);
 
   // 4. Progression multiplier
   const progressionMultiplier =
     1 +
     progression.level * 0.02 +
-    progression.stars * 0.1 +
-    progression.ascension * 0.15;
+    progression.stars * 0.1;
 
   const power = baseScore * advancedMultiplier * progressionMultiplier;
 
@@ -212,27 +155,27 @@ export function calculateEquipmentPower(
   // 1. Base stats score (similar to character calculation)
   let baseScore = 0;
 
-  if (stats.maxHp) baseScore += stats.maxHp * 0.2;
-  if (stats.attack) baseScore += stats.attack * 1.5;
+  if (stats.maxHp) baseScore += stats.maxHp * 0.5;
+  if (stats.attack) baseScore += stats.attack * 0.5;
   if (stats.defense) baseScore += stats.defense * 1.2;
   if (stats.speed) baseScore += stats.speed * 1.0;
 
   // 2. Advanced stats contribution
   let advancedScore = 0;
 
-  if (stats.critChance) advancedScore += stats.critChance * 30; // 0.01 = 1% crit chance = 30 power
-  if (stats.critDamage) advancedScore += stats.critDamage * 20; // 0.01 = 1% crit damage = 20 power
-  if (stats.dodge) advancedScore += stats.dodge * 20; // 0.01 = 1% dodge = 20 power
-  if (stats.lifesteal) advancedScore += stats.lifesteal * 20; // 0.01 = 1% lifesteal = 20 power
-  if (stats.accuracy) advancedScore += stats.accuracy * 10; // 0.01 = 1% accuracy = 10 power
+  if (stats.critChance) advancedScore += stats.critChance * 100; // 0.01 = 1% crit chance = 30 power
+  if (stats.critDamage) advancedScore += stats.critDamage * 100; // 0.01 = 1% crit damage = 20 power
+  if (stats.dodge) advancedScore += stats.dodge * 100; // 0.01 = 1% dodge = 20 power
+  if (stats.lifesteal) advancedScore += stats.lifesteal * 5; // 0.01 = 1% lifesteal = 20 power
+  if (stats.accuracy) advancedScore += stats.accuracy * 100; // 0.01 = 1% accuracy = 10 power
 
   // 3. Rarity multipliers (similar progression concept)
   const rarityMultipliers: Record<Character.Rarity, number> = {
     [Character.Rarity.COMMON]: 1.0,
     [Character.Rarity.UNCOMMON]: 1.2,
-    [Character.Rarity.RARE]: 1.5,
-    [Character.Rarity.EPIC]: 2.0,
-    [Character.Rarity.LEGENDARY]: 3.0,
+    [Character.Rarity.RARE]: 1.3,
+    [Character.Rarity.EPIC]: 1.4,
+    [Character.Rarity.LEGENDARY]: 2.0,
   };
 
   // 4. Level multiplier (equipment level scaling)
@@ -265,20 +208,23 @@ export const levelUp = (id: string) => {
 
   character.baseStats.attack = increaseWithFloor(
     character.baseStats.attack,
-    1.05,
+    1.03,
   );
   character.baseStats.defense = increaseWithFloor(
     character.baseStats.defense,
-    1.05,
+    1.03,
   );
   character.baseStats.maxHp = increaseWithFloor(
     character.baseStats.maxHp,
-    1.05,
+    1.03,
   );
 
   if (character.progression.level % 5 === 0) {
+    if (character.advancedStats.accuracy) {
+      character.advancedStats.accuracy += 0.02;
+    }
     if (character.advancedStats?.dodge) {
-      character.advancedStats.dodge += 0.05;
+      character.advancedStats.dodge += 0.01;
     }
     if (character.advancedStats?.critChance) {
       character.advancedStats.critChance += 0.02;
@@ -306,19 +252,22 @@ export const calculateLevelUpStats = (
   const copy = structuredClone(character);
   copy.progression.level = nextLvl;
 
-  copy.baseStats.attack = increaseWithFloor(copy.baseStats.attack, 1.05);
-  copy.baseStats.defense = increaseWithFloor(copy.baseStats.defense, 1.05);
-  copy.baseStats.maxHp = increaseWithFloor(copy.baseStats.maxHp, 1.05);
+  copy.baseStats.attack = increaseWithFloor(copy.baseStats.attack, 1.03);
+  copy.baseStats.defense = increaseWithFloor(copy.baseStats.defense, 1.03);
+  copy.baseStats.maxHp = increaseWithFloor(copy.baseStats.maxHp, 1.03);
 
   if (nextLvl % 5 === 0) {
+    if (copy.advancedStats?.accuracy) {
+      copy.advancedStats.accuracy += 0.02;
+    }
     if (copy.advancedStats?.dodge) {
-      copy.advancedStats.dodge += 0.05;
+      copy.advancedStats.dodge += 0.01;
     }
     if (copy.advancedStats?.critChance) {
       copy.advancedStats.critChance += 0.02;
     }
-    if (copy.advancedStats?.critChance) {
-      copy.advancedStats.critChance += 0.05;
+    if (copy.advancedStats?.critDamage) {
+      copy.advancedStats.critDamage += 0.05;
     }
   }
 
@@ -366,22 +315,33 @@ export const upgradeEquipment = (equipmentId: string) => {
   equipment.level++;
 
   // Increase stats (similar to character level up but for equipment)
-  Object.keys(equipment.stats).forEach((statKey) => {
-    const statValue = equipment.stats[statKey as keyof typeof equipment.stats];
-    if (typeof statValue === "number") {
-      if (statValue < 1) {
-        equipment.stats[statKey as keyof typeof equipment.stats] = Math.max(
-          increaseWithFloor(statValue * 100, 1.03) / 100,
-          statValue + 0.01,
-        );
-      } else {
-        equipment.stats[statKey as keyof typeof equipment.stats] = Math.max(
-          increaseWithFloor(statValue, 1.03),
-          statValue + 1,
-        ); // 3% increase per level
-      }
+  if (equipment.stats.attack) {
+    equipment.stats.attack = increaseWithFloor(equipment.stats.attack, 1.05);
+  }
+  if (equipment.stats.defense) {
+    equipment.stats.defense = increaseWithFloor(equipment.stats.defense, 1.05);
+  }
+  if (equipment.stats.maxHp) {
+    equipment.stats.maxHp = increaseWithFloor(equipment.stats.maxHp, 1.05);
+  }
+
+  if (equipment.level % 5 === 0) {
+    if (equipment.stats.speed) {
+      equipment.stats.speed += 2;
     }
-  });
+    if (equipment.stats.accuracy) {
+      equipment.stats.accuracy += 0.02;
+    }
+    if (equipment.stats.dodge) {
+      equipment.stats.dodge += 0.01;
+    }
+    if (equipment.stats.critChance) {
+      equipment.stats.critChance += 0.02;
+    }
+    if (equipment.stats.critDamage) {
+      equipment.stats.critDamage += 0.05;
+    }
+  }
 
   // Update equipment in store
   usePlayerCharactersStore
@@ -404,21 +364,34 @@ export const calculateEquipmentUpgradeStats = (
   const copy = structuredClone(equipment);
   copy.level = nextLevel;
 
-  // Increase stats
-  Object.keys(copy.stats).forEach((statKey) => {
-    const statValue = copy.stats[statKey as keyof typeof copy.stats];
-    if (typeof statValue === "number") {
-      if (copy.stats[statKey as keyof typeof copy.stats]! >= 1) {
-        copy.stats[statKey as keyof typeof copy.stats] = increaseWithFloor(
-          statValue,
-          1.1,
-        );
-      } else if (nextLevel % 2 === 0) {
-        copy.stats[statKey as keyof typeof copy.stats]! += 0.01;
-      }
-    }
-  });
+  // Increase stats (similar to character level up but for equipment)
+  if (copy.stats.attack) {
+    copy.stats.attack = increaseWithFloor(copy.stats.attack, 1.05);
+  }
+  if (copy.stats.defense) {
+    copy.stats.defense = increaseWithFloor(copy.stats.defense, 1.05);
+  }
+  if (copy.stats.maxHp) {
+    copy.stats.maxHp = increaseWithFloor(copy.stats.maxHp, 1.05);
+  }
 
+  if (copy.level % 5 === 0) {
+    if (copy.stats.speed) {
+      copy.stats.speed += 2;
+    }
+    if (copy.stats.accuracy) {
+      copy.stats.accuracy += 0.02;
+    }
+    if (copy.stats.dodge) {
+      copy.stats.dodge += 0.01;
+    }
+    if (copy.stats.critChance) {
+      copy.stats.critChance += 0.02;
+    }
+    if (copy.stats.critDamage) {
+      copy.stats.critDamage += 0.05;
+    }
+  }
   return copy;
 };
 

@@ -17,7 +17,7 @@ import { GameEndSurvivial } from "@/pages/GameEnd/GameEndSurvivial";
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <MemoryRouter>
       <main className="relative">
         <Loader />
         <Routes>
@@ -48,6 +48,6 @@ export default function App() {
           </Route>
         </Routes>
       </main>
-    </BrowserRouter>
+    </MemoryRouter>
   );
 }

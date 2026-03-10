@@ -16,6 +16,8 @@ import { useShallow } from "zustand/shallow";
 import { useNavigate } from "react-router-dom";
 import usePlayerCharactersStore from "@/shared/store/PlayerCharactersStore";
 import { AnimatePresence, motion } from "framer-motion";
+import { useSoundEffects } from "@/shared/hooks/useSoundEffects";
+import { SOUNDS } from "@/assets/sound/sounds";
 
 export interface IEquipmentSelectModalProps {
   currentEquipment?: Character.Equipment;
@@ -34,6 +36,7 @@ export const EquipmentSelectModal: FC<IEquipmentSelectModalProps> = ({
   onSelect,
   close,
 }) => {
+  const sounds = useSoundEffects(SOUNDS)
   const navigate = useNavigate();
   const [page, setPage] = useState(0);
   const [direction, setDirection] = useState(1);
@@ -77,6 +80,7 @@ export const EquipmentSelectModal: FC<IEquipmentSelectModalProps> = ({
 
   const handleUpgradeClick = () => {
     upgradeEquipment(currentEquipment!.id);
+    sounds.playSound("weapon_upgrade", 0.5);
   };
 
   return (
@@ -89,7 +93,7 @@ export const EquipmentSelectModal: FC<IEquipmentSelectModalProps> = ({
         if (e.target === e.currentTarget) close();
       }}
     >
-      <div
+      <motion.div
         className={cn(`
                 bg-gradient-to-br from-gray-900 to-gray-800
                 border-4 border-amber-900/50
@@ -102,6 +106,12 @@ export const EquipmentSelectModal: FC<IEquipmentSelectModalProps> = ({
                 shadow-2xl
                 flex flex-col
             `)}
+        key={slot}
+        initial={{ opacity: 0, scale: 0.2 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.5 }}
+        transition={{ duration: 0.2, ease: "easeOut" }}
+
       >
         {/* Decorative corner elements */}
         <div className="absolute -top-2 -left-2 w-6 h-6 border-t-4 border-l-4 border-amber-700 rounded-tl-lg"></div>
@@ -201,7 +211,7 @@ export const EquipmentSelectModal: FC<IEquipmentSelectModalProps> = ({
                         character.id === equipment.equippedCharacterId,
                     )}
                   />
-                  {equipment.id === currentEquipment?.id ? (
+                  {currentEquipment && equipment.id === currentEquipment?.id ? (
                     <Button
                       onClick={() => onSelect(undefined)}
                       className="bg-red-700 hover:bg-red-600 justify-center text-3xl px-4 py-3 w-full rounded-t-none rounded-b-2xl"
@@ -262,7 +272,7 @@ export const EquipmentSelectModal: FC<IEquipmentSelectModalProps> = ({
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };

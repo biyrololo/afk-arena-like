@@ -2,7 +2,7 @@ import { BotController } from "@/components/Bot";
 import Character from "@/components/Character";
 import { EventBus } from "@/utils/eventBus";
 import Phaser from "phaser";
-import type { PlayerCharacter } from "@/shared/types/PlayerCharacter";
+import type { PlayerCharacter, PlayerCharacterWithState } from "@/shared/types/PlayerCharacter";
 import generateCharacter from "@/characters/characters";
 import type { IStage } from "@/entities/chapter/lib/chapter.model";
 import { calculateStatsWithEquipment } from "@/shared/types/develop";
@@ -23,6 +23,15 @@ import greenSlime from "@/assets/characters/greenSlime.png";
 import purpleSlime from "@/assets/characters/purpleSlime.png";
 import fantasyWarrior from "@/assets/characters/fantasyWarrior.png";
 import kitsune from "@/assets/characters/kitsune.png";
+import minotaur from "@/assets/characters/minotaur.png";
+import bringerOfDeath from "@/assets/characters/bringerOfDeath.png";
+import nightBorne from "@/assets/characters/nightBorne.png";
+import knight from '@/assets/characters/knight.png'
+import steelKnight from '@/assets/characters/steelKnight.png'
+import heroKnight from '@/assets/characters/heroKnight.png'
+import martialHero from '@/assets/characters/martialHero.png'
+import oldGolem from '@/assets/characters/oldGolem.png'
+import oldGuardian from '@/assets/characters/oldGuardian.png'
 
 import magic_field_bg from "@/assets/backgrounds/magic_field.png";
 import castle_bg from "@/assets/backgrounds/castle.webp";
@@ -30,9 +39,16 @@ import castle_bg from "@/assets/backgrounds/castle.webp";
 import flamie_bg from "@/assets/backgrounds/flamie_bg.webp";
 import ice_bg from "@/assets/backgrounds/ice_bg.webp";
 import abyss_bg from "@/assets/backgrounds/abyss_bg.webp";
+import abyss_bg_2 from "@/assets/backgrounds/abyss_bg_2.webp";
 import sand_bg from "@/assets/backgrounds/sand_bg.webp";
 import crystal_bg from "@/assets/backgrounds/crystal_bg.webp";
 import grass_bg from "@/assets/backgrounds/grass_bg.webp";
+import sky_bg from "@/assets/backgrounds/sky_bg.webp";
+import volcano_bg from "@/assets/backgrounds/volcano_bg.webp";
+import ancient_bg from "@/assets/backgrounds/ancient_bg.webp";
+import night_castle_bg from "@/assets/backgrounds/night_castle_bg.webp";
+import ice_lake_bg from "@/assets/backgrounds/ice_lake_bg.webp";
+import snow_bg from "@/assets/backgrounds/snow_bg.webp";
 
 export default class GameScene extends Phaser.Scene {
   private background!: Phaser.GameObjects.Image;
@@ -40,19 +56,18 @@ export default class GameScene extends Phaser.Scene {
   private allies: Character[] = [];
   private enemies: Character[] = [];
 
-  private alliesPositions: { x: number; y: number }[] = [
-    { x: 100, y: 300 },
-    { x: 150, y: 400 },
-    { x: 200, y: 500 },
-    { x: 150, y: 600 },
+  private alliesPositions = [
+    { x: 200, y: 400 + 70 }, // Верх (Warrior/Assassin)
+    { x: 420, y: 550 + 70 }, // Центр-перед (TANK)
+    { x: 300, y: 820 + 70 }, // Низ (Warrior/Assassin)
+    { x: 80, y: 640 + 70 }, // Глубокий тыл (если будет 4-й юнит)
   ];
 
-  private enemiesPositions: { x: number; y: number }[] = [
-    { x: 1800, y: 310 },
-    { x: 1800, y: 420 },
-    { x: 1600, y: 450 },
-    { x: 1600, y: 550 },
-  ];
+  // Enemies (Зеркально)
+  private enemiesPositions = this.alliesPositions.map(p => ({
+    x: 1920 - p.x,
+    y: p.y
+  }));
 
   /**
    * Боты
@@ -146,6 +161,42 @@ export default class GameScene extends Phaser.Scene {
       frameWidth: 128,
       frameHeight: 128,
     });
+    this.load.spritesheet("minotaur", minotaur, {
+      frameWidth: 128,
+      frameHeight: 128,
+    });
+    this.load.spritesheet("bringerOfDeath", bringerOfDeath, {
+      frameWidth: 140,
+      frameHeight: 93,
+    });
+    this.load.spritesheet("nightBorne", nightBorne, {
+      frameWidth: 80,
+      frameHeight: 80,
+    });
+    this.load.spritesheet("knight", knight, {
+      frameWidth: 135,
+      frameHeight: 135,
+    });
+    this.load.spritesheet("steelKnight", steelKnight, {
+      frameWidth: 180,
+      frameHeight: 180,
+    });
+    this.load.spritesheet("heroKnight", heroKnight, {
+      frameWidth: 140,
+      frameHeight: 140,
+    });
+    this.load.spritesheet("martialHero", martialHero, {
+      frameWidth: 200,
+      frameHeight: 200,
+    });
+    this.load.spritesheet("oldGolem", oldGolem, {
+      frameWidth: 160,
+      frameHeight: 160,
+    });
+    this.load.spritesheet("oldGuardian", oldGuardian, {
+      frameWidth: 120,
+      frameHeight: 120,
+    });
 
     this.load.font("Birthstone", "assets/fonts/Birthstone-Regular.ttf");
 
@@ -156,8 +207,15 @@ export default class GameScene extends Phaser.Scene {
     this.load.image("flamie_bg", flamie_bg);
     this.load.image("ice_bg", ice_bg);
     this.load.image("abyss_bg", abyss_bg);
+    this.load.image("abyss_bg_2", abyss_bg_2);
     this.load.image("sand_bg", sand_bg);
     this.load.image("crystal_bg", crystal_bg);
+    this.load.image("sky_bg", sky_bg);
+    this.load.image("volcano_bg", volcano_bg);
+    this.load.image("ancient_bg", ancient_bg);
+    this.load.image("night_castle_bg", night_castle_bg);
+    this.load.image("ice_lake_bg", ice_lake_bg);
+    this.load.image("snow_bg", snow_bg);
 
     this.load.on("progress", (value: number) => {
       EventBus.emit("load:progress", value);
@@ -220,14 +278,50 @@ export default class GameScene extends Phaser.Scene {
     }
   }
 
-  private handleAddAllies(allies: PlayerCharacter[]) {
+  private handleAddAllies(allies: (PlayerCharacterWithState | null)[]) {
+    console.log('handleAddAllies', allies)
     for (const ally of this.allies) {
       ally.destroy(true);
     }
+
+    let teamDmgBonus = 1;
+    let teamHpBonus = 1;
+    let teamCritChanceBonus = 0;
+
+    // Найти максимальное количество героев 1 фракции
+    let maxHeroesPerFaction = 0;
+    allies.forEach((ally) => {
+      if (ally) {
+        const faction = ally.faction;
+        const heroesCount = allies.filter((a) => a && a.faction === faction).length;
+        if (heroesCount > maxHeroesPerFaction) {
+          maxHeroesPerFaction = heroesCount;
+        }
+      }
+    });
+
+    if (maxHeroesPerFaction === 2) {
+      teamDmgBonus = 1.1;
+      teamHpBonus = 1.1;
+    }
+
+    if (maxHeroesPerFaction === 3) {
+      teamDmgBonus = 1.2;
+      teamHpBonus = 1.2;
+    }
+
+    if (maxHeroesPerFaction === 4) {
+      teamDmgBonus = 1.3;
+      teamHpBonus = 1.3;
+      teamCritChanceBonus = 0.1;
+    }
+
     this.allies = [];
     console.log("addAllies", allies);
     allies.forEach((ally, i) => {
-      if (ally) this.handleAddAlly(ally, i);
+      if (ally) {
+        this.handleAddAlly(ally, i, { teamDmgBonus, teamHpBonus, teamCritChanceBonus });
+      }
     });
   }
 
@@ -245,11 +339,23 @@ export default class GameScene extends Phaser.Scene {
     // this.enemies = [];
     // this.bots = [];
     // this.scene.start('MenuScene', { win });
+
+    const alliesState = this.allies.map((ally) => ({
+      texture: ally.getTextureKey(),
+      energy: ally.getEnergy(),
+      maxEnergy: ally.maxEnergy,
+      maxHp: ally.getMaxHP(),
+      hp: ally.getHP(),
+    }));
+
+    console.log("game over state", alliesState);
+
     EventBus.emit("gameOverUI", {
       win,
       stage: this.stage?.stageNumber,
       chapter: this.stage?.chapterNumber,
       type: this.stage?.type,
+      allies: alliesState,
     });
   }
 
@@ -264,19 +370,37 @@ export default class GameScene extends Phaser.Scene {
     const scale = this.scale.height / this.background.height;
     this.background.setScale(scale);
 
-    console.log("handleStart");
-    console.log("this.allies", this.allies);
-
     stage.enemies.forEach((enemy, i) => {
+      if (!enemy) return;
       if (!this.enemiesPositions[i]) return;
-      generateCharacter(this, "enemy", enemy.key as any, {
+      const entity = generateCharacter(this, "enemy", enemy.key as any, {
         ...this.enemiesPositions[i],
         character: calculateStatsWithEquipment(enemy),
       });
+      const {
+        right,
+        bottom
+      } = entity.getHitbox();
+
+      entity
+        .setPosition(
+          entity.getX() + (this.enemiesPositions[i].x - right),
+          entity.getY() + (this.enemiesPositions[i].y - bottom)
+        )
+
+      if (enemy.state) {
+        if (enemy.state.hp) {
+          entity.setEnergy(enemy.state.energy);
+        }
+        if (enemy.state.energy) {
+          entity.setEnergy(enemy.state.energy);
+        }
+        if (enemy.state.baseColor) {
+          entity.setBaseColor(enemy.state.baseColor);
+        }
+      }
     });
 
-    // generateCharacter(this, 'enemy', 'fireKing', {x: 1000, y: 400, maxHp: 200, speed: 250});
-    // generateCharacter(this, 'enemy', 'frostGuardian', {x: 1000, y: 200, maxHp: 400, speed: 100});
     this.allies.forEach((ally, i) => {
       ally.onUpdateHP = () => {
         const hp = ally.getHP();
@@ -327,15 +451,41 @@ export default class GameScene extends Phaser.Scene {
     );
   }
 
-  private handleAddAlly(ally: PlayerCharacter, index: number) {
+  private handleAddAlly(ally: PlayerCharacterWithState, index: number, bonuses?: { teamDmgBonus: number, teamHpBonus: number, teamCritChanceBonus: number }) {
+    if (ally.state && ally.state.hp <= 0) return;
     const position = this.alliesPositions[index];
     if (!position) {
       throw new Error(`Position for ally ${index} not found`);
     }
-    generateCharacter(this, "ally", ally.key as any, {
+
+    const calculated = calculateStatsWithEquipment(ally);
+
+    if (bonuses) {
+      calculated.baseStats.maxHp *= bonuses.teamHpBonus;
+      calculated.baseStats.defense *= bonuses.teamDmgBonus;
+      calculated.advancedStats.critChance += bonuses.teamCritChanceBonus;
+    }
+
+    const entity = generateCharacter(this, "ally", ally.key as any, {
       ...position,
-      character: calculateStatsWithEquipment(ally),
+      character: calculated,
     });
+
+    const {
+      left,
+      bottom
+    } = entity.getHitbox();
+
+    entity
+      .setPosition(
+        entity.getX() + (position.x - left),
+        entity.getY() + (position.y - bottom)
+      )
+
+    if (ally.state) {
+      entity.setHP(ally.state.hp);
+      entity.setEnergy(ally.state.energy);
+    }
   }
 
   private highlightCaster(character: Character) {

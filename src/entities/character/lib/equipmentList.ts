@@ -11,7 +11,6 @@ export type CreateEquipmentProps = Pick<Character.Equipment,
 >;
 
 export namespace AllEquipment {
-
     export const EQUIPMENT = {
 
         gray: {
@@ -22,7 +21,7 @@ export namespace AllEquipment {
                 description: 'Потрёпанный временем, но всё ещё надёжный.',
                 rarity: Character.Rarity.COMMON,
                 level: 1,
-                stats: { defense: 4, maxHp: 15 }
+                stats: { defense: 14, maxHp: 30 }
             },
             chest: {
                 slot: Character.EquipmentSlot.CHEST,
@@ -40,7 +39,7 @@ export namespace AllEquipment {
                 description: 'Созданы для долгих дежурств.',
                 rarity: Character.Rarity.COMMON,
                 level: 1,
-                stats: { speed: 2 }
+                stats: { speed: 2, dodge: 0.02, defense: 14 }
             }
         },
 
@@ -52,7 +51,7 @@ export namespace AllEquipment {
                 description: 'Следы старых битв всё ещё заметны.',
                 rarity: Character.Rarity.COMMON,
                 level: 1,
-                stats: { defense: 5, maxHp: 20 }
+                stats: { defense: 15, maxHp: 30 }
             },
             chest: {
                 slot: Character.EquipmentSlot.CHEST,
@@ -61,7 +60,7 @@ export namespace AllEquipment {
                 description: 'Не блестит, но держит удар.',
                 rarity: Character.Rarity.COMMON,
                 level: 1,
-                stats: { defense: 10, maxHp: 55 }
+                stats: { defense: 15, maxHp: 70 }
             },
             boots: {
                 slot: Character.EquipmentSlot.BOOTS,
@@ -82,7 +81,7 @@ export namespace AllEquipment {
                 description: 'Маскирует и защищает.',
                 rarity: Character.Rarity.COMMON,
                 level: 1,
-                stats: { defense: 6, accuracy: 0.04 }
+                stats: { defense: 10, accuracy: 0.04, dodge: 0.01 }
             },
             chest: {
                 slot: Character.EquipmentSlot.CHEST,
@@ -91,7 +90,7 @@ export namespace AllEquipment {
                 description: 'Любим лесными дозорными.',
                 rarity: Character.Rarity.COMMON,
                 level: 1,
-                stats: { maxHp: 60, defense: 11 }
+                stats: { maxHp: 80, defense: 15, dodge: 0.03 }
             },
             boots: {
                 slot: Character.EquipmentSlot.BOOTS,
@@ -112,7 +111,7 @@ export namespace AllEquipment {
                 description: 'Дарует ясность взгляда.',
                 rarity: Character.Rarity.UNCOMMON,
                 level: 1,
-                stats: { defense: 7, accuracy: 0.06 }
+                stats: { defense: 12, accuracy: 0.06, dodge: 0.02 }
             },
             chest: {
                 slot: Character.EquipmentSlot.CHEST,
@@ -121,7 +120,7 @@ export namespace AllEquipment {
                 description: 'Усиливает живучесть.',
                 rarity: Character.Rarity.UNCOMMON,
                 level: 1,
-                stats: { maxHp: 75, defense: 12 }
+                stats: { maxHp: 100, defense: 15, dodge: 0.04 }
             },
             boots: {
                 slot: Character.EquipmentSlot.BOOTS,
@@ -130,7 +129,7 @@ export namespace AllEquipment {
                 description: 'Лёгкие и цепкие.',
                 rarity: Character.Rarity.UNCOMMON,
                 level: 1,
-                stats: { speed: 3, dodge: 0.06 }
+                stats: { speed: 3, dodge: 0.06, defense: 15 }
             }
         },
 
@@ -142,7 +141,7 @@ export namespace AllEquipment {
                 description: 'Согрет жаром битв.',
                 rarity: Character.Rarity.UNCOMMON,
                 level: 1,
-                stats: { defense: 8, critChance: 0.05 }
+                stats: { defense: 12, critChance: 0.05, maxHp: 120 }
             },
             chest: {
                 slot: Character.EquipmentSlot.CHEST,
@@ -151,7 +150,7 @@ export namespace AllEquipment {
                 description: 'Чем дольше бой — тем ярче ответ.',
                 rarity: Character.Rarity.UNCOMMON,
                 level: 1,
-                stats: { maxHp: 85, defense: 13, critDamage: 0.1 }
+                stats: { maxHp: 100, defense: 15, critDamage: 0.1 }
             },
             boots: {
                 slot: Character.EquipmentSlot.BOOTS,
@@ -160,7 +159,7 @@ export namespace AllEquipment {
                 description: 'Поддерживают напор.',
                 rarity: Character.Rarity.UNCOMMON,
                 level: 1,
-                stats: { speed: 3, accuracy: 0.04 }
+                stats: { speed: 3, accuracy: 0.04, attack: 20 }
             }
         },
 
@@ -172,7 +171,7 @@ export namespace AllEquipment {
                 description: 'Очищает разум.',
                 rarity: Character.Rarity.UNCOMMON,
                 level: 1,
-                stats: { defense: 9, accuracy: 0.07 }
+                stats: { defense: 12, accuracy: 0.07, attack: 15 }
             },
             chest: {
                 slot: Character.EquipmentSlot.CHEST,
@@ -181,7 +180,7 @@ export namespace AllEquipment {
                 description: 'Вдохновляет союзников.',
                 rarity: Character.Rarity.UNCOMMON,
                 level: 1,
-                stats: { maxHp: 95, defense: 14 }
+                stats: { maxHp: 100, defense: 15, attack: 20 }
             },
             boots: {
                 slot: Character.EquipmentSlot.BOOTS,
@@ -190,7 +189,7 @@ export namespace AllEquipment {
                 description: 'Движения быстры и точны.',
                 rarity: Character.Rarity.UNCOMMON,
                 level: 1,
-                stats: { speed: 4, dodge: 0.06 }
+                stats: { speed: 4, dodge: 0.06, attack: 5, maxHp: 40 }
             }
         },
 
@@ -202,7 +201,7 @@ export namespace AllEquipment {
                 description: 'Символ власти и чести.',
                 rarity: Character.Rarity.RARE,
                 level: 1,
-                stats: { defense: 12, accuracy: 0.08 }
+                stats: { defense: 12, accuracy: 0.08, attack: 15 }
             },
             chest: {
                 slot: Character.EquipmentSlot.CHEST,
@@ -211,7 +210,7 @@ export namespace AllEquipment {
                 description: 'Подавляет противников.',
                 rarity: Character.Rarity.RARE,
                 level: 1,
-                stats: { maxHp: 120, defense: 18, critDamage: 0.12 }
+                stats: { maxHp: 200, defense: 18, critDamage: 0.12 }
             },
             boots: {
                 slot: Character.EquipmentSlot.BOOTS,
@@ -220,7 +219,7 @@ export namespace AllEquipment {
                 description: 'Каждый шаг внушает страх.',
                 rarity: Character.Rarity.RARE,
                 level: 1,
-                stats: { speed: 4, accuracy: 0.05 }
+                stats: { speed: 4, accuracy: 0.05, defense: 20 }
             }
         },
 
@@ -232,7 +231,7 @@ export namespace AllEquipment {
                 description: 'Отражает удары с лязгом.',
                 rarity: Character.Rarity.RARE,
                 level: 1,
-                stats: { defense: 14, maxHp: 35, accuracy: 0.05 }
+                stats: { defense: 14, maxHp: 55, accuracy: 0.05 }
             },
             chest: {
                 slot: Character.EquipmentSlot.CHEST,
@@ -241,7 +240,7 @@ export namespace AllEquipment {
                 description: 'Для тех, кто стоит до конца.',
                 rarity: Character.Rarity.RARE,
                 level: 1,
-                stats: { defense: 28, maxHp: 110, critDamage: 0.1 }
+                stats: { defense: 28, maxHp: 150, critDamage: 0.1 }
             },
             boots: {
                 slot: Character.EquipmentSlot.BOOTS,
@@ -250,7 +249,7 @@ export namespace AllEquipment {
                 description: 'Тяжёлые, но надёжные.',
                 rarity: Character.Rarity.RARE,
                 level: 1,
-                stats: { speed: 1, dodge: 0.04 }
+                stats: { speed: 1, dodge: 0.04, maxHp: 60 }
             }
         },
 
@@ -262,7 +261,7 @@ export namespace AllEquipment {
                 description: 'Пропитан пылью сражений.',
                 rarity: Character.Rarity.RARE,
                 level: 1,
-                stats: { defense: 15, maxHp: 40 }
+                stats: { defense: 15, maxHp: 60 }
             },
             chest: {
                 slot: Character.EquipmentSlot.CHEST,
@@ -271,7 +270,7 @@ export namespace AllEquipment {
                 description: 'Идеален для обороны.',
                 rarity: Character.Rarity.RARE,
                 level: 1,
-                stats: { defense: 30, maxHp: 130 }
+                stats: { defense: 30, maxHp: 200 }
             },
             boots: {
                 slot: Character.EquipmentSlot.BOOTS,
@@ -280,7 +279,7 @@ export namespace AllEquipment {
                 description: 'Трудно сбить с ног.',
                 rarity: Character.Rarity.RARE,
                 level: 1,
-                stats: { speed: 1, dodge: 0.03 }
+                stats: { speed: 1, dodge: 0.03, maxHp: 80 }
             }
         },
 
@@ -292,7 +291,7 @@ export namespace AllEquipment {
                 description: 'Для суровых рубежей.',
                 rarity: Character.Rarity.RARE,
                 level: 1,
-                stats: { defense: 16, accuracy: 0.06 }
+                stats: { defense: 40, accuracy: 0.06, attack: 15 }
             },
             chest: {
                 slot: Character.EquipmentSlot.CHEST,
@@ -301,7 +300,7 @@ export namespace AllEquipment {
                 description: 'Сдерживает натиск.',
                 rarity: Character.Rarity.RARE,
                 level: 1,
-                stats: { defense: 32, maxHp: 135 }
+                stats: { defense: 70, maxHp: 135 }
             },
             boots: {
                 slot: Character.EquipmentSlot.BOOTS,
@@ -310,7 +309,7 @@ export namespace AllEquipment {
                 description: 'Баланс скорости и защиты.',
                 rarity: Character.Rarity.RARE,
                 level: 1,
-                stats: { speed: 2, dodge: 0.05 }
+                stats: { speed: 2, dodge: 0.05, defense: 30 }
             }
         },
 
@@ -322,7 +321,7 @@ export namespace AllEquipment {
                 description: 'Чёткий взгляд охотника.',
                 rarity: Character.Rarity.EPIC,
                 level: 1,
-                stats: { defense: 17, critChance: 0.06 }
+                stats: { defense: 70, critChance: 0.06, accuracy: 0.1 }
             },
             chest: {
                 slot: Character.EquipmentSlot.CHEST,
@@ -331,7 +330,7 @@ export namespace AllEquipment {
                 description: 'Для мобильных бойцов.',
                 rarity: Character.Rarity.EPIC,
                 level: 1,
-                stats: { defense: 30, maxHp: 120, dodge: 0.05 }
+                stats: { defense: 30, maxHp: 250, dodge: 0.05 }
             },
             boots: {
                 slot: Character.EquipmentSlot.BOOTS,
@@ -340,7 +339,7 @@ export namespace AllEquipment {
                 description: 'Позволяют навязывать бой.',
                 rarity: Character.Rarity.EPIC,
                 level: 1,
-                stats: { speed: 4, dodge: 0.08 }
+                stats: { speed: 4, dodge: 0.08, attack: 15, critChance: 0.1 }
             }
         },
 
@@ -352,16 +351,16 @@ export namespace AllEquipment {
                 description: 'Разжигает ярость.',
                 rarity: Character.Rarity.EPIC,
                 level: 1,
-                stats: { defense: 18, critChance: 0.08 }
+                stats: { defense: 18, critDamage: 0.2 }
             },
             chest: {
                 slot: Character.EquipmentSlot.CHEST,
                 key: 'steel_orange',
                 name: 'Кираса Последнего Натиска',
-                description: 'Чем ближе смерть — тем сильнее удары.',
+                description: 'Чем ближе — тем сильнее удары.',
                 rarity: Character.Rarity.EPIC,
                 level: 1,
-                stats: { maxHp: 140, critDamage: 0.18 }
+                stats: { maxHp: 200, accuracy: 0.05, critDamage: 0.18 }
             },
             boots: {
                 slot: Character.EquipmentSlot.BOOTS,
@@ -370,7 +369,7 @@ export namespace AllEquipment {
                 description: 'Для агрессивной игры.',
                 rarity: Character.Rarity.EPIC,
                 level: 1,
-                stats: { speed: 4, accuracy: 0.06 }
+                stats: { speed: 4, accuracy: 0.06, attack: 40 }
             }
         },
 
@@ -382,7 +381,7 @@ export namespace AllEquipment {
                 description: 'Разум ясен, рука тверда.',
                 rarity: Character.Rarity.EPIC,
                 level: 1,
-                stats: { defense: 19, accuracy: 0.1 }
+                stats: { defense: 94, accuracy: 0.1, attack: 20 }
             },
             chest: {
                 slot: Character.EquipmentSlot.CHEST,
@@ -391,7 +390,7 @@ export namespace AllEquipment {
                 description: 'Ведёт за собой.',
                 rarity: Character.Rarity.EPIC,
                 level: 1,
-                stats: { defense: 34, maxHp: 150 }
+                stats: { defense: 34, maxHp: 300, attack: 20 }
             },
             boots: {
                 slot: Character.EquipmentSlot.BOOTS,
@@ -400,7 +399,7 @@ export namespace AllEquipment {
                 description: 'Ни одного лишнего движения.',
                 rarity: Character.Rarity.EPIC,
                 level: 1,
-                stats: { speed: 5 }
+                stats: { speed: 5, maxHp: 40, attack: 15, defence: 60 }
             }
         },
 
@@ -412,7 +411,7 @@ export namespace AllEquipment {
                 description: 'Командует даже молча.',
                 rarity: Character.Rarity.LEGENDARY,
                 level: 1,
-                stats: { defense: 22, accuracy: 0.12 }
+                stats: { defense: 140, accuracy: 0.12, maxHp: 200 }
             },
             chest: {
                 slot: Character.EquipmentSlot.CHEST,
@@ -421,7 +420,7 @@ export namespace AllEquipment {
                 description: 'Подавляет волю врагов.',
                 rarity: Character.Rarity.LEGENDARY,
                 level: 1,
-                stats: { maxHp: 180, defense: 40, critDamage: 0.2 }
+                stats: { maxHp: 320, defense: 70, critDamage: 0.2, attack: 30 }
             },
             boots: {
                 slot: Character.EquipmentSlot.BOOTS,
@@ -430,7 +429,7 @@ export namespace AllEquipment {
                 description: 'Каждый шаг — приказ.',
                 rarity: Character.Rarity.LEGENDARY,
                 level: 1,
-                stats: { speed: 4, accuracy: 0.08 }
+                stats: { speed: 4, accuracy: 0.08, attack: 30, defense: 100 }
             }
         },
 
@@ -442,7 +441,7 @@ export namespace AllEquipment {
                 description: 'Пробуждает жажду боя.',
                 rarity: Character.Rarity.LEGENDARY,
                 level: 1,
-                stats: { defense: 18, critChance: 0.12, accuracy: 0.08 }
+                stats: { defense: 68, critChance: 0.32, accuracy: 0.08 }
             },
             chest: {
                 slot: Character.EquipmentSlot.CHEST,
@@ -451,7 +450,7 @@ export namespace AllEquipment {
                 description: 'Каждый удар в ответ сильнее.',
                 rarity: Character.Rarity.LEGENDARY,
                 level: 1,
-                stats: { maxHp: 160, defense: 22, lifesteal: 0.1 }
+                stats: { maxHp: 130, defense: 22, critDamage: 0.5 }
             },
             boots: {
                 slot: Character.EquipmentSlot.BOOTS,
@@ -460,7 +459,7 @@ export namespace AllEquipment {
                 description: 'Для тех, кто идёт первым.',
                 rarity: Character.Rarity.LEGENDARY,
                 level: 1,
-                stats: { speed: 4, dodge: 0.12 }
+                stats: { speed: 4, dodge: 0.12, attack: 20, defense: 100, accuracy: 0.08 }
             }
         },
 
@@ -472,7 +471,7 @@ export namespace AllEquipment {
                 description: 'Помнит падение империй.',
                 rarity: Character.Rarity.LEGENDARY,
                 level: 1,
-                stats: { defense: 24, critChance: 0.1 }
+                stats: { defense: 24, critChance: 0.1, attack: 70 }
             },
             chest: {
                 slot: Character.EquipmentSlot.CHEST,
@@ -481,7 +480,7 @@ export namespace AllEquipment {
                 description: 'Чем тяжелее бой — тем крепче броня.',
                 rarity: Character.Rarity.LEGENDARY,
                 level: 1,
-                stats: { maxHp: 200, defense: 45 }
+                stats: { maxHp: 200, defense: 45, attack: 100 }
             },
             boots: {
                 slot: Character.EquipmentSlot.BOOTS,
@@ -490,7 +489,7 @@ export namespace AllEquipment {
                 description: 'Идут до конца.',
                 rarity: Character.Rarity.LEGENDARY,
                 level: 1,
-                stats: { speed: 3, dodge: 0.1 }
+                stats: { speed: 3, dodge: 0.1, attack: 70, defense: 50 }
             }
         }
 
@@ -508,7 +507,7 @@ export namespace Weapons {
             description: 'Лёгкий и быстрый меч для первых дуэлей.',
             rarity: Character.Rarity.COMMON,
             level: 1,
-            stats: { attack: 12, critChance: 0.08, speed: 1 }
+            stats: { attack: 40, critChance: 0.08, speed: 1 }
         },
 
         bone: {
@@ -518,7 +517,7 @@ export namespace Weapons {
             description: 'Собран из останков древних воинов.',
             rarity: Character.Rarity.COMMON,
             level: 1,
-            stats: { attack: 14, lifesteal: 0.04 }
+            stats: { attack: 30, accuracy: 0.04 }
         },
 
         emerald: {
@@ -528,7 +527,7 @@ export namespace Weapons {
             description: 'Каждый удар находит слабое место.',
             rarity: Character.Rarity.UNCOMMON,
             level: 1,
-            stats: { attack: 18, accuracy: 0.15 }
+            stats: { attack: 50, accuracy: 0.15 }
         },
 
         solid_purple: {
@@ -538,7 +537,7 @@ export namespace Weapons {
             description: 'Тяжёлый меч с разрушительной силой.',
             rarity: Character.Rarity.UNCOMMON,
             level: 1,
-            stats: { attack: 22, critDamage: 0.18 }
+            stats: { attack: 44, critDamage: 0.18 }
         },
 
         hellstone: {
@@ -548,7 +547,7 @@ export namespace Weapons {
             description: 'Пылает яростью глубин.',
             rarity: Character.Rarity.RARE,
             level: 1,
-            stats: { attack: 30, critDamage: 0.3 }
+            stats: { attack: 70, critDamage: 0.3 }
         },
 
         consecration: {
@@ -558,7 +557,7 @@ export namespace Weapons {
             description: 'Свет направляет клинок.',
             rarity: Character.Rarity.RARE,
             level: 1,
-            stats: { attack: 28, accuracy: 0.2, critChance: 0.1 }
+            stats: { attack: 80, accuracy: 0.2, critChance: 0.1 }
         },
 
         night: {
@@ -568,7 +567,7 @@ export namespace Weapons {
             description: 'Убивает до того, как его заметят.',
             rarity: Character.Rarity.RARE,
             level: 1,
-            stats: { attack: 26, critChance: 0.2, dodge: 0.05 }
+            stats: { attack: 70, critChance: 0.2, speed: 5, dodge: 0.2 }
         },
 
         jungle: {
@@ -578,7 +577,7 @@ export namespace Weapons {
             description: 'Идеален для агрессивного боя.',
             rarity: Character.Rarity.UNCOMMON,
             level: 1,
-            stats: { attack: 21, speed: 1, lifesteal: 0.05 }
+            stats: { attack: 50, speed: 1, lifesteal: 0.05 }
         },
 
         cobalt_core: {
@@ -588,7 +587,7 @@ export namespace Weapons {
             description: 'Стабильный и смертоносный.',
             rarity: Character.Rarity.RARE,
             level: 1,
-            stats: { attack: 29, accuracy: 0.15 }
+            stats: { attack: 86, accuracy: 0.15 }
         },
 
         hero: {
@@ -598,7 +597,7 @@ export namespace Weapons {
             description: 'Оружие защитника слабых.',
             rarity: Character.Rarity.EPIC,
             level: 1,
-            stats: { attack: 38, accuracy: 0.15, critChance: 0.1 }
+            stats: { attack: 138, accuracy: 0.15, critChance: 0.1 }
         },
 
         short_blue: {
@@ -608,7 +607,7 @@ export namespace Weapons {
             description: 'Быстрые точные удары.',
             rarity: Character.Rarity.UNCOMMON,
             level: 1,
-            stats: { attack: 17, speed: 2 }
+            stats: { attack: 100 }
         },
 
         evil: {
@@ -618,7 +617,7 @@ export namespace Weapons {
             description: 'Искажает саму кровь.',
             rarity: Character.Rarity.EPIC,
             level: 1,
-            stats: { attack: 40, lifesteal: 0.12, critChance: 0.12 }
+            stats: { attack: 140, accuracy: 0.1, critChance: 0.12 }
         },
 
         torch: {
@@ -628,7 +627,7 @@ export namespace Weapons {
             description: 'Обжигает при каждом ударе.',
             rarity: Character.Rarity.UNCOMMON,
             level: 1,
-            stats: { attack: 20, critDamage: 0.15 }
+            stats: { attack: 60, critDamage: 0.15, accuracy: 0.1 }
         },
 
         needle: {
@@ -638,7 +637,7 @@ export namespace Weapons {
             description: 'Почти не оставляет шансов.',
             rarity: Character.Rarity.RARE,
             level: 1,
-            stats: { attack: 24, critChance: 0.28 }
+            stats: { attack: 80, critChance: 0.28 }
         },
 
         true_hero: {
@@ -648,7 +647,7 @@ export namespace Weapons {
             description: 'Символ легенды.',
             rarity: Character.Rarity.LEGENDARY,
             level: 1,
-            stats: { attack: 60, accuracy: 0.2, critChance: 0.15 }
+            stats: { attack: 140, accuracy: 0.4, critChance: 0.3, critDamage: 0.3 }
         },
 
         muramasa: {
@@ -658,7 +657,7 @@ export namespace Weapons {
             description: 'Жаждет крови.',
             rarity: Character.Rarity.LEGENDARY,
             level: 1,
-            stats: { attack: 55, critChance: 0.25, lifesteal: 0.12 }
+            stats: { attack: 180, critChance: 0.2, lifesteal: 0.5 }
         },
 
         ancient_heavy: {
@@ -668,7 +667,7 @@ export namespace Weapons {
             description: 'Каждый удар — как обвал.',
             rarity: Character.Rarity.EPIC,
             level: 1,
-            stats: { attack: 45, critDamage: 0.35 }
+            stats: { attack: 70, critDamage: 0.7 }
         },
 
         steel_chain: {
@@ -678,7 +677,7 @@ export namespace Weapons {
             description: 'Рвёт защиту врагов.',
             rarity: Character.Rarity.RARE,
             level: 1,
-            stats: { attack: 32, accuracy: 0.12 }
+            stats: { attack: 90, accuracy: 0.12 }
         },
 
         curved: {
@@ -688,7 +687,7 @@ export namespace Weapons {
             description: 'Идеален для серий ударов.',
             rarity: Character.Rarity.UNCOMMON,
             level: 1,
-            stats: { attack: 23, speed: 2 }
+            stats: { attack: 70, speed: 2 }
         },
 
         short_platinum: {
@@ -698,7 +697,7 @@ export namespace Weapons {
             description: 'Лёгкий, но смертоносный.',
             rarity: Character.Rarity.RARE,
             level: 1,
-            stats: { attack: 30, critChance: 0.18 }
+            stats: { attack: 50, critChance: 0.4 }
         },
 
         falchion: {
@@ -708,7 +707,7 @@ export namespace Weapons {
             description: 'Грубая, но эффективная сталь.',
             rarity: Character.Rarity.UNCOMMON,
             level: 1,
-            stats: { attack: 26, critDamage: 0.2 }
+            stats: { attack: 60, critDamage: 0.2 }
         },
 
         scimitar: {
@@ -718,7 +717,7 @@ export namespace Weapons {
             description: 'Смертоносный танец клинков.',
             rarity: Character.Rarity.RARE,
             level: 1,
-            stats: { attack: 34, speed: 1, dodge: 0.06 }
+            stats: { attack: 96, speed: 5, dodge: 0.06, critChance: 0.2 }
         },
 
         royal_spear: {
@@ -728,7 +727,7 @@ export namespace Weapons {
             description: 'Держит врагов на расстоянии.',
             rarity: Character.Rarity.EPIC,
             level: 1,
-            stats: { attack: 42, accuracy: 0.18 }
+            stats: { attack: 110, accuracy: 0.18, dodge: 0.05 }
         },
 
         heavy_melee: {
@@ -738,7 +737,7 @@ export namespace Weapons {
             description: 'Медленный, но беспощадный.',
             rarity: Character.Rarity.RARE,
             level: 1,
-            stats: { attack: 40, critDamage: 0.3 }
+            stats: { attack: 90, critDamage: 0.3 }
         },
 
         crystal: {
@@ -748,7 +747,7 @@ export namespace Weapons {
             description: 'Усиливает критические удары.',
             rarity: Character.Rarity.EPIC,
             level: 1,
-            stats: { attack: 44, critChance: 0.2 }
+            stats: { attack: 130, critChance: 0.2 }
         },
 
         royal: {
@@ -758,7 +757,7 @@ export namespace Weapons {
             description: 'Сбалансированное оружие лидера.',
             rarity: Character.Rarity.EPIC,
             level: 1,
-            stats: { attack: 46, accuracy: 0.15, defense: 8 }
+            stats: { attack: 100, accuracy: 0.15, dodge: 0.05, defense: 30 }
         },
 
         christmas_tree: {
@@ -768,7 +767,7 @@ export namespace Weapons {
             description: 'Странный, но эффективный.',
             rarity: Character.Rarity.RARE,
             level: 1,
-            stats: { attack: 28, critChance: 0.12, lifesteal: 0.05 }
+            stats: { attack: 140, critChance: 0.12, lifesteal: 0.05 }
         },
 
         ice: {
@@ -778,7 +777,7 @@ export namespace Weapons {
             description: 'Холод замедляет врагов.',
             rarity: Character.Rarity.EPIC,
             level: 1,
-            stats: { attack: 42, accuracy: 0.1, dodge: 0.05 }
+            stats: { attack: 180, accuracy: 0.1, dodge: 0.05 }
         },
 
         true_evil: {
@@ -788,7 +787,7 @@ export namespace Weapons {
             description: 'Абсолютное зло приняло форму стали.',
             rarity: Character.Rarity.LEGENDARY,
             level: 1,
-            stats: { attack: 68, critChance: 0.22, critDamage: 0.4 }
+            stats: { attack: 260, critChance: 0.22, critDamage: 0.3 }
         },
 
         true_muramasa: {
@@ -798,7 +797,7 @@ export namespace Weapons {
             description: 'Совершенный клинок резни.',
             rarity: Character.Rarity.LEGENDARY,
             level: 1,
-            stats: { attack: 72, critChance: 0.3, critDamage: 0.45, lifesteal: 0.15 }
+            stats: { attack: 240, critChance: 0.3, critDamage: 0.45, lifesteal: 0.15 }
         }
 
     } as const;
@@ -818,7 +817,7 @@ export namespace Accessories {
             description: 'Простая защита и уверенный хват.',
             rarity: Character.Rarity.COMMON,
             level: 1,
-            stats: { defense: 6, attack: 2 }
+            stats: { defense: 20, attack: 20 }
         },
 
         gold_gloves: {
@@ -828,7 +827,7 @@ export namespace Accessories {
             description: 'Баланс силы и статуса.',
             rarity: Character.Rarity.UNCOMMON,
             level: 1,
-            stats: { attack: 5, critChance: 0.05 }
+            stats: { attack: 35, critChance: 0.1 }
         },
 
         magic_crystal_gloves: {
@@ -838,7 +837,7 @@ export namespace Accessories {
             description: 'Усиливают точность и крит.',
             rarity: Character.Rarity.RARE,
             level: 1,
-            stats: { critChance: 0.15, accuracy: 0.12 }
+            stats: { critChance: 0.15, accuracy: 0.15 }
         },
 
         /* 🛡 SHIELDS */
@@ -850,7 +849,7 @@ export namespace Accessories {
             description: 'Первая линия обороны.',
             rarity: Character.Rarity.COMMON,
             level: 1,
-            stats: { defense: 10 }
+            stats: { defense: 40 }
         },
 
         fortified_wooden_shield: {
@@ -860,7 +859,7 @@ export namespace Accessories {
             description: 'Выдерживает серьёзные удары.',
             rarity: Character.Rarity.UNCOMMON,
             level: 1,
-            stats: { defense: 16, hp: 20 }
+            stats: { defense: 30, maxHp: 70 }
         },
 
         magic_crystal_shield: {
@@ -870,7 +869,7 @@ export namespace Accessories {
             description: 'Отражает часть урона.',
             rarity: Character.Rarity.RARE,
             level: 1,
-            stats: { defense: 22, dodge: 0.05 }
+            stats: { defense: 40, dodge: 0.2, maxHp: 90 }
         },
 
         emerald_shield: {
@@ -880,7 +879,7 @@ export namespace Accessories {
             description: 'Защита с идеальной балансировкой.',
             rarity: Character.Rarity.RARE,
             level: 1,
-            stats: { defense: 26, accuracy: 0.1 }
+            stats: { defense: 26, accuracy: 0.1, maxHp: 120, dodge: 0.05 }
         },
 
         evil_crystal_shield: {
@@ -890,7 +889,7 @@ export namespace Accessories {
             description: 'Питается болью врагов.',
             rarity: Character.Rarity.EPIC,
             level: 1,
-            stats: { defense: 32, lifesteal: 0.08 }
+            stats: { defense: 32, dodge: 0.2, maxHp: 130 }
         },
 
         night_shield: {
@@ -900,7 +899,7 @@ export namespace Accessories {
             description: 'Растворяется во тьме.',
             rarity: Character.Rarity.EPIC,
             level: 1,
-            stats: { defense: 30, dodge: 0.12 }
+            stats: { defense: 30, dodge: 0.12, maxHp: 150 }
         },
 
         ancient_fire_evil_shield: {
@@ -910,7 +909,7 @@ export namespace Accessories {
             description: 'Пылающий артефакт разрушения.',
             rarity: Character.Rarity.LEGENDARY,
             level: 1,
-            stats: { defense: 48, critDamage: 0.25 }
+            stats: { defense: 48, critDamage: 0.25, maxHp: 180 }
         },
 
         hero_shield: {
@@ -920,7 +919,7 @@ export namespace Accessories {
             description: 'Щит защитника королевства.',
             rarity: Character.Rarity.EPIC,
             level: 1,
-            stats: { defense: 36, hp: 60 }
+            stats: { defense: 36, maxHp: 200 }
         },
 
         true_hero_shield: {
@@ -930,7 +929,7 @@ export namespace Accessories {
             description: 'Легендарный символ стойкости.',
             rarity: Character.Rarity.LEGENDARY,
             level: 1,
-            stats: { defense: 55, hp: 120, dodge: 0.08 }
+            stats: { defense: 40, maxHp: 200, dodge: 0.3 }
         },
 
         /* 💍 RINGS */
@@ -942,7 +941,7 @@ export namespace Accessories {
             description: 'Простое усиление.',
             rarity: Character.Rarity.COMMON,
             level: 1,
-            stats: { attack: 4 }
+            stats: { accuracy: 0.1, critChance: 0.1, attack: 10 }
         },
 
         gold_ring: {
@@ -952,7 +951,7 @@ export namespace Accessories {
             description: 'Чуть больше силы.',
             rarity: Character.Rarity.UNCOMMON,
             level: 1,
-            stats: { attack: 6, critChance: 0.04 }
+            stats: { attack: 30, critChance: 0.04, accuracy: 0.1 }
         },
 
         ruby_ring: {
@@ -962,7 +961,7 @@ export namespace Accessories {
             description: 'Усиливает разрушительные удары.',
             rarity: Character.Rarity.RARE,
             level: 1,
-            stats: { critDamage: 0.25 }
+            stats: { critDamage: 0.25, attack: 56 }
         },
 
         emerald_ring: {
@@ -972,7 +971,7 @@ export namespace Accessories {
             description: 'Точность важнее силы.',
             rarity: Character.Rarity.RARE,
             level: 1,
-            stats: { accuracy: 0.18 }
+            stats: { accuracy: 0.3, critChance: 0.18, attack: 20 }
         },
 
         lapis_ring: {
@@ -982,7 +981,7 @@ export namespace Accessories {
             description: 'Повышает шанс крита.',
             rarity: Character.Rarity.RARE,
             level: 1,
-            stats: { critChance: 0.18 }
+            stats: { critChance: 0.25, attack: 40 }
         },
 
         /* 📿 NECKLACES */
@@ -994,7 +993,7 @@ export namespace Accessories {
             description: 'Выносливость и защита.',
             rarity: Character.Rarity.COMMON,
             level: 1,
-            stats: { hp: 40, defense: 6 }
+            stats: { maxHp: 40, defense: 10 }
         },
 
         emerald_necklace: {
@@ -1004,7 +1003,7 @@ export namespace Accessories {
             description: 'Повышает боевую эффективность.',
             rarity: Character.Rarity.UNCOMMON,
             level: 1,
-            stats: { accuracy: 0.12, attack: 6 }
+            stats: { accuracy: 0.12, attack: 20 }
         },
 
         ruby_necklace: {
@@ -1014,7 +1013,7 @@ export namespace Accessories {
             description: 'Для агрессивных билдов.',
             rarity: Character.Rarity.RARE,
             level: 1,
-            stats: { attack: 10, critDamage: 0.2 }
+            stats: { attack: 30, critDamage: 0.2 }
         },
 
         lapis_necklace: {
@@ -1024,7 +1023,7 @@ export namespace Accessories {
             description: 'Мастер критических ударов.',
             rarity: Character.Rarity.RARE,
             level: 1,
-            stats: { critChance: 0.22 }
+            stats: { critChance: 0.22, accuracy: 0.15, attack: 26 }
         },
 
         royal_necklace: {
@@ -1034,7 +1033,7 @@ export namespace Accessories {
             description: 'Символ власти и силы.',
             rarity: Character.Rarity.EPIC,
             level: 1,
-            stats: { attack: 14, accuracy: 0.15, hp: 80 }
+            stats: { attack: 64, accuracy: 0.15, maxHp: 120 }
         }
 
     } as const;

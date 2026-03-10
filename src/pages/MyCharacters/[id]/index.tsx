@@ -1,3 +1,5 @@
+import { MUSIC } from "@/assets/music/music";
+import { SOUNDS } from "@/assets/sound/sounds";
 import { getCharacterEquipment } from "@/entities/character/lib/allCharacters";
 import {
   equipItem,
@@ -10,6 +12,9 @@ import { EquipmentCard } from "@/entities/character/ui/EquipmentCard/EquipmentCa
 import { EquipmentSelectModal } from "@/entities/character/ui/EquipmentSelectModal/EquipmentSelectModal";
 import { usePlayerStore } from "@/entities/player/model/player.store";
 import CharacterViewScene from "@/scenes/CharacterViewScene";
+import { useBackgroundMusic } from "@/shared/hooks/useBackgroundMusic";
+import { useSmoothCounter } from "@/shared/hooks/useSmoothCounter";
+import { useSoundEffects } from "@/shared/hooks/useSoundEffects";
 import usePlayerCharactersStore from "@/shared/store/PlayerCharactersStore";
 import { Character } from "@/shared/types/character";
 import {
@@ -29,6 +34,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useShallow } from "zustand/react/shallow";
 
 export const MyCharacterPage: FC = () => {
+  const music = useBackgroundMusic(MUSIC.menu, { loop: true, volume: 0.2 });
+  const sounds = useSoundEffects(SOUNDS);
   const { id } = useParams();
 
   useEffect(() => {
@@ -91,7 +98,9 @@ export const MyCharacterPage: FC = () => {
 
   const totalStats = current ? calculateStatsWithEquipment(current) : null;
 
-  const totalNewStats = newStats ? calculateStatsWithEquipment(newStats) : null;
+  const animatedPower = useSmoothCounter(totalStats?.power || 0, { speed: 25 });
+
+  const totalNewStats = newStats && animatedPower === totalStats?.power.toString() ? calculateStatsWithEquipment(newStats) : null;
 
   const isHover = isEnoughResources(resources, banalces);
 
@@ -99,12 +108,21 @@ export const MyCharacterPage: FC = () => {
 
   const equipment = getCharacterEquipment(current?.id || "");
 
+
   const handleLevelUp = () => {
     if (!current) return;
+    sounds.playSound('match_synth_1', 1)
     handlePlayAnimation("special");
     levelUp(current.id);
     console.log("levelUp", current.id);
   };
+
+  useEffect(() => {
+    music.play();
+    return () => {
+      music.stop();
+    };
+  }, [music.play]);
 
   if (!totalStats) {
     // navigate('/')
@@ -122,7 +140,7 @@ export const MyCharacterPage: FC = () => {
           <Balances />
           <div
             className={`
-                    absolute w-1/3 left-0 top-0 bottom-0 bg-gray-900/30
+                    absolute w-2/5 left-0 top-0 bottom-0 bg-gray-900/30
                     flex flex-col
                     p-2
                     `}
@@ -138,10 +156,16 @@ export const MyCharacterPage: FC = () => {
                             flex
                             items-center
                             justify-center
+                            flex-col
                             `}
               style={{ color: getRarityColor(totalStats.rarity) }}
             >
               {totalStats.name}
+              {
+                totalStats.description && (
+                  <p className="text-2xl text-center">{totalStats.description}</p>
+                )
+              }
             </p>
             <div
               className={`
@@ -177,6 +201,23 @@ export const MyCharacterPage: FC = () => {
 
                 }
               </div>
+              <div
+                className="text-white text-2xl flex items-center gap-4"
+                style={{ color: getRarityColor(totalStats.rarity) }}
+              >
+                {
+                  current && (
+                    <>
+                    <div className="rounded-full overflow-hidden size-[40px] relative">
+                      <Icon icon={`faction_${current.faction}`} className="absolute !w-[60px] !h-[60px] max-w-none top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+                    </div>
+                    <div className="rounded-full overflow-hidden size-[40px] relative">
+                      <Icon icon={`role_${current.role}`} />
+                    </div>
+                    </>
+                  )
+                }
+              </div>
             </div>
             <div className="px-10 mt-4">
               <p
@@ -192,8 +233,16 @@ export const MyCharacterPage: FC = () => {
                                 px-20
                                 `}
               >
-                Ур. {totalStats.progression.level}
-                {isHover && newStats && (
+                <span
+                  className="transition-all"
+                  style={{
+                    color: animatedPower !== totalStats?.power.toString() ? "var(--color-green-600)" : undefined,
+                    transform: animatedPower !== totalStats?.power.toString() ? 'scale(1.15)' : undefined,
+                  }}
+                >
+                  Ур. {totalStats.progression.level}
+                </span>
+                {isHover && newStats && animatedPower === totalStats?.power.toString() && (
                   <span className="inline-block ml-auto text-green-600">
                     {">"} Ур. {newStats.progression.level}
                   </span>
@@ -216,7 +265,7 @@ export const MyCharacterPage: FC = () => {
                         `}
             >
               <div className="grid grid-cols-2 gap-2 w-full px-2 pt-4 pb-2 border-b-2 border-amber-900">
-                <span className="text-4xl text-white">МОЩЬ</span>
+                <span className="text-3xl text-white">МОЩЬ</span>
                 <span className="text-3xl text-white text-right flex justify-end">
                   {isHover &&
                     totalStats &&
@@ -226,11 +275,23 @@ export const MyCharacterPage: FC = () => {
                         {totalNewStats.power} {"<"}
                       </span>
                     )}
-                  {totalStats?.power}
+                  <span
+                  className="transition-all"
+                  style={
+                    animatedPower !== totalStats?.power.toString() ? 
+                    { 
+                      color: "var(--color-green-600)",
+                      transform: 'scale(1.3)'
+                    } : 
+                    {}
+                  }
+                  >
+                    {animatedPower}
+                  </span>
                 </span>
               </div>
               <div className="grid grid-cols-2 gap-2 w-full px-2 pt-4 pb-2 border-b-2 border-amber-900">
-                <span className="text-4xl text-white">ОЗ</span>
+                <span className="text-3xl text-white">ОЗ</span>
                 <span className="text-3xl text-white text-right flex justify-end">
                   {isHover &&
                     totalNewStats &&
@@ -245,7 +306,7 @@ export const MyCharacterPage: FC = () => {
                 </span>
               </div>
               <div className="grid grid-cols-2 gap-2 w-full px-2 pt-4 pb-2 border-b-2 border-amber-900">
-                <span className="text-4xl text-white">АТК</span>
+                <span className="text-3xl text-white">АТК</span>
                 <span className="text-3xl text-white text-right flex justify-end">
                   {isHover &&
                     totalNewStats &&
@@ -259,7 +320,7 @@ export const MyCharacterPage: FC = () => {
                 </span>
               </div>
               <div className="grid grid-cols-2 gap-2 w-full px-2 pt-4 pb-2 border-b-2 border-amber-900">
-                <span className="text-4xl text-white">Скорость</span>
+                <span className="text-3xl text-white">Скорость</span>
                 <span className="text-3xl text-white text-right flex justify-end">
                   {isHover &&
                     totalNewStats &&
@@ -273,7 +334,7 @@ export const MyCharacterPage: FC = () => {
                 </span>
               </div>
               <div className="grid grid-cols-2 gap-2 w-full px-2 pt-4 pb-2">
-                <span className="text-4xl text-white">Защита</span>
+                <span className="text-3xl text-white">Защита</span>
                 <span className="text-3xl text-white text-right flex justify-end">
                   {isHover &&
                     totalNewStats &&
@@ -302,7 +363,7 @@ export const MyCharacterPage: FC = () => {
                         `}
             >
               <div className="grid grid-cols-2 gap-2 w-full px-2 pt-4 pb-2 border-b-2 border-amber-900">
-                <span className="text-4xl text-white">Крит шанс</span>
+                <span className="text-3xl text-white">Крит шанс</span>
                 <span className="text-3xl text-white text-right flex justify-end">
                   {isHover &&
                     totalNewStats &&
@@ -323,7 +384,7 @@ export const MyCharacterPage: FC = () => {
                 </span>
               </div>
               <div className="grid grid-cols-2 gap-2 w-full px-2 pt-4 pb-2 border-b-2 border-amber-900">
-                <span className="text-4xl text-white">Крит урон</span>
+                <span className="text-3xl text-white">Крит урон</span>
                 <span className="text-3xl text-white text-right flex justify-end">
                   {isHover &&
                     totalNewStats &&
@@ -363,7 +424,7 @@ export const MyCharacterPage: FC = () => {
                 </span>
               </div>
               <div className="grid grid-cols-2 gap-2 w-full px-2 pt-4 pb-2 border-b-2 border-amber-900">
-                <span className="text-4xl text-white">Уклонение</span>
+                <span className="text-3xl text-white">Уклонение</span>
                 <span className="text-3xl text-white text-right flex justify-end">
                   {isHover &&
                     totalNewStats &&
@@ -379,8 +440,8 @@ export const MyCharacterPage: FC = () => {
                   {Math.floor((totalStats.advancedStats?.dodge || 0.01) * 100)}%
                 </span>
               </div>
-              <div className="grid grid-cols-2 gap-2 w-full px-2 pt-4 pb-2 border-b-2 border-amber-900">
-                <span className="text-4xl text-white">Точность</span>
+              <div className="grid grid-cols-2 gap-2 w-full px-2 pt-4 pb-2">
+                <span className="text-3xl text-white">Точность</span>
                 <span className="text-3xl text-white text-right flex justify-end">
                   {isHover &&
                     totalNewStats &&
@@ -404,10 +465,10 @@ export const MyCharacterPage: FC = () => {
               className="mt-auto text-2xl text-white p-4 bg-gray-900/80 rounded-xl cursor-pointer"
               onClick={goBack}
             >
-              Назад
+              ← Назад
             </span>
           </div>
-          <div className="absolute left-[33.33%] right-0 bottom-0 h-1/3 bg-gray-900/30 flex flex-col items-center justify-center p-8 gap-2">
+          <div className="absolute left-[40%] right-0 bottom-0 h-1/3 bg-gray-900/30 flex flex-col items-center justify-center p-8 gap-2">
             <div className="text-4xl text-white font-bold">Снаряжение</div>
             <div className="grid grid-cols-5 gap-4 mb-4">
               <EquipmentCard
@@ -563,8 +624,10 @@ export const MyCharacterPage: FC = () => {
             currentEquipment={equipment[isEquipmentModalOpen]}
             onSelect={(e) => {
               if (e) {
+                sounds.playSound("weapon_equip", 0.5);
                 equipItem(current!.id, e.id);
               } else if (equipment[isEquipmentModalOpen]?.id) {
+                sounds.playSound("weapon_unequip", 0.5);
                 unequipItem(equipment[isEquipmentModalOpen].id);
               }
             }}

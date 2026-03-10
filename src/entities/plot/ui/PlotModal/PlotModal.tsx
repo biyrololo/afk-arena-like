@@ -1,6 +1,7 @@
 import { useEffect, useEffectEvent, useMemo, useState, type FC } from "react";
 import { findStatement, usePlotStore } from "../../lib/plot.store";
 import { useShallow } from "zustand/shallow";
+import { AnimatePresence, motion } from "framer-motion";
 
 export const PlotModal: FC = () => {
     const [
@@ -73,20 +74,26 @@ export const PlotModal: FC = () => {
             }}
             onClick={handleClick}
             >
-                {
-                    statement.avatar && (
-                        <img 
-                        key={statement.id}
-                        src={statement.avatar}
-                        alt={statement.author}
-                        className="size-50 object-cover object-center rounded-t-2xl border-2 border-stone-700 mt-auto mx-20"
-                        style={{
-                            alignSelf: statement.authorPosition === 'right' ? 'flex-end' : 'flex-start',
-                            transform: statement.authorPosition === 'right' ? 'rotateY(180deg)' : ''
-                        }}
-                        />
-                    )
-                }
+                <AnimatePresence mode="wait">
+                    {
+                        statement.avatar && (
+                            <motion.img 
+                            key={`${statement.avatar}-${statement.authorPosition}`}
+                            initial={{ opacity: 0, scale: 0.5 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.9 }}
+                            transition={{ duration: 0.5 }}
+                            src={statement.avatar}
+                            alt={statement.author}
+                            className="size-50 object-cover object-center rounded-t-2xl border-2 border-stone-700 mt-auto mx-20"
+                            style={{
+                                alignSelf: statement.authorPosition === 'right' ? 'flex-end' : 'flex-start',
+                                transform: statement.authorPosition === 'right' ? 'rotateY(180deg)' : ''
+                            }}
+                            />
+                        )
+                    }
+                </AnimatePresence>
                 <div
                 className={`
                     bg-stone-900 p-8 rounded-xl border-2 border-stone-700 mx-10 mb-10

@@ -2,6 +2,7 @@ import Phaser from "phaser";
 
 import { Character as CharacterNS } from "@/shared/types/character";
 import { getDamageColor } from "@/entities/character/lib/getDamageColor";
+import { usePlayerStatsStore } from "@/entities/player/model/player-stats.store";
 
 export type CharacterAttackType = "special" | `attack${number}`;
 
@@ -22,9 +23,10 @@ export function applyAttackDamage(
   height: number,
   damage: number,
   damageType: CharacterNS.DamageType,
+  targetsCount = 5
 ) {
   if (attacker.getHP() <= 0) return;
-  const dir = attacker.direction ? 1 : -1;
+  const dir = attacker.getDirection() ? 1 : -1;
   const hitbox = new Phaser.Geom.Rectangle(
     attacker.x + offsetX * dir - width / 2,
     attacker.y + offsetY - height / 2,
@@ -44,20 +46,76 @@ export function applyAttackDamage(
 
   const stats = attacker.getAdvancedStats();
 
-  // Проверка попаданий
-  enemies.forEach((enemy) => {
-    if (
-      Phaser.Geom.Intersects.RectangleToRectangle(hitbox, enemy.getHitbox())
-    ) {
-      hit = true;
-      const isCrit = Math.random() < stats.critChance;
-      enemy.takeDamage(
-        damage,
-        isCrit ? stats.critDamage : 1,
-        stats.accuracy,
-        damageType,
-      );
+
+  const potentialTargets = enemies.filter(enemy =>
+    enemy.getHP() > 0 &&
+    Phaser.Geom.Intersects.RectangleToRectangle(hitbox, enemy.getHitbox())
+  );
+
+  // 2. Сортируем их по близости к атакующему
+  potentialTargets.sort((a, b) => {
+    return Phaser.Math.Distance.Between(attacker.x, attacker.y, a.x, a.y) -
+      Phaser.Math.Distance.Between(attacker.x, attacker.y, b.x, b.y);
+  });
+
+  const myRole = attacker.getRole();
+  let targetsToHit: Character[] = [];
+
+  // 3. Логика выбора целей в зависимости от роли атакующего
+  switch (myRole) {
+    case CharacterNS.Role.TANK: {
+      // Приоритет — вражеские танки в зоне поражения
+      const tanks = potentialTargets.filter(e => e.getRole() === CharacterNS.Role.TANK);
+      targetsToHit = tanks.length > 0 ? tanks : potentialTargets;
+      break;
     }
+
+    case CharacterNS.Role.WARRIOR: {
+      // Приоритет — танки, затем ассасины
+      const priority = potentialTargets.filter(e =>
+        e.getRole() === CharacterNS.Role.TANK || e.getRole() === CharacterNS.Role.ASSASSIN
+      ).sort((a, b) => {
+        if (a.getRole() === CharacterNS.Role.TANK && b.getRole() === CharacterNS.Role.ASSASSIN) return -1;
+        else if (a.getRole() === CharacterNS.Role.ASSASSIN && b.getRole() === CharacterNS.Role.TANK) return 1;
+        else return 0;
+      });
+      targetsToHit = priority.length > 0 ? priority : potentialTargets;
+      break;
+    }
+
+    case CharacterNS.Role.ASSASSIN: {
+      // Сортируем по "эффективному здоровью" (HP * защита)
+      const weakEnemies = [...potentialTargets].sort((a, b) => {
+        const effHPA = a.getHP() * (1 + a.getBaseStats().defense / 200);
+        const effHPB = b.getHP() * (1 + b.getBaseStats().defense / 200);
+        return effHPA - effHPB;
+      });
+
+      // Ассасины часто бьют одну цель, но если targetsCount > 1, берем самых слабых
+      targetsToHit = weakEnemies;
+      break;
+    }
+
+    default:
+      targetsToHit = potentialTargets;
+  }
+
+  // Ограничиваем количество целей согласно параметру targetsCount
+  const finalTargets = (attacker.characterState === 'special' && targetsCount > 1) ?
+    potentialTargets.slice(0, targetsCount)
+    : targetsToHit.slice(0, targetsCount);
+
+
+  finalTargets.forEach((enemy) => {
+    hit = true;
+    const isCrit = Math.random() < stats.critChance;
+    enemy.takeDamage(
+      damage,
+      isCrit ? stats.critDamage : 1,
+      stats.accuracy,
+      damageType,
+      attacker.getFaction(),
+    );
   });
 
   if (hit && !(attacker.characterState === "special")) {
@@ -83,6 +141,8 @@ export default class Character extends Phaser.GameObjects.Container {
 
   private advancedStats: CharacterNS.AdvancedStats;
   private baseStats: CharacterNS.BaseStats;
+  private role: CharacterNS.Role;
+  private faction: CharacterNS.Faction;
 
   // Параметры движения
   private speed: number;
@@ -90,7 +150,7 @@ export default class Character extends Phaser.GameObjects.Container {
    * true - вправо
    * false - влево
    */
-  public direction: boolean = true;
+  private direction: boolean = true;
 
   // HP система
   private maxHP: number;
@@ -118,8 +178,8 @@ export default class Character extends Phaser.GameObjects.Container {
     CharacterAttackType,
     { x: number; y: number }
   > = {
-    special: { x: 0, y: 0 },
-  };
+      special: { x: 0, y: 0 },
+    };
 
   private movingTarget: {
     x: number;
@@ -143,14 +203,26 @@ export default class Character extends Phaser.GameObjects.Container {
 
   private cooldownAttack: number = 2000;
 
+  private hpBarColor: number = 0xff0000;
+  private hpBarBgColor: number = 0x000000;
+
+  private level: number;
+
+  private levelText?: Phaser.GameObjects.Text;
+
+  private baseColor?: number;
+
   constructor(
     scene: Phaser.Scene,
     x: number,
     y: number,
     speed: number,
     textureKey: string,
+    level: number,
     baseStats: CharacterNS.BaseStats,
     advancedStats: CharacterNS.AdvancedStats,
+    role: CharacterNS.Role,
+    faction: CharacterNS.Faction,
     frameWidth: number,
     frameHeight: number,
     displayWidth?: number,
@@ -160,6 +232,8 @@ export default class Character extends Phaser.GameObjects.Container {
   ) {
     super(scene, x, y);
     scene.add.existing(this);
+
+    this.level = level;
 
     this.spriteOffsetX = spriteOffsetX || 0;
 
@@ -173,6 +247,8 @@ export default class Character extends Phaser.GameObjects.Container {
     this.textureKey = textureKey;
     this.baseStats = baseStats;
     this.advancedStats = advancedStats;
+    this.role = role;
+    this.faction = faction;
     this.frameWidth = frameWidth;
     this.frameHeight = frameHeight;
 
@@ -242,7 +318,7 @@ export default class Character extends Phaser.GameObjects.Container {
   public setAttacksDistances(
     attacksDistances: Record<
       CharacterAttackType,
-      { x: number; y: number; minX?: number }
+      { x: number; y: number; minX?: number; minY?: number }
     >,
   ) {
     this.attacksDistances = attacksDistances;
@@ -252,9 +328,10 @@ export default class Character extends Phaser.GameObjects.Container {
     x: number;
     y: number;
     minX?: number;
+    minY?: number;
   } {
     if (!this.attacksDistances[attackType]) {
-      return { x: 0, y: 0, minX: undefined };
+      return { x: 0, y: 0, minX: undefined, minY: undefined };
     }
     return this.attacksDistances[attackType];
   }
@@ -421,14 +498,43 @@ export default class Character extends Phaser.GameObjects.Container {
     const barHeight: number = 10;
     const offsetY: number = this.uiOffsetY;
 
+    if (!this.levelText && this.level) {
+      this.levelText = this.scene.add
+        .text(0, offsetY - 30, `Ур. ${this.level}`, {
+          fontSize: "12px",
+          color: "#ffffff",
+          align: "center",
+          font: "30px Pixel",
+          stroke: "#000000",
+          strokeThickness: 4,
+        })
+        .setOrigin(0.5);
+      this.add(this.levelText);
+
+      this.scene.tweens.add({
+        targets: this.levelText,
+        alpha: 0,
+        duration: 3000,
+        ease: "Linear",
+        repeat: 0,
+        onComplete: () => {
+          this.levelText?.destroy();
+        },
+      });
+    }
+
     // Фон полоски HP
-    this.hpBarBg = this.scene.add.graphics();
-    this.hpBarBg.fillStyle(0x333333, 1);
+    if (!this.hpBarBg) {
+      this.hpBarBg = this.scene.add.graphics();
+    }
+    this.hpBarBg.fillStyle(this.hpBarBgColor, 1);
     this.hpBarBg.fillRect(-barWidth / 2, offsetY, barWidth, barHeight);
 
     // Активная полоска HP
-    this.hpBar = this.scene.add.graphics();
-    this.hpBar.fillStyle(0x00ff00, 1);
+    if (!this.hpBar) {
+      this.hpBar = this.scene.add.graphics();
+    }
+    this.hpBar.fillStyle(this.hpBarColor, 1);
     this.hpBar.fillRect(-barWidth / 2, offsetY, barWidth, barHeight);
 
     // Добавляем в контейнер
@@ -463,13 +569,7 @@ export default class Character extends Phaser.GameObjects.Container {
 
     // Обновляем цвет полоски в зависимости от HP и перерисовываем полностью
     this.hpBar.clear();
-    if (hpPercent > 0.6) {
-      this.hpBar.fillStyle(0x00ff00, 1); // Зеленый
-    } else if (hpPercent > 0.3) {
-      this.hpBar.fillStyle(0xffff00, 1); // Желтый
-    } else {
-      this.hpBar.fillStyle(0xff0000, 1); // Красный
-    }
+    this.hpBar.fillStyle(this.hpBarColor, 1);
     this.hpBar.fillRect(-barWidth / 2, offsetY, barWidth * hpPercent, 10);
 
     // Обновляем текст
@@ -569,18 +669,64 @@ export default class Character extends Phaser.GameObjects.Container {
     critDmg: number = 0,
     accuracy: number = 0,
     damageType: CharacterNS.DamageType = CharacterNS.DamageType.PHYSICAL,
+    attackerFaction: CharacterNS.Faction = CharacterNS.Faction.FIRE,
   ): void {
     if (this.isDead) return;
 
-    damage = Math.floor(damage * critDmg);
+    let dmgBonus = 1;
 
-    const effectiveDefense = this.baseStats.defense / (1 + accuracy);
+    let defenseBonus = 1;
+
+    let accuracyBonus = 1;
+
+    if (attackerFaction === CharacterNS.Faction.FIRE && this.faction === CharacterNS.Faction.ICE) {
+      dmgBonus = 1.25;
+      defenseBonus = 0.9;
+    }
+
+    if (attackerFaction === CharacterNS.Faction.ICE && this.faction === CharacterNS.Faction.CRYSTAL) {
+      dmgBonus = 1.25;
+      defenseBonus = 0.9;
+    }
+
+    if (attackerFaction === CharacterNS.Faction.CRYSTAL && this.faction === CharacterNS.Faction.NATURE) {
+      dmgBonus = 1.25;
+      accuracyBonus = 1.15;
+    }
+
+    if (attackerFaction === CharacterNS.Faction.NATURE && this.faction === CharacterNS.Faction.FIRE) {
+      dmgBonus = 1.25;
+      accuracyBonus = 1.15;
+    }
+
+
+    if (attackerFaction === CharacterNS.Faction.FIRE && this.faction === CharacterNS.Faction.NATURE) {
+      dmgBonus = 0.9;
+    }
+
+    if (attackerFaction === CharacterNS.Faction.CRYSTAL && this.faction === CharacterNS.Faction.ICE) {
+      accuracyBonus = 0.8;
+    }
+
+    if (attackerFaction === CharacterNS.Faction.CORRUPTION && this.faction !== CharacterNS.Faction.CORRUPTION) {
+      dmgBonus = 1.2;
+      accuracyBonus = 1.2;
+    }
+
+    if (attackerFaction !== CharacterNS.Faction.CORRUPTION && this.faction === CharacterNS.Faction.CORRUPTION) {
+      accuracyBonus = 0.8;
+      defenseBonus = 1.2;
+    }
+
+    damage = Math.floor(damage * critDmg * dmgBonus);
+
+    const effectiveDefense = this.baseStats.defense * defenseBonus / (1 + accuracy * accuracyBonus);
 
     damage = (damage * 100) / (100 + effectiveDefense);
 
     damage = Math.floor(damage);
 
-    const dodgeChance = this.advancedStats.dodge / (1 + accuracy);
+    const dodgeChance = this.advancedStats.dodge / (1 + accuracy * accuracyBonus);
 
     let isDodged = false;
 
@@ -639,19 +785,19 @@ export default class Character extends Phaser.GameObjects.Container {
         `${damage}`,
         critDmg > 1 && !isDodged
           ? {
-              font: "200px Pixel",
-              color: getDamageColor(damageType),
-              fontStyle: "bold",
-              stroke: "#333333",
-              strokeThickness: 7,
-            }
+            font: "200px Pixel",
+            color: getDamageColor(damageType),
+            fontStyle: "bold",
+            stroke: "#333333",
+            strokeThickness: 7,
+          }
           : {
-              font: "80px Pixel",
-              color: isDodged ? "#48f542" : getDamageColor(damageType),
-              fontStyle: "bold",
-              stroke: "#333333",
-              strokeThickness: 5,
-            },
+            font: "80px Pixel",
+            color: isDodged ? "#48f542" : getDamageColor(damageType),
+            fontStyle: "bold",
+            stroke: "#333333",
+            strokeThickness: 5,
+          },
       )
       .setOrigin(0.5)
       .setDepth(999);
@@ -668,16 +814,41 @@ export default class Character extends Phaser.GameObjects.Container {
       },
     });
 
-    // Эффект получения урона
-    this.scene.tweens.add({
-      targets: this.sprite,
-      tint: 0xff0000,
+    // Определяем начальный и конечный цвета
+    const startColor = Phaser.Display.Color.IntegerToColor(0xff0000); // Красный
+    const endColor = Phaser.Display.Color.IntegerToColor(this.baseColor || 0xffffff);
+
+    this.scene.tweens.addCounter({
+      from: 0,
+      to: 100,
       duration: 100,
       yoyo: true,
       repeat: 1,
-      onComplete: (): void => {
-        this.sprite.clearTint();
+      onUpdate: (tween) => {
+        const value = tween.getValue();
+        // Интерполяция между красным и baseColor
+        const colorObject = Phaser.Display.Color.Interpolate.ColorWithColor(
+          startColor,
+          endColor,
+          100,
+          value || 0
+        );
+
+        const color = Phaser.Display.Color.GetColor(
+          colorObject.r,
+          colorObject.g,
+          colorObject.b
+        );
+
+        this.sprite.setTint(color);
       },
+      onComplete: () => {
+        if (this.baseColor) {
+          this.sprite.setTint(this.baseColor);
+        } else {
+          this.sprite.clearTint();
+        }
+      }
     });
 
     if (this.currentHP <= 0) {
@@ -706,6 +877,12 @@ export default class Character extends Phaser.GameObjects.Container {
     // Анимация смерти
     this.sprite.setTint(0x444444);
 
+    if (this.hpBarColor === 0xff0000) {
+      usePlayerStatsStore
+        .getState()
+        .addKilledEnemy(this.textureKey);
+    }
+
     this.scene.tweens.add({
       targets: this,
       alpha: 0,
@@ -723,6 +900,13 @@ export default class Character extends Phaser.GameObjects.Container {
   public setMaxHP(hp: number): void {
     this.maxHP = hp;
     this.currentHP = hp;
+    this.updateHPBar();
+  }
+
+  public setHP(hp: number): void {
+    this.currentHP = hp;
+    this.currentHP = Math.max(0, this.currentHP);
+    this.currentHP = Math.min(this.maxHP, this.currentHP);
     this.updateHPBar();
   }
 
@@ -753,6 +937,14 @@ export default class Character extends Phaser.GameObjects.Container {
   public setPosition(x: number, y: number): this {
     super.setPosition(x, y);
     return this;
+  }
+
+  public getDirection(): boolean {
+    return this.direction;
+  }
+
+  public setDirection(direction: boolean): void {
+    this.direction = direction;
   }
 
   /**
@@ -793,8 +985,22 @@ export default class Character extends Phaser.GameObjects.Container {
     return this.baseStats;
   }
 
+  public getRole(): Readonly<CharacterNS.Role> {
+    return this.role;
+  }
+
+  public getFaction(): Readonly<CharacterNS.Faction> {
+    return this.faction;
+  }
+
   public getAdvancedStats(): Readonly<CharacterNS.AdvancedStats> {
     return this.advancedStats;
+  }
+
+  public toggleFlipX(): void {
+    this.setFlipX(!this.sprite.flipX);
+    this.sprite.setX(!this.sprite.flipX ? -this.spriteOffsetX : this.spriteOffsetX);
+    this.direction = !this.direction;
   }
 
   public setFlipX(flip: boolean) {
@@ -844,5 +1050,20 @@ export default class Character extends Phaser.GameObjects.Container {
 
   public setCooldownAttack(cooldownAttack: number): void {
     this.cooldownAttack = cooldownAttack;
+  }
+
+  public updateHPBarBgColor(color: number): void {
+    this.hpBarBgColor = color;
+    this.createHPBar();
+  }
+
+  public updateHPBarColor(color: number): void {
+    this.hpBarColor = color;
+    this.createHPBar();
+  }
+
+  public setBaseColor(color?: number): void {
+    this.baseColor = color;
+    this.sprite.setTint(color);
   }
 }

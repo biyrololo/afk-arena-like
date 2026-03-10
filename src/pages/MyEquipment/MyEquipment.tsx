@@ -4,16 +4,20 @@ import { ResponsiveUI } from "@/shared/ui/ResponsiveUI/ResponsiveUI";
 import { getRarityColor } from "@/entities/character/lib/getRarityColor";
 import { Balances } from "@/widgets/Balances/Balances";
 import { HeroMiniCard } from "@/entities/character/ui/HeroMiniCard/HeroMiniCard";
-import { useMemo, type FC } from "react";
+import { useEffect, useMemo, type FC } from "react";
 import { Button } from "@/shared/ui/Button/Button";
 import { EquipmentFullCard } from "@/entities/character/ui/EquipmentCard/EquipmentFullCard";
 import { assets } from "@/shared/assets";
 import { calculateEquipmentPower } from "@/shared/types/develop";
 import { Avatars } from "@/shared/avatars";
+import { AnimatePresence, motion } from "framer-motion";
+import { useBackgroundMusic } from "@/shared/hooks/useBackgroundMusic";
+import { MUSIC } from "@/assets/music/music";
 
 const PER_PAGE = 3 * 3;
 
 export const MyEquipmentPage: FC = () => {
+  const music = useBackgroundMusic(MUSIC.menu, { loop: true, volume: 0.2 });
   const [params, setParams] = useSearchParams();
 
   const page = parseInt(params.get("page") ?? "0") ?? 0;
@@ -57,6 +61,13 @@ export const MyEquipmentPage: FC = () => {
     navitate("/");
   };
 
+  useEffect(() => {
+    music.play();
+    return () => {
+      music.stop();
+    };
+  }, [music.play]);
+
   return (
     <ResponsiveUI>
       <div
@@ -90,25 +101,41 @@ export const MyEquipmentPage: FC = () => {
           Назад
         </button>
         <div className="w-[1800px] mx-auto mt-24 flex flex-col gap-12 items-center">
-          <section className="grid grid-cols-3 gap-4 w-full">
-            {paginatedEquipment.map((eq) => {
-              let equippedCharacter = characters.find(
-                (c) => c.id === eq.equippedCharacterId,
-              );
-              return (
-                <EquipmentFullCard
-                  key={eq.id}
-                  equipment={eq}
-                  withEquipedCharacter={
-                    equippedCharacter
-                      ? Avatars[equippedCharacter.key as keyof typeof Avatars]
-                      : undefined
-                  }
-                  onClick={() => navitate(`/my-equipment/${eq.id}`)}
-                />
-              );
-            })}
-          </section>
+          <AnimatePresence mode="wait">
+            <motion.section
+              className="grid grid-cols-3 gap-4 w-full"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.2 }}
+              key={page}
+            >
+              {
+                paginatedEquipment.length === 0 && (
+                  <div className="col-span-3 flex items-center justify-center text-white/70 text-5xl mt-30">
+                    Пусто
+                  </div>
+                )
+              }
+              {paginatedEquipment.map((eq) => {
+                let equippedCharacter = characters.find(
+                  (c) => c.id === eq.equippedCharacterId,
+                );
+                return (
+                  <EquipmentFullCard
+                    key={eq.id}
+                    equipment={eq}
+                    withEquipedCharacter={
+                      equippedCharacter
+                        ? Avatars[equippedCharacter.key as keyof typeof Avatars]
+                        : undefined
+                    }
+                    onClick={() => navitate(`/my-equipment/${eq.id}`)}
+                  />
+                );
+              })}
+            </motion.section>
+          </AnimatePresence>
           <div className="flex gap-4 justify-between w-full px-20 mt-auto">
             <Button onClick={handlePrevious} disabled={isPreviousDisabled}>
               {"<"}

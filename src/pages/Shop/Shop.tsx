@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { ResponsiveUI } from "@/shared/ui/ResponsiveUI/ResponsiveUI";
 import { Button } from "@/shared/ui/Button/Button";
 import { Icon } from "@/shared/ui/Icon/Icon";
@@ -8,17 +8,64 @@ import { useShallow } from "zustand/shallow";
 
 import shop from "@/assets/backgrounds/shop.webp";
 import { Balances } from "@/widgets/Balances/Balances";
-import { isEnoughResourcesForShopItem, shopItems } from "@/entities/shop/model/shop.store";
+import { isEnoughResourcesForShopItem, getShopItems } from "@/entities/shop/model/shop.store";
 import { ShopItem } from "@/entities/shop/ui/ShopItem/ShopItem";
 import type { IShopItem } from "@/entities/shop/model/shop.model";
 import { PromocodeModal } from "@/entities/shop/ui/PromocodeModal/PromocodeModal";
 import { AnimatePresence } from "framer-motion";
+import { useBackgroundMusic } from "@/shared/hooks/useBackgroundMusic";
+import { MUSIC } from "@/assets/music/music";
+import { useSoundEffects } from "@/shared/hooks/useSoundEffects";
+import { SOUNDS } from "@/assets/sound/sounds";
+
+const PER_PAGE = 6;
 
 export default function ShopPage() {
+  const sounds = useSoundEffects(SOUNDS);
+  const music = useBackgroundMusic(MUSIC.menu, { loop: true, volume: 0.2 });
+  useEffect(() => {
+    music.play();
+    return () => {
+      music.stop();
+    };
+  }, [music.play]);
+
   const navigate = useNavigate();
   const balances = usePlayerStore(useShallow((state) => state.balances));
 
   const [isPromocodeModalOpen, setIsPromocodeModalOpen] = useState(false);
+
+  const [params, setParams] = useSearchParams();
+
+  const page = parseInt(params.get("page") ?? "0") ?? 0;
+
+  const shopItems = getShopItems();
+
+  const paginatedShopItems = useMemo(() => {
+    return shopItems.slice(page * PER_PAGE, (page + 1) * PER_PAGE);
+  }, [page, shopItems]);
+
+  const isNextDisabled = useMemo(() => {
+      return page * PER_PAGE + PER_PAGE >= shopItems.length;
+  }, [shopItems, page, PER_PAGE]);
+  
+  const isPreviousDisabled = useMemo(() => {
+    return page === 0;
+  }, [page]);
+
+  const handleNext = () => {
+    setParams({
+      ...params,
+      page: (page + 1).toString(),
+    });
+  };
+
+  const handlePrevious = () => {
+    setParams({
+      ...params,
+      page: (page - 1).toString(),
+    });
+  };
 
 
   const handleBack = () => {
@@ -26,6 +73,7 @@ export default function ShopPage() {
   };
 
   const handleBuy = (item: IShopItem) => {
+    sounds.playSound('sci_fi_confirm', 0.8)
     item.onBuy();
   };
 
@@ -93,13 +141,24 @@ export default function ShopPage() {
 
             {/* Items Grid */}
             <div className="grid grid-cols-3 gap-6 px-4">
-              {shopItems.map((item, index) => {
+              {paginatedShopItems.map((item, index) => {
                 const affordable = isEnoughResourcesForShopItem(item.price, item.priceType, balances);
 
                 return (
                   <ShopItem affordable={affordable} key={index} item={item} buy={() => handleBuy(item)} />
                 )
               })}
+            </div>
+            <div className="flex gap-4 justify-between w-full px-20 mt-auto">
+              <Button onClick={handlePrevious} disabled={isPreviousDisabled}>
+                {"<"}
+              </Button>
+              <span className="text-2xl font-bold text-white">
+                {page + 1} / {Math.ceil(shopItems.length / PER_PAGE)}
+              </span>
+              <Button onClick={handleNext} disabled={isNextDisabled}>
+                {">"}
+              </Button>
             </div>
           </div>
         </div>
