@@ -97,7 +97,7 @@ export const SPEARWOMAN_CHARACTER: Character.Character = {
     dodge: 0.1,
     lifesteal: 0.5,
     accuracy: 0.1,
-    energyRegen: 12,
+    energyRegen: 6,
     cooldownAttack: 1000
   },
   skills: [],
@@ -149,7 +149,7 @@ export const FROST_GUARDIAN: Character.Character = {
   power: 70,
   baseStats: {
     maxHp: 1400,
-    attack: 70,
+    attack: 120,
     speed: 60,
     defense: 300,
   },
@@ -270,7 +270,7 @@ export const CRYSTAL_KING: Character.Character = {
     dodge: 0.1,
     lifesteal: 0.5,
     accuracy: 0.1,
-    energyRegen: 20,
+    energyRegen: 15,
     cooldownAttack: 2000
   },
 
@@ -287,7 +287,7 @@ export const ELEMENTAL_WIND_CHARACTER: Character.Character = {
   faction: Character.Faction.NATURE, // установленное произвольное значение
   damageType: Character.DamageType.MAGIC, // установленное произвольное значение
   power: 30,
-  
+
   baseStats: {
     maxHp: 350,
     attack: 160, // недостающий атрибут в исходном объекте
@@ -306,12 +306,12 @@ export const ELEMENTAL_WIND_CHARACTER: Character.Character = {
     dodge: 0.3,
     lifesteal: 0.5,
     accuracy: 0.1,
-    energyRegen: 10,
+    energyRegen: 8,
     cooldownAttack: 1500
   },
-  
+
   skills: [], // здесь можно добавить доступные навыки
-  
+
 };
 
 export const GROUND_MONK_CHARACTER: Character.Character = {
@@ -343,7 +343,7 @@ export const GROUND_MONK_CHARACTER: Character.Character = {
     dodge: 0.05,
     lifesteal: 0.5,
     accuracy: 0.1,
-    energyRegen: 10,
+    energyRegen: 8,
     cooldownAttack: 1400
   },
   skills: [],
@@ -362,7 +362,7 @@ export const WATER_PRIESTESS_CHARACTER: Character.Character = {
 
   baseStats: {
     maxHp: 400,
-    attack: 70,
+    attack: 110,
     speed: 180,
     defense: 40,
   },

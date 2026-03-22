@@ -3,14 +3,13 @@ import { getDailyRewards, useDailyRewardsStore } from "../../model/daily-reward.
 import { useShallow } from "zustand/shallow";
 import { Modal } from "@/shared/ui/Modal";
 import { DailyReward } from "../DailyReward";
-import type { IDailyReward } from "../../model/daily-reward.model";
 import { Button } from "@/shared/ui/Button/Button";
 
 export const DailyRewardsModal: FC = () => {
     const [isOpenedModal, setIsOpenedModal, currentDay, lastClaimedAt, claimToday] = useDailyRewardsStore(
         useShallow(state => [
-            state.isOpenedModal, 
-            state.setIsOpenedModal, 
+            state.isOpenedModal,
+            state.setIsOpenedModal,
             state.currentDay,
             state.lastClaimedAt,
             state.claimToday
@@ -33,7 +32,7 @@ export const DailyRewardsModal: FC = () => {
 
     const handleClaim = () => {
         const curReward = rewards.find(r => r.day === currentDay);
-        if(!curReward || !isAvailable(curReward.day)) return;
+        if (!curReward || !isAvailable(curReward.day)) return;
         curReward.onClaim();
         claimToday();
         setIsOpenedModal(false);
@@ -41,32 +40,35 @@ export const DailyRewardsModal: FC = () => {
 
     return (
         <Modal
-        isOpened={isOpenedModal}
-        close={() => setIsOpenedModal(false)}
-        title="Ежедневные награды"
-        classNames={{
-            title: 'text-4xl',
-            container: 'px-8 gap-12 pb-8'
-        }}
-        maxWidth="90%"
+            isOpened={isOpenedModal}
+            close={() => setIsOpenedModal(false)}
+            title="Ежедневные награды"
+            classNames={{
+                title: 'text-4xl',
+                container: 'px-8 gap-12 pb-8'
+            }}
+            maxWidth="95%"
+            style={{
+                backgroundColor: '#10141f'
+            }}
         >
             <section
-            className="grid grid-cols-7 gap-8 w-full"
+                className="grid grid-cols-7 gap-8 w-full"
             >
                 {
                     rewards.map(reward => (
-                        <DailyReward 
-                        key={reward.day}
-                        dailyReward={reward}
-                        available={isAvailable(reward.day)}
-                        claimed={claimed(reward.day)}
+                        <DailyReward
+                            key={reward.day}
+                            dailyReward={reward}
+                            available={isAvailable(reward.day)}
+                            claimed={claimed(reward.day)}
                         />
                     ))
                 }
             </section>
-            <Button 
-            className="w-full justify-center mt-10 transition-all"
-            onClick={handleClaim}
+            <Button
+                className="w-full justify-center mt-10 transition-all !bg-amber-600 hover:not-disabled:!bg-amber-500 text-4xl"
+                onClick={handleClaim}
             >
                 Получить награду
             </Button>

@@ -4,16 +4,17 @@ import { EventBus } from "@/utils/eventBus";
 import GameScene from "@/scenes/GameScene";
 import GameUI from "@/widgets/GameUI/GameUI";
 import PhaserGame from "@/shared/ui/PhaserGame";
-import type { PlayerCharacter, PlayerCharacterWithState } from "@/shared/types/PlayerCharacter";
-import { useEffect, useState } from "react";
+import type { PlayerCharacterWithState } from "@/shared/types/PlayerCharacter";
+import { useEffect } from "react";
 import { ResponsiveUI } from "@/shared/ui/ResponsiveUI/ResponsiveUI";
-import { findStage, SURVIVAL_CHAPTERS } from "@/entities/chapter/lib/chapters";
+import { findStage, getSurvivalChapters } from "@/entities/chapter/lib/chapters";
 import {
   StageTypeEnum,
   type IStage,
 } from "@/entities/chapter/lib/chapter.model";
 import { useBackgroundMusic } from "@/shared/hooks/useBackgroundMusic";
 import { MUSIC } from "@/assets/music/music";
+import { TogleMusicButton } from "@/widgets/TogleMusicButton/TogleMusicButton";
 
 export default function Game() {
   const location = useLocation();
@@ -59,7 +60,7 @@ export default function Game() {
         EventBus.emit("addAllies", characters);
         let currentStage: IStage | undefined;
         if (stageType === StageTypeEnum.SURVIVAL) {
-          currentStage = SURVIVAL_CHAPTERS.find(
+          currentStage = getSurvivalChapters().find(
             (c) => c.stageNumber === +stage,
           );
         } else if (chapter) {
@@ -113,6 +114,7 @@ export default function Game() {
       <PhaserGame scenes={[GameScene]} />
       <ResponsiveUI>
         <GameUI />
+        <TogleMusicButton />
       </ResponsiveUI>
     </>
   );

@@ -1,7 +1,8 @@
-import fc160 from "@/assets/icons/fc160.png";
+// import fc160 from "@/assets/icons/fc160.png";
+import fc131 from "@/assets/icons/fc131.png";
 import fc167 from "@/assets/icons/fc167.png";
-import fc302 from "@/assets/icons/fc302.png";
-import fc303 from "@/assets/icons/fc303.png";
+import fc297 from "@/assets/icons/fc297.png";
+// import fc302 from "@/assets/icons/fc302.png";
 import fc304 from "@/assets/icons/fc304.png";
 
 import star_icon from "@/assets/icons/fc12.png";
@@ -126,10 +127,12 @@ import role_warrior from '@/assets/roles/warrior.webp'
 import role_assassin from '@/assets/roles/assassin.webp'
 
 export const Icons = {
-  gold: fc160,
+  gold: fc131,
   gems: fc167,
-  summon: fc302,
-  summons: fc302,
+  summon: fc297,
+  summons: fc297,
+  summonsSpecial: fc304,
+  summonSpecial: fc304,
   star: star_icon,
 
   sharp_pink_sword_weapon,

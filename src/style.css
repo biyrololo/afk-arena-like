@@ -25,6 +25,7 @@ body {
     font-family: "Birthstone";
     src: url("assets/fonts/Birthstone-Regular.ttf") format("truetype");
 }
+
 @font-face {
     font-family: "LavishlyYours";
     src: url("assets/fonts/LavishlyYours-Regular.ttf") format("truetype");
@@ -38,13 +39,41 @@ body {
 
 /* Custom animations for GameEnd page */
 @keyframes float {
+
     0%,
     100% {
         transform: translateY(0) translateX(0);
         opacity: 0.6;
     }
+
     50% {
         transform: translateY(-20px) translateX(10px);
         opacity: 0.3;
     }
+}
+
+
+input {
+    outline: none !important;
+    border: none !important;
+}
+
+#app {
+    /* Запрещаем выделение текста везде */
+    -webkit-touch-callout: none;
+    /* iOS Safari */
+    -webkit-user-select: none;
+    /* Safari */
+    -moz-user-select: none;
+    /* Firefox */
+    -ms-user-select: none;
+    /* IE/Edge */
+    user-select: none;
+    /* Chrome, Opera */
+
+    /* Убираем синий квадрат при клике на мобилках */
+    -webkit-tap-highlight-color: transparent;
+
+    /* Запрещаем скролл всей страницы (важно для мобилок) */
+    touch-action: none;
 }

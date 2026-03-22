@@ -1,6 +1,7 @@
 import { useEffect, useState, type FC } from "react";
 
-import bg from "@/assets/backgrounds/loading.webp";
+// import bg from "@/assets/backgrounds/loading.webp";
+import loading_bg from '@/assets/backgrounds/wallpaper.webp'
 import { ResponsiveUI } from "@/shared/ui/ResponsiveUI/ResponsiveUI";
 import { EventBus } from "@/utils/eventBus";
 
@@ -43,22 +44,29 @@ export const Loader: FC = () => {
   return (
     <ResponsiveUI zIndex={9999}>
       <div
-        className="w-full h-full bg-cover bg-center flex flex-col gap-4 items-center justify-center"
+        className="w-full h-full bg-cover bg-center flex flex-col gap-4 items-center justify-center relative"
         style={{
           backgroundColor: "black",
-          backgroundImage: `url(${bg})`,
+          backgroundImage: `url(${loading_bg})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           pointerEvents: "all",
           zIndex: 9999,
         }}
       >
-        <p className="text-white text-6xl font-bold text-shadow-[0px_0px_10px_rgba(0,0,0,0.5)]">
+        <p className="text-white text-8xl font-bold text-shadow-[0px_0px_10px_rgba(0,0,0,0.5)] mt-30">
           Загрузка...
         </p>
-        <p className="text-white text-6xl font-bold text-shadow-[0px_0px_10px_rgba(0,0,0,0.5)]">
-          {Math.floor(progress)}%
-        </p>
+        <div
+          className="w-full h-20 bg-sky-950 mt-auto relative"
+        >
+          <div className="h-full bg-sky-500 absolute" style={{ width: `${progress}%`, transition: "width 0.5s" }} />
+          <p
+            className="text-white text-6xl font-bold text-shadow-[0px_0px_10px_rgba(0,0,0,0.5)] absolute top-1/2 left-1/2 -translate-1/2"
+          >
+            {Math.floor(progress)}%
+          </p>
+        </div>
       </div>
     </ResponsiveUI>
   );
@@ -68,19 +76,23 @@ export const PermanentLoader: FC = () => {
   return (
     <ResponsiveUI zIndex={9999}>
       <div
-        className="w-full h-full bg-cover bg-center flex flex-col gap-4 items-center justify-center"
+        className="w-full h-full bg-cover bg-center flex flex-col gap-4 items-center justify-center relative"
         style={{
           backgroundColor: "black",
-          backgroundImage: `url(${bg})`,
+          backgroundImage: `url(${loading_bg})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           pointerEvents: "all",
           zIndex: 9999,
         }}
       >
-        <p className="text-white text-6xl font-bold text-shadow-[0px_0px_10px_rgba(0,0,0,0.5)]">
+        <p className="text-white text-8xl font-bold text-shadow-[0px_0px_10px_rgba(0,0,0,0.5)] mt-30">
           Загрузка...
         </p>
+        <div
+          className="w-full h-20 bg-sky-950 mt-auto relative"
+        >
+        </div>
       </div>
     </ResponsiveUI>
   );

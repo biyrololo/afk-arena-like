@@ -48,13 +48,13 @@ export function generateFirewarrior(scene: GameScene, team: 'ally' | 'enemy', pr
     entity.setAttackHitFrames('attack1', [2]);
     entity.setAttackHitFrames('attack2', [2]);
     entity.setAttackHitFrames('attack3', [2]);
-    entity.setAttackHitFrames('special', [3,4,5,6,7,8,9]);
+    entity.setAttackHitFrames('special', [3, 4, 5, 7, 9]);
 
     const baseDamage = props.character.baseStats.attack;
 
-    entity.onAttackFrame = (attackName: string, frameIndex: number): void => {
+    entity.onAttackFrame = (attackName: string, _: number): void => {
         const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
-        switch(attackName) {
+        switch (attackName) {
             case 'attack1':
                 applyAttackDamage(scene, entity, enemies, 100, 0, 180, 200, baseDamage, CharacterModel.DamageType.FIRE, 1);
                 break;
@@ -65,7 +65,7 @@ export function generateFirewarrior(scene: GameScene, team: 'ally' | 'enemy', pr
                 applyAttackDamage(scene, entity, enemies, 100, 20, 300, 100, baseDamage, CharacterModel.DamageType.FIRE, 1);
                 break;
             case 'special':
-                applyAttackDamage(scene, entity, enemies, 200, 0, 400, 200, baseDamage / 3, CharacterModel.DamageType.FIRE);
+                applyAttackDamage(scene, entity, enemies, 200, 0, 400, 200, baseDamage / 2, CharacterModel.DamageType.FIRE);
                 break;
         }
     }
@@ -93,7 +93,7 @@ export function generateFirewarrior(scene: GameScene, team: 'ally' | 'enemy', pr
         }
     })
 
-    if(team === 'ally') {
+    if (team === 'ally') {
         scene.addAlly(entity);
         entity.updateHPBarColor(0x00ff00)
         entity.updateHPBarBgColor(0x000000)
@@ -109,7 +109,7 @@ export function generateFirewarrior(scene: GameScene, team: 'ally' | 'enemy', pr
         scene.addEnemy(entity);
         entity.setFlipX(true);
     }
-    
+
     // entity.setDebugMode(true);
 
     entity.playAnimation('idle', 'idle', true);
@@ -152,9 +152,9 @@ export function generateViking(scene: GameScene, team: 'ally' | 'enemy', props: 
 
     const baseDamage = props.character.baseStats.attack;
 
-    entity.onAttackFrame = (attackName: string, frameIndex: number): void => {
+    entity.onAttackFrame = (attackName: string, _: number): void => {
         const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
-        switch(attackName) {
+        switch (attackName) {
             case 'attack1':
                 applyAttackDamage(scene, entity, enemies, 100, 50, 180, 200, baseDamage, CharacterModel.DamageType.PHYSICAL, 2);
                 break;
@@ -165,7 +165,7 @@ export function generateViking(scene: GameScene, team: 'ally' | 'enemy', props: 
                 applyAttackDamage(scene, entity, enemies, 100, 50, 220, 200, baseDamage, CharacterModel.DamageType.PHYSICAL, 2);
                 break;
             case 'special':
-                applyAttackDamage(scene, entity, enemies, 0, 100, 500, 200, baseDamage * 2, CharacterModel.DamageType.PHYSICAL);
+                applyAttackDamage(scene, entity, enemies, 0, 100, 500, 200, baseDamage * 3, CharacterModel.DamageType.PHYSICAL);
                 break;
         }
     }
@@ -193,7 +193,7 @@ export function generateViking(scene: GameScene, team: 'ally' | 'enemy', props: 
         }
     })
 
-    if(team === 'ally') {
+    if (team === 'ally') {
         scene.addAlly(entity);
         entity.updateHPBarColor(0x00ff00)
         entity.updateHPBarBgColor(0x000000)
@@ -221,7 +221,7 @@ export function generateSpearwoman(scene: GameScene, team: 'ally' | 'enemy', pro
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
-        props.frameWidth || 128, props.frameHeight || 115, props.displayWidth ?? 128 *(props.scale || 5), props.displayHeight ?? 115 * (props.scale || 5),
+        props.frameWidth || 128, props.frameHeight || 115, props.displayWidth ?? 128 * (props.scale || 5), props.displayHeight ?? 115 * (props.scale || 5),
         props.uiOffsetY || -80, 50);
 
     entity.setMaxHP(props.character.baseStats.maxHp);
@@ -251,9 +251,9 @@ export function generateSpearwoman(scene: GameScene, team: 'ally' | 'enemy', pro
 
     const baseDamage = props.character.baseStats.attack;
 
-    entity.onAttackFrame = (attackName: string, frameIndex: number): void => {
+    entity.onAttackFrame = (attackName: string, _: number): void => {
         const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
-        switch(attackName) {
+        switch (attackName) {
             case 'attack1':
                 applyAttackDamage(scene, entity, enemies, 100, 100, 220, 150, baseDamage, CharacterModel.DamageType.MAGIC, 1);
                 break;
@@ -264,7 +264,7 @@ export function generateSpearwoman(scene: GameScene, team: 'ally' | 'enemy', pro
                 applyAttackDamage(scene, entity, enemies, 100, 100, 320, 150, baseDamage / 3, CharacterModel.DamageType.MAGIC, 1);
                 break;
             case 'special':
-                applyAttackDamage(scene, entity, enemies, 50, 200, 300, 200, baseDamage * 3, CharacterModel.DamageType.MAGIC);
+                applyAttackDamage(scene, entity, enemies, 50, 200, 300, 200, baseDamage * 3.5, CharacterModel.DamageType.MAGIC);
                 break;
         }
     }
@@ -292,7 +292,7 @@ export function generateSpearwoman(scene: GameScene, team: 'ally' | 'enemy', pro
         }
     })
 
-    if(team === 'ally') {
+    if (team === 'ally') {
         entity.updateHPBarColor(0x00ff00)
         entity.updateHPBarBgColor(0x000000)
         scene.addAlly(entity);
@@ -320,9 +320,9 @@ export function generateWarrior(scene: GameScene, team: 'ally' | 'enemy', props:
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
-        props.frameWidth || 69, props.frameHeight || 44, props.displayWidth ?? 69*(props.scale || 5), props.displayHeight ?? 44*(props.scale || 5),
+        props.frameWidth || 69, props.frameHeight || 44, props.displayWidth ?? 69 * (props.scale || 5), props.displayHeight ?? 44 * (props.scale || 5),
         props.uiOffsetY || -80, 50);
-    
+
     entity.setMaxHP(props.character.baseStats.maxHp);
     entity.setCooldownAttack(props.character.advancedStats.cooldownAttack);
 
@@ -343,9 +343,9 @@ export function generateWarrior(scene: GameScene, team: 'ally' | 'enemy', props:
 
     const baseDamage = props.character.baseStats.attack / 2;
 
-    entity.onAttackFrame = (attackName: string, frameIndex: number): void => {
+    entity.onAttackFrame = (attackName: string, _: number): void => {
         const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
-        switch(attackName) {
+        switch (attackName) {
             case 'attack1':
                 applyAttackDamage(scene, entity, enemies, 100, 20, 200, 150, baseDamage, CharacterModel.DamageType.PHYSICAL, 1);
                 break;
@@ -368,7 +368,7 @@ export function generateWarrior(scene: GameScene, team: 'ally' | 'enemy', props:
         }
     })
 
-    if(team === 'ally') {
+    if (team === 'ally') {
         entity.updateHPBarColor(0x00ff00)
         entity.updateHPBarBgColor(0x000000)
         scene.addAlly(entity);
@@ -397,7 +397,7 @@ export function generateCrystalKing(scene: GameScene, team: 'ally' | 'enemy', pr
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
-        props.frameWidth || 288, props.frameHeight || 128, props.displayWidth ?? 288*(props.scale || 5), props.displayHeight ?? 128*(props.scale || 5),
+        props.frameWidth || 288, props.frameHeight || 128, props.displayWidth ?? 288 * (props.scale || 5), props.displayHeight ?? 128 * (props.scale || 5),
         props.uiOffsetY || 80);
 
     entity.setMaxHP(props.character.baseStats.maxHp);
@@ -407,10 +407,10 @@ export function generateCrystalKing(scene: GameScene, team: 'ally' | 'enemy', pr
     entity.createAnimation('idle', 0, 7, 10);
     entity.createAnimation('walk', 21, 28, 14);
     entity.createAnimation('attack1', 105, 112, 14, 0);
-    entity.createAnimation('attack2', 21*7, 21*7+6, 14, 0);
-    entity.createAnimation('attack3', 21*8, 21*8+6, 14, 0);
-    entity.createAnimation('attack4', 21*9, 21*9+16, 14, 0);
-    entity.createAnimation('special', 21*10, 21*10+14, 14, 0);
+    entity.createAnimation('attack2', 21 * 7, 21 * 7 + 6, 14, 0);
+    entity.createAnimation('attack3', 21 * 8, 21 * 8 + 6, 14, 0);
+    entity.createAnimation('attack4', 21 * 9, 21 * 9 + 16, 14, 0);
+    entity.createAnimation('special', 21 * 10, 21 * 10 + 14, 14, 0);
 
     const hitBoxScale = (props.scale || 5) / 5;
     entity.setHitbox(125 * hitBoxScale, 200 * hitBoxScale, 0, 215 * hitBoxScale);
@@ -426,9 +426,9 @@ export function generateCrystalKing(scene: GameScene, team: 'ally' | 'enemy', pr
 
     const baseDamage = props.character.baseStats.attack;
 
-    entity.onAttackFrame = (attackName: string, frameIndex: number): void => {
+    entity.onAttackFrame = (attackName: string, _: number): void => {
         const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
-        switch(attackName) {
+        switch (attackName) {
             case 'attack1':
                 applyAttackDamage(scene, entity, enemies, 110, 200, 180, 200, baseDamage * 0.5, CharacterModel.DamageType.PHYSICAL, 1);
                 break;
@@ -442,7 +442,7 @@ export function generateCrystalKing(scene: GameScene, team: 'ally' | 'enemy', pr
                 applyAttackDamage(scene, entity, enemies, 350, 125, 250, 225, baseDamage * 0.75, CharacterModel.DamageType.PHYSICAL, 1);
                 break;
             case 'special':
-                applyAttackDamage(scene, entity, enemies, 312.5, 200, 437.5, 225, baseDamage * 2, CharacterModel.DamageType.MAGIC);
+                applyAttackDamage(scene, entity, enemies, 312.5, 200, 437.5, 225, baseDamage * 2.5, CharacterModel.DamageType.MAGIC);
                 break;
         }
     }
@@ -475,7 +475,7 @@ export function generateCrystalKing(scene: GameScene, team: 'ally' | 'enemy', pr
         }
     })
 
-    if(team === 'ally') {
+    if (team === 'ally') {
         entity.updateHPBarColor(0x00ff00)
         entity.updateHPBarBgColor(0x000000)
         scene.addAlly(entity);
@@ -498,23 +498,23 @@ export function generateCrystalKing(scene: GameScene, team: 'ally' | 'enemy', pr
 }
 
 export function generateFireKing(scene: GameScene, team: 'ally' | 'enemy', props: CharacterProps): Character {
-    const entity = new Character(scene, 
-        props.x || 800, props.y || 400, props.character.baseStats.speed, props.textureKey || 'fireKing', 
+    const entity = new Character(scene,
+        props.x || 800, props.y || 400, props.character.baseStats.speed, props.textureKey || 'fireKing',
         props.character.progression.level,
         props.character.baseStats,
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
-    props.frameWidth || 288, props.frameHeight || 128, props.displayWidth ?? 288*(props.scale || 5), props.displayHeight ?? 128*(props.scale || 5),
+        props.frameWidth || 288, props.frameHeight || 128, props.displayWidth ?? 288 * (props.scale || 5), props.displayHeight ?? 128 * (props.scale || 5),
         props.uiOffsetY || 60);
 
     entity.setMaxHP(props.character.baseStats.maxHp);
     entity.setCooldownAttack(props.character.advancedStats.cooldownAttack);
 
-    entity.createAnimation('idle', 0, 7, 10);
-    entity.createAnimation('walk', 28, 28+7, 12);
-    entity.createAnimation('attack1', 28*7, 28*7+10, 12, 0);
-    entity.createAnimation('special', 28*10, 28*10+16, 12, 0);
+    entity.createAnimation('idle', 0, 7, 10, -1);
+    entity.createAnimation('walk', 28, 35, 12, -1);
+    entity.createAnimation('attack1', 196, 206, 12, 0);
+    entity.createAnimation('special', 280, 296, 12, 0);
     // entity.sprite.setFlipX(true);
 
     const hitBoxScale = (props.scale || 5) / 5;
@@ -528,14 +528,14 @@ export function generateFireKing(scene: GameScene, team: 'ally' | 'enemy', props
 
     const baseDamage = props.character.baseStats.attack;
 
-    entity.onAttackFrame = (attackName: string, frameIndex: number): void => {
+    entity.onAttackFrame = (attackName: string, _: number): void => {
         const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
-        switch(attackName) {
+        switch (attackName) {
             case 'attack1':
                 applyAttackDamage(scene, entity, enemies, 160, 225, 300, 250, baseDamage, CharacterModel.DamageType.PHYSICAL, 2);
                 break;
             case 'special':
-                applyAttackDamage(scene, entity, enemies, 200, 200, 450, 250, baseDamage * 2, CharacterModel.DamageType.FIRE);
+                applyAttackDamage(scene, entity, enemies, 200, 200, 450, 250, baseDamage * 4, CharacterModel.DamageType.FIRE);
         }
     }
 
@@ -552,7 +552,7 @@ export function generateFireKing(scene: GameScene, team: 'ally' | 'enemy', props
         }
     })
 
-    if(team === 'ally') {
+    if (team === 'ally') {
         entity.updateHPBarColor(0x00ff00)
         entity.updateHPBarBgColor(0x000000)
         scene.addAlly(entity);
@@ -575,14 +575,14 @@ export function generateFireKing(scene: GameScene, team: 'ally' | 'enemy', props
 }
 
 export function generateFrostGuardian(scene: GameScene, team: 'ally' | 'enemy', props: CharacterProps): Character {
-    const entity = new Character(scene, props.x || 1000, props.y || 200, props.character.baseStats.speed, 
-        props.textureKey || 'frostGuardian', 
+    const entity = new Character(scene, props.x || 1000, props.y || 200, props.character.baseStats.speed,
+        props.textureKey || 'frostGuardian',
         props.character.progression.level,
         props.character.baseStats,
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
-        props.frameWidth || 192, props.frameHeight || 128, props.displayWidth ?? 192*(props.scale || 5), props.displayHeight ?? 128*(props.scale || 5), props.uiOffsetY || -140);
+        props.frameWidth || 192, props.frameHeight || 128, props.displayWidth ?? 192 * (props.scale || 5), props.displayHeight ?? 128 * (props.scale || 5), props.uiOffsetY || -140);
     entity.setDirection(false);
 
     entity.setMaxHP(props.character.baseStats.maxHp);
@@ -590,9 +590,9 @@ export function generateFrostGuardian(scene: GameScene, team: 'ally' | 'enemy', 
 
     // 16 кадров в ряду
     entity.createAnimation('idle', 0, 5, 8);
-    entity.createAnimation('walk', 16, 16+9, 8);
-    entity.createAnimation('attack1', 16*2, 16*2+13, 8, 0);
-    entity.createAnimation('special', 16*2, 16*2+13, 8, 0);
+    entity.createAnimation('walk', 16, 16 + 9, 8);
+    entity.createAnimation('attack1', 16 * 2, 16 * 2 + 13, 8, 0);
+    entity.createAnimation('special', 16 * 2, 16 * 2 + 13, 8, 0);
     entity.playAnimation('idle', 'idle');
 
     entity.setAttackHitFrames('attack1', [7]);
@@ -604,9 +604,9 @@ export function generateFrostGuardian(scene: GameScene, team: 'ally' | 'enemy', 
 
     const baseDamage = props.character.baseStats.attack;
 
-    entity.onAttackFrame = (attackName: string, frameIndex: number): void => {
+    entity.onAttackFrame = (attackName: string, _: number): void => {
         const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
-        applyAttackDamage(scene, entity, enemies, 230, 40, 450, 350, attackName === 'special' ? baseDamage * 2 : baseDamage, CharacterModel.DamageType.PHYSICAL, 1);
+        applyAttackDamage(scene, entity, enemies, 230, 40, 450, 350, attackName === 'special' ? baseDamage * 4 : baseDamage, CharacterModel.DamageType.PHYSICAL, 1);
     }
 
     entity.setAttacksDistances({
@@ -625,7 +625,7 @@ export function generateFrostGuardian(scene: GameScene, team: 'ally' | 'enemy', 
     const hitBoxScale = (props.scale || 5) / 5;
     entity.setHitbox(200 * hitBoxScale, 400 * hitBoxScale, 0, 25 * hitBoxScale);
     entity.flipSpritesheet = true;
-    if(team === 'ally') {
+    if (team === 'ally') {
         entity.updateHPBarColor(0x00ff00)
         entity.updateHPBarBgColor(0x000000)
         scene.addAlly(entity);
@@ -646,14 +646,14 @@ export function generateFrostGuardian(scene: GameScene, team: 'ally' | 'enemy', 
 }
 
 export function generateDemonSlime(scene: GameScene, team: 'ally' | 'enemy', props: CharacterProps): Character {
-    const entity = new Character(scene, props.x || 1000, props.y || 200, props.character.baseStats.speed, 
-        props.textureKey || 'demonSlime', 
+    const entity = new Character(scene, props.x || 1000, props.y || 200, props.character.baseStats.speed,
+        props.textureKey || 'demonSlime',
         props.character.progression.level,
         props.character.baseStats,
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
-        props.frameWidth || 288, props.frameHeight || 160, props.displayWidth ?? 288*(props.scale || 5), props.displayHeight ?? 160*(props.scale || 5), props.uiOffsetY || -20);
+        props.frameWidth || 288, props.frameHeight || 160, props.displayWidth ?? 288 * (props.scale || 5), props.displayHeight ?? 160 * (props.scale || 5), props.uiOffsetY || -20);
     entity.setDirection(false);
 
     entity.setMaxHP(props.character.baseStats.maxHp);
@@ -661,9 +661,9 @@ export function generateDemonSlime(scene: GameScene, team: 'ally' | 'enemy', pro
 
     // 22 кадра в ряду
     entity.createAnimation('idle', 0, 5, 6);
-    entity.createAnimation('walk', 22, 22+11, 8);
-    entity.createAnimation('attack1', 22*2, 22*2+14, 10, 0);
-    entity.createAnimation('special', 22*2, 22*2+14, 10, 0);
+    entity.createAnimation('walk', 22, 22 + 11, 8);
+    entity.createAnimation('attack1', 22 * 2, 22 * 2 + 14, 10, 0);
+    entity.createAnimation('special', 22 * 2, 22 * 2 + 14, 10, 0);
     entity.playAnimation('idle', 'idle');
 
     entity.setAttackHitFrames('attack1', [9]);
@@ -674,9 +674,9 @@ export function generateDemonSlime(scene: GameScene, team: 'ally' | 'enemy', pro
     // entity.setDebugMode(true);
 
     const baseDamage = props.character.baseStats.attack;
-    entity.onAttackFrame = (attackName: string, frameIndex: number): void => {
+    entity.onAttackFrame = (attackName: string, _: number): void => {
         const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
-        applyAttackDamage(scene, entity, enemies, 300, 300, 600, 200, attackName === 'special' ? baseDamage * 2 : baseDamage, CharacterModel.DamageType.PHYSICAL);
+        applyAttackDamage(scene, entity, enemies, 300, 300, 600, 200, attackName === 'special' ? baseDamage * 4 : baseDamage, CharacterModel.DamageType.PHYSICAL);
     }
 
     entity.setAttacksDistances({
@@ -696,7 +696,7 @@ export function generateDemonSlime(scene: GameScene, team: 'ally' | 'enemy', pro
     entity.setHitbox(160 * hitBoxScale, 340 * hitBoxScale, 0, 225 * hitBoxScale);
 
     entity.flipSpritesheet = true;
-    if(team === 'ally') {
+    if (team === 'ally') {
         entity.updateHPBarColor(0x00ff00)
         entity.updateHPBarBgColor(0x000000)
         scene.addAlly(entity);
@@ -717,14 +717,14 @@ export function generateDemonSlime(scene: GameScene, team: 'ally' | 'enemy', pro
 }
 
 export function generateElementalWind(scene: GameScene, team: 'ally' | 'enemy', props: CharacterProps): Character {
-    const entity = new Character(scene, props.x || 1000, props.y || 200, props.character.baseStats.speed, 
-        props.textureKey || 'elementalWind', 
+    const entity = new Character(scene, props.x || 1000, props.y || 200, props.character.baseStats.speed,
+        props.textureKey || 'elementalWind',
         props.character.progression.level,
         props.character.baseStats,
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
-        props.frameWidth || 288, props.frameHeight || 128, props.displayWidth ?? 288*(props.scale || 5), props.displayHeight ?? 128*(props.scale || 5), props.uiOffsetY || 120);
+        props.frameWidth || 288, props.frameHeight || 128, props.displayWidth ?? 288 * (props.scale || 5), props.displayHeight ?? 128 * (props.scale || 5), props.uiOffsetY || 120);
 
     entity.setMaxHP(props.character.baseStats.maxHp);
     entity.setCooldownAttack(props.character.advancedStats.cooldownAttack);
@@ -749,20 +749,20 @@ export function generateElementalWind(scene: GameScene, team: 'ally' | 'enemy', 
 
     entity.onAttackFrame = (attackName: string, frameIndex: number): void => {
         const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
-        switch(attackName) {
+        switch (attackName) {
             case 'attack1':
                 const dmg = frameIndex === 2 ? baseDamage / 2 : baseDamage / 4;
-                if(frameIndex < 3) {
+                if (frameIndex < 3) {
                     applyAttackDamage(scene, entity, enemies, 100, 200, 150, 200, dmg, CharacterModel.DamageType.PHYSICAL, 1);
                 } else {
                     applyAttackDamage(scene, entity, enemies, 150, 200, 250, 200, dmg, CharacterModel.DamageType.PHYSICAL, 1);
                 }
                 break;
             case 'attack2':
-                if(frameIndex < 3) { 
+                if (frameIndex < 3) {
                     applyAttackDamage(scene, entity, enemies, 100, 200, 150, 200, baseDamage / 4, CharacterModel.DamageType.PHYSICAL, 1);
                 }
-                else if(frameIndex !== 18) {
+                else if (frameIndex !== 18) {
                     applyAttackDamage(scene, entity, enemies, 150, 200, 250, 200, baseDamage / 4, CharacterModel.DamageType.PHYSICAL, 1);
                 } else {
                     applyAttackDamage(scene, entity, enemies, 225, 200, 450, 200, baseDamage / 2, CharacterModel.DamageType.PHYSICAL, 3);
@@ -791,7 +791,7 @@ export function generateElementalWind(scene: GameScene, team: 'ally' | 'enemy', 
         }
     });
 
-    if(team === 'ally') {
+    if (team === 'ally') {
         entity.updateHPBarColor(0x00ff00)
         entity.updateHPBarBgColor(0x000000)
         scene.addAlly(entity);
@@ -816,14 +816,14 @@ export function generateElementalWind(scene: GameScene, team: 'ally' | 'enemy', 
 }
 
 export function generateGroundMonk(scene: GameScene, team: 'ally' | 'enemy', props: CharacterProps): Character {
-    const entity = new Character(scene, props.x || 1000, props.y || 200, props.character.baseStats.speed, 
-        props.textureKey || 'groundMonk', 
+    const entity = new Character(scene, props.x || 1000, props.y || 200, props.character.baseStats.speed,
+        props.textureKey || 'groundMonk',
         props.character.progression.level,
         props.character.baseStats,
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
-        props.frameWidth || 288, props.frameHeight || 128, props.displayWidth ?? 288*(props.scale || 5), props.displayHeight ?? 128*(props.scale || 5), props.uiOffsetY || 80);
+        props.frameWidth || 288, props.frameHeight || 128, props.displayWidth ?? 288 * (props.scale || 5), props.displayHeight ?? 128 * (props.scale || 5), props.uiOffsetY || 80);
 
     entity.setMaxHP(props.character.baseStats.maxHp);
     entity.setCooldownAttack(props.character.advancedStats.cooldownAttack);
@@ -848,9 +848,9 @@ export function generateGroundMonk(scene: GameScene, team: 'ally' | 'enemy', pro
 
     const baseDamage = props.character.baseStats.attack;
 
-    entity.onAttackFrame = (attackName: string, frameIndex: number): void => {
+    entity.onAttackFrame = (attackName: string, _: number): void => {
         const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
-        switch(attackName) {
+        switch (attackName) {
             case 'attack1': {
                 const dmg = baseDamage;
                 applyAttackDamage(scene, entity, enemies, 100, 200, 150, 200, dmg, CharacterModel.DamageType.PHYSICAL, 1);
@@ -862,7 +862,7 @@ export function generateGroundMonk(scene: GameScene, team: 'ally' | 'enemy', pro
                 break;
             }
             case 'special':
-                applyAttackDamage(scene, entity, enemies, 180, 180, 220, 320, baseDamage, CharacterModel.DamageType.MAGIC);
+                applyAttackDamage(scene, entity, enemies, 180, 180, 220, 320, baseDamage / 4, CharacterModel.DamageType.MAGIC);
         }
     }
 
@@ -889,7 +889,7 @@ export function generateGroundMonk(scene: GameScene, team: 'ally' | 'enemy', pro
         }
     });
 
-    if(team === 'ally') {
+    if (team === 'ally') {
         entity.updateHPBarColor(0x00ff00)
         entity.updateHPBarBgColor(0x000000)
         scene.addAlly(entity);
@@ -914,14 +914,14 @@ export function generateGroundMonk(scene: GameScene, team: 'ally' | 'enemy', pro
 }
 
 export function generateWaterPriestess(scene: GameScene, team: 'ally' | 'enemy', props: CharacterProps): Character {
-    const entity = new Character(scene, props.x || 1000, props.y || 200, props.character.baseStats.speed, 
-        props.textureKey || 'waterPriestess', 
+    const entity = new Character(scene, props.x || 1000, props.y || 200, props.character.baseStats.speed,
+        props.textureKey || 'waterPriestess',
         props.character.progression.level,
         props.character.baseStats,
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
-        props.frameWidth || 288, props.frameHeight || 128, props.displayWidth ?? 288*(props.scale || 5), props.displayHeight ?? 128*(props.scale || 5), props.uiOffsetY || 110);
+        props.frameWidth || 288, props.frameHeight || 128, props.displayWidth ?? 288 * (props.scale || 5), props.displayHeight ?? 128 * (props.scale || 5), props.uiOffsetY || 110);
 
     entity.setMaxHP(props.character.baseStats.maxHp);
     entity.setCooldownAttack(props.character.advancedStats.cooldownAttack);
@@ -944,9 +944,9 @@ export function generateWaterPriestess(scene: GameScene, team: 'ally' | 'enemy',
 
     const baseDamage = props.character.baseStats.attack;
 
-    entity.onAttackFrame = (attackName: string, frameIndex: number): void => {
+    entity.onAttackFrame = (attackName: string, _: number): void => {
         const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
-        switch(attackName) {
+        switch (attackName) {
             case 'attack1': {
                 const dmg = baseDamage;
                 applyAttackDamage(scene, entity, enemies, 150, 200, 300, 300, dmg, CharacterModel.DamageType.MAGIC, 1);
@@ -958,7 +958,7 @@ export function generateWaterPriestess(scene: GameScene, team: 'ally' | 'enemy',
                 break;
             }
             case 'special':
-                applyAttackDamage(scene, entity, enemies, 280, 200, 420, 300, baseDamage, CharacterModel.DamageType.MAGIC);
+                applyAttackDamage(scene, entity, enemies, 280, 200, 420, 300, baseDamage / 2, CharacterModel.DamageType.MAGIC);
         }
     }
 
@@ -980,7 +980,7 @@ export function generateWaterPriestess(scene: GameScene, team: 'ally' | 'enemy',
         }
     });
 
-    if(team === 'ally') {
+    if (team === 'ally') {
         entity.updateHPBarColor(0x00ff00)
         entity.updateHPBarBgColor(0x000000)
         scene.addAlly(entity);
@@ -1005,14 +1005,14 @@ export function generateWaterPriestess(scene: GameScene, team: 'ally' | 'enemy',
 }
 
 export function generateBlueSlime(scene: GameScene, team: 'ally' | 'enemy', props: CharacterProps): Character {
-    const entity = new Character(scene, props.x || 1000, props.y || 200, props.character.baseStats.speed, 
-        props.textureKey || 'blueSlime', 
+    const entity = new Character(scene, props.x || 1000, props.y || 200, props.character.baseStats.speed,
+        props.textureKey || 'blueSlime',
         props.character.progression.level,
         props.character.baseStats,
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
-        props.frameWidth || 80, props.frameHeight || 80, props.displayWidth ?? 80*(props.scale || 5), props.displayHeight ?? 80*(props.scale || 5), props.uiOffsetY || -70);
+        props.frameWidth || 80, props.frameHeight || 80, props.displayWidth ?? 80 * (props.scale || 5), props.displayHeight ?? 80 * (props.scale || 5), props.uiOffsetY || -70);
 
     entity.setMaxHP(props.character.baseStats.maxHp);
     entity.setCooldownAttack(props.character.advancedStats.cooldownAttack);
@@ -1033,9 +1033,9 @@ export function generateBlueSlime(scene: GameScene, team: 'ally' | 'enemy', prop
 
     const baseDamage = props.character.baseStats.attack;
 
-    entity.onAttackFrame = (attackName: string, frameIndex: number): void => {
+    entity.onAttackFrame = (attackName: string, _: number): void => {
         const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
-        switch(attackName) {
+        switch (attackName) {
             case 'attack1': {
                 const dmg = baseDamage;
                 applyAttackDamage(scene, entity, enemies, 100, -10, 200, 120, dmg, CharacterModel.DamageType.MAGIC, 1);
@@ -1059,7 +1059,7 @@ export function generateBlueSlime(scene: GameScene, team: 'ally' | 'enemy', prop
         }
     });
 
-    if(team === 'ally') {
+    if (team === 'ally') {
         entity.updateHPBarColor(0x00ff00)
         entity.updateHPBarBgColor(0x000000)
         scene.addAlly(entity);
@@ -1084,14 +1084,14 @@ export function generateBlueSlime(scene: GameScene, team: 'ally' | 'enemy', prop
 }
 
 export function generateGreenSlime(scene: GameScene, team: 'ally' | 'enemy', props: CharacterProps): Character {
-    const entity = new Character(scene, props.x || 1000, props.y || 200, props.character.baseStats.speed, 
-        props.textureKey || 'greenSlime', 
+    const entity = new Character(scene, props.x || 1000, props.y || 200, props.character.baseStats.speed,
+        props.textureKey || 'greenSlime',
         props.character.progression.level,
         props.character.baseStats,
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
-        props.frameWidth || 80, props.frameHeight || 80, props.displayWidth ?? 80*(props.scale || 5), props.displayHeight ?? 80*(props.scale || 5), props.uiOffsetY || -70);
+        props.frameWidth || 80, props.frameHeight || 80, props.displayWidth ?? 80 * (props.scale || 5), props.displayHeight ?? 80 * (props.scale || 5), props.uiOffsetY || -70);
 
     entity.setMaxHP(props.character.baseStats.maxHp);
     entity.setCooldownAttack(props.character.advancedStats.cooldownAttack);
@@ -1112,9 +1112,9 @@ export function generateGreenSlime(scene: GameScene, team: 'ally' | 'enemy', pro
 
     const baseDamage = props.character.baseStats.attack;
 
-    entity.onAttackFrame = (attackName: string, frameIndex: number): void => {
+    entity.onAttackFrame = (attackName: string, _: number): void => {
         const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
-        switch(attackName) {
+        switch (attackName) {
             case 'attack1': {
                 const dmg = baseDamage;
                 applyAttackDamage(scene, entity, enemies, 100, -10, 200, 120, dmg, CharacterModel.DamageType.MAGIC, 1);
@@ -1138,7 +1138,7 @@ export function generateGreenSlime(scene: GameScene, team: 'ally' | 'enemy', pro
         }
     });
 
-    if(team === 'ally') {
+    if (team === 'ally') {
         entity.updateHPBarColor(0x00ff00)
         entity.updateHPBarBgColor(0x000000)
         scene.addAlly(entity);
@@ -1163,14 +1163,14 @@ export function generateGreenSlime(scene: GameScene, team: 'ally' | 'enemy', pro
 }
 
 export function generatePurpleSlime(scene: GameScene, team: 'ally' | 'enemy', props: CharacterProps): Character {
-    const entity = new Character(scene, props.x || 1000, props.y || 200, props.character.baseStats.speed, 
-        props.textureKey || 'purpleSlime', 
+    const entity = new Character(scene, props.x || 1000, props.y || 200, props.character.baseStats.speed,
+        props.textureKey || 'purpleSlime',
         props.character.progression.level,
         props.character.baseStats,
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
-        props.frameWidth || 80, props.frameHeight || 80, props.displayWidth ?? 80*(props.scale || 5), props.displayHeight ?? 80*(props.scale || 5), props.uiOffsetY || -70);
+        props.frameWidth || 80, props.frameHeight || 80, props.displayWidth ?? 80 * (props.scale || 5), props.displayHeight ?? 80 * (props.scale || 5), props.uiOffsetY || -70);
 
     entity.setMaxHP(props.character.baseStats.maxHp);
     entity.setCooldownAttack(props.character.advancedStats.cooldownAttack);
@@ -1191,9 +1191,9 @@ export function generatePurpleSlime(scene: GameScene, team: 'ally' | 'enemy', pr
 
     const baseDamage = props.character.baseStats.attack;
 
-    entity.onAttackFrame = (attackName: string, frameIndex: number): void => {
+    entity.onAttackFrame = (attackName: string, _: number): void => {
         const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
-        switch(attackName) {
+        switch (attackName) {
             case 'attack1': {
                 const dmg = baseDamage;
                 applyAttackDamage(scene, entity, enemies, 100, -10, 200, 120, dmg, CharacterModel.DamageType.MAGIC, 1);
@@ -1217,7 +1217,7 @@ export function generatePurpleSlime(scene: GameScene, team: 'ally' | 'enemy', pr
         }
     });
 
-    if(team === 'ally') {
+    if (team === 'ally') {
         entity.updateHPBarColor(0x00ff00)
         entity.updateHPBarBgColor(0x000000)
         scene.addAlly(entity);
@@ -1242,14 +1242,14 @@ export function generatePurpleSlime(scene: GameScene, team: 'ally' | 'enemy', pr
 }
 
 export function generateFantasyWarrior(scene: GameScene, team: 'ally' | 'enemy', props: CharacterProps): Character {
-    const entity = new Character(scene, props.x || 1000, props.y || 200, props.character.baseStats.speed, 
-        props.textureKey || 'fantasyWarrior', 
+    const entity = new Character(scene, props.x || 1000, props.y || 200, props.character.baseStats.speed,
+        props.textureKey || 'fantasyWarrior',
         props.character.progression.level,
         props.character.baseStats,
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
-        props.frameWidth || 162, props.frameHeight || 162, props.displayWidth ?? 162*(props.scale || 5), props.displayHeight ?? 162*(props.scale || 5), props.uiOffsetY || -150);
+        props.frameWidth || 162, props.frameHeight || 162, props.displayWidth ?? 162 * (props.scale || 5), props.displayHeight ?? 162 * (props.scale || 5), props.uiOffsetY || -150);
 
     entity.setMaxHP(props.character.baseStats.maxHp);
     entity.setCooldownAttack(props.character.advancedStats.cooldownAttack);
@@ -1273,9 +1273,9 @@ export function generateFantasyWarrior(scene: GameScene, team: 'ally' | 'enemy',
 
     const baseDamage = props.character.baseStats.attack;
 
-    entity.onAttackFrame = (attackName: string, frameIndex: number): void => {
+    entity.onAttackFrame = (attackName: string, _: number): void => {
         const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
-        switch(attackName) {
+        switch (attackName) {
             case 'attack1': {
                 const dmg = baseDamage;
                 applyAttackDamage(scene, entity, enemies, 150, -40, 300, 300, dmg, CharacterModel.DamageType.MAGIC, 1);
@@ -1285,7 +1285,7 @@ export function generateFantasyWarrior(scene: GameScene, team: 'ally' | 'enemy',
                 applyAttackDamage(scene, entity, enemies, 150, -40, 300, 300, baseDamage, CharacterModel.DamageType.MAGIC, 1);
                 break;
             case 'special':
-                applyAttackDamage(scene, entity, enemies, 150, -40, 300, 300, baseDamage * 2, CharacterModel.DamageType.MAGIC, 3);
+                applyAttackDamage(scene, entity, enemies, 150, -40, 300, 300, baseDamage * 3, CharacterModel.DamageType.MAGIC, 3);
         }
     }
 
@@ -1309,7 +1309,7 @@ export function generateFantasyWarrior(scene: GameScene, team: 'ally' | 'enemy',
 
     // entity.setDebugMode(true);
 
-    if(team === 'ally') {
+    if (team === 'ally') {
         entity.updateHPBarColor(0x00ff00)
         entity.updateHPBarBgColor(0x000000)
         scene.addAlly(entity);
@@ -1332,14 +1332,14 @@ export function generateFantasyWarrior(scene: GameScene, team: 'ally' | 'enemy',
 }
 
 export function generateKitsune(scene: GameScene, team: 'ally' | 'enemy', props: CharacterProps): Character {
-    const entity = new Character(scene, props.x || 1000, props.y || 200, props.character.baseStats.speed, 
-        props.textureKey || 'kitsune', 
+    const entity = new Character(scene, props.x || 1000, props.y || 200, props.character.baseStats.speed,
+        props.textureKey || 'kitsune',
         props.character.progression.level,
         props.character.baseStats,
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
-        props.frameWidth || 128, props.frameHeight || 128, props.displayWidth ?? 64*(props.scale || 5), props.displayHeight ?? 64*(props.scale || 5), props.uiOffsetY || -70);
+        props.frameWidth || 128, props.frameHeight || 128, props.displayWidth ?? 64 * (props.scale || 5), props.displayHeight ?? 64 * (props.scale || 5), props.uiOffsetY || -70);
 
     entity.setMaxHP(props.character.baseStats.maxHp);
     entity.setCooldownAttack(props.character.advancedStats.cooldownAttack);
@@ -1361,9 +1361,9 @@ export function generateKitsune(scene: GameScene, team: 'ally' | 'enemy', props:
 
     const baseDamage = props.character.baseStats.attack;
 
-    entity.onAttackFrame = (attackName: string, frameIndex: number): void => {
+    entity.onAttackFrame = (attackName: string, _: number): void => {
         const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
-        switch(attackName) {
+        switch (attackName) {
             case 'attack1': {
                 const dmg = baseDamage;
                 applyAttackDamage(scene, entity, enemies, 100, 60, 200, 200, dmg, CharacterModel.DamageType.MAGIC, 2);
@@ -1389,7 +1389,7 @@ export function generateKitsune(scene: GameScene, team: 'ally' | 'enemy', props:
 
     // entity.setDebugMode(true);
 
-    if(team === 'ally') {
+    if (team === 'ally') {
         entity.updateHPBarColor(0x00ff00)
         entity.updateHPBarBgColor(0x000000)
         scene.addAlly(entity);
@@ -1412,14 +1412,14 @@ export function generateKitsune(scene: GameScene, team: 'ally' | 'enemy', props:
 }
 
 export function generateMinotaur(scene: GameScene, team: 'ally' | 'enemy', props: CharacterProps): Character {
-    const entity = new Character(scene, props.x || 1000, props.y || 200, props.character.baseStats.speed, 
-        props.textureKey || 'minotaur', 
+    const entity = new Character(scene, props.x || 1000, props.y || 200, props.character.baseStats.speed,
+        props.textureKey || 'minotaur',
         props.character.progression.level,
         props.character.baseStats,
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
-        props.frameWidth || 128, props.frameHeight || 128, props.displayWidth ?? 128*(props.scale || 5) * 3 / 5, props.displayHeight ?? 128*(props.scale || 5) * 3 / 5, props.uiOffsetY || -90);
+        props.frameWidth || 128, props.frameHeight || 128, props.displayWidth ?? 128 * (props.scale || 5) * 3 / 5, props.displayHeight ?? 128 * (props.scale || 5) * 3 / 5, props.uiOffsetY || -90);
 
     entity.setMaxHP(props.character.baseStats.maxHp);
     entity.setCooldownAttack(props.character.advancedStats.cooldownAttack);
@@ -1440,9 +1440,9 @@ export function generateMinotaur(scene: GameScene, team: 'ally' | 'enemy', props
 
     const baseDamage = props.character.baseStats.attack;
 
-    entity.onAttackFrame = (attackName: string, frameIndex: number): void => {
+    entity.onAttackFrame = (attackName: string, _: number): void => {
         const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
-        switch(attackName) {
+        switch (attackName) {
             case 'attack1': {
                 applyAttackDamage(scene, entity, enemies, 100, 80, 200, 200, baseDamage, CharacterModel.DamageType.PHYSICAL, 1);
                 break;
@@ -1466,7 +1466,7 @@ export function generateMinotaur(scene: GameScene, team: 'ally' | 'enemy', props
         }
     });
 
-    if(team === 'ally') {
+    if (team === 'ally') {
         entity.updateHPBarColor(0x00ff00)
         entity.updateHPBarBgColor(0x000000)
         scene.addAlly(entity);
@@ -1491,14 +1491,14 @@ export function generateMinotaur(scene: GameScene, team: 'ally' | 'enemy', props
 }
 
 export function generateBringerOfDeath(scene: GameScene, team: 'ally' | 'enemy', props: CharacterProps): Character {
-    const entity = new Character(scene, props.x || 1000, props.y || 200, props.character.baseStats.speed, 
-        props.textureKey || 'bringerOfDeath', 
+    const entity = new Character(scene, props.x || 1000, props.y || 200, props.character.baseStats.speed,
+        props.textureKey || 'bringerOfDeath',
         props.character.progression.level,
         props.character.baseStats,
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
-        props.frameWidth || 140, props.frameHeight || 93, props.displayWidth ?? 140*(props.scale || 5), props.displayHeight ?? 93*(props.scale || 5), props.uiOffsetY || -70, -35 * (props.scale || 5));
+        props.frameWidth || 140, props.frameHeight || 93, props.displayWidth ?? 140 * (props.scale || 5), props.displayHeight ?? 93 * (props.scale || 5), props.uiOffsetY || -70, -35 * (props.scale || 5));
 
     entity.setDirection(false);
     entity.setMaxHP(props.character.baseStats.maxHp);
@@ -1522,9 +1522,9 @@ export function generateBringerOfDeath(scene: GameScene, team: 'ally' | 'enemy',
 
     // entity.setDebugMode(true);
 
-    entity.onAttackFrame = (attackName: string, frameIndex: number): void => {
+    entity.onAttackFrame = (attackName: string, _: number): void => {
         const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
-        switch(attackName) {
+        switch (attackName) {
             case 'attack1': {
                 applyAttackDamage(scene, entity, enemies, 200, 80, 400, 300, baseDamage, CharacterModel.DamageType.PHYSICAL, 2);
                 break;
@@ -1550,7 +1550,7 @@ export function generateBringerOfDeath(scene: GameScene, team: 'ally' | 'enemy',
 
     entity.flipSpritesheet = true;
 
-    if(team === 'ally') {
+    if (team === 'ally') {
         entity.updateHPBarColor(0x00ff00)
         entity.updateHPBarBgColor(0x000000)
         scene.addAlly(entity);
@@ -1573,15 +1573,15 @@ export function generateBringerOfDeath(scene: GameScene, team: 'ally' | 'enemy',
 }
 
 export function generateNightBorne(scene: GameScene, team: 'ally' | 'enemy', props: CharacterProps): Character {
-    const entity = new Character(scene, props.x || 1000, props.y || 200, props.character.baseStats.speed, 
-        props.textureKey || 'nightBorne', 
+    const entity = new Character(scene, props.x || 1000, props.y || 200, props.character.baseStats.speed,
+        props.textureKey || 'nightBorne',
         props.character.progression.level,
         props.character.baseStats,
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
-        props.frameWidth || 80, props.frameHeight || 80, props.displayWidth ?? 80*(props.scale || 5), props.displayHeight ?? 80*(props.scale || 5), props.uiOffsetY || -40);
-    
+        props.frameWidth || 80, props.frameHeight || 80, props.displayWidth ?? 80 * (props.scale || 5), props.displayHeight ?? 80 * (props.scale || 5), props.uiOffsetY || -40);
+
     entity.setMaxHP(props.character.baseStats.maxHp);
     entity.setCooldownAttack(props.character.advancedStats.cooldownAttack);
 
@@ -1601,9 +1601,9 @@ export function generateNightBorne(scene: GameScene, team: 'ally' | 'enemy', pro
 
     const baseDamage = props.character.baseStats.attack;
 
-    entity.onAttackFrame = (attackName: string, frameIndex: number): void => {
+    entity.onAttackFrame = (attackName: string, _: number): void => {
         const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
-        switch(attackName) {
+        switch (attackName) {
             case 'attack1': {
                 applyAttackDamage(scene, entity, enemies, 100, 40, 200, 160, baseDamage, CharacterModel.DamageType.MAGIC, 1);
                 break;
@@ -1616,18 +1616,18 @@ export function generateNightBorne(scene: GameScene, team: 'ally' | 'enemy', pro
 
     entity.setAttacksDistances({
         attack1: {
-            x: 150,
-            minX: 30,
+            x: 80,
+            minX: 20,
             y: 10
         },
         special: {
-            x: 150,
-            minX: 30,
+            x: 80,
+            minX: 20,
             y: 10
         }
     });
 
-    if(team === 'ally') {
+    if (team === 'ally') {
         entity.updateHPBarColor(0x00ff00)
         entity.updateHPBarBgColor(0x000000)
         scene.addAlly(entity);
@@ -1652,15 +1652,15 @@ export function generateNightBorne(scene: GameScene, team: 'ally' | 'enemy', pro
 }
 
 export function generateKnight(scene: GameScene, team: 'ally' | 'enemy', props: CharacterProps): Character {
-    const entity = new Character(scene, props.x || 1000, props.y || 200, props.character.baseStats.speed, 
-        props.textureKey || 'knight', 
+    const entity = new Character(scene, props.x || 1000, props.y || 200, props.character.baseStats.speed,
+        props.textureKey || 'knight',
         props.character.progression.level,
         props.character.baseStats,
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
-        props.frameWidth || 135, props.frameHeight || 135, props.displayWidth ?? 135*(props.scale || 5), props.displayHeight ?? 135*(props.scale || 5), props.uiOffsetY || -120);
-    
+        props.frameWidth || 135, props.frameHeight || 135, props.displayWidth ?? 135 * (props.scale || 5), props.displayHeight ?? 135 * (props.scale || 5), props.uiOffsetY || -120);
+
     entity.setMaxHP(props.character.baseStats.maxHp);
     entity.setCooldownAttack(props.character.advancedStats.cooldownAttack);
 
@@ -1682,9 +1682,9 @@ export function generateKnight(scene: GameScene, team: 'ally' | 'enemy', props: 
 
     const baseDamage = props.character.baseStats.attack;
 
-    entity.onAttackFrame = (attackName: string, frameIndex: number): void => {
+    entity.onAttackFrame = (attackName: string, _: number): void => {
         const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
-        switch(attackName) {
+        switch (attackName) {
             case 'attack1':
             case 'attack2': {
                 applyAttackDamage(scene, entity, enemies, 140, 0, 200, 160, baseDamage, CharacterModel.DamageType.PHYSICAL, 1);
@@ -1714,7 +1714,7 @@ export function generateKnight(scene: GameScene, team: 'ally' | 'enemy', props: 
         }
     });
 
-    if(team === 'ally') {
+    if (team === 'ally') {
         entity.updateHPBarColor(0x00ff00)
         entity.updateHPBarBgColor(0x000000)
         scene.addAlly(entity);
@@ -1739,15 +1739,15 @@ export function generateKnight(scene: GameScene, team: 'ally' | 'enemy', props: 
 }
 
 export function generateSteelKnight(scene: GameScene, team: 'ally' | 'enemy', props: CharacterProps): Character {
-    const entity = new Character(scene, props.x || 1000, props.y || 200, props.character.baseStats.speed, 
-        props.textureKey || 'steelKnight', 
+    const entity = new Character(scene, props.x || 1000, props.y || 200, props.character.baseStats.speed,
+        props.textureKey || 'steelKnight',
         props.character.progression.level,
         props.character.baseStats,
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
-        props.frameWidth || 180, props.frameHeight || 180, props.displayWidth ?? 180*(props.scale || 5), props.displayHeight ?? 180*(props.scale || 5), props.uiOffsetY || -140);
-    
+        props.frameWidth || 180, props.frameHeight || 180, props.displayWidth ?? 180 * (props.scale || 5), props.displayHeight ?? 180 * (props.scale || 5), props.uiOffsetY || -140);
+
     entity.setMaxHP(props.character.baseStats.maxHp);
     entity.setCooldownAttack(props.character.advancedStats.cooldownAttack);
 
@@ -1767,15 +1767,15 @@ export function generateSteelKnight(scene: GameScene, team: 'ally' | 'enemy', pr
 
     const baseDamage = props.character.baseStats.attack;
 
-    entity.onAttackFrame = (attackName: string, frameIndex: number): void => {
+    entity.onAttackFrame = (attackName: string, _: number): void => {
         const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
-        switch(attackName) {
+        switch (attackName) {
             case 'attack1': {
                 applyAttackDamage(scene, entity, enemies, 100, 0, 200, 200, baseDamage, CharacterModel.DamageType.PHYSICAL, 1);
                 break;
             }
             case 'special':
-                applyAttackDamage(scene, entity, enemies, 200, 0, 300, 200, baseDamage * 2, CharacterModel.DamageType.PHYSICAL, 1);
+                applyAttackDamage(scene, entity, enemies, 200, 0, 300, 200, baseDamage * 3, CharacterModel.DamageType.PHYSICAL, 1);
                 break
         }
     }
@@ -1793,7 +1793,7 @@ export function generateSteelKnight(scene: GameScene, team: 'ally' | 'enemy', pr
         }
     });
 
-    if(team === 'ally') {
+    if (team === 'ally') {
         entity.updateHPBarColor(0x00ff00)
         entity.updateHPBarBgColor(0x000000)
         scene.addAlly(entity);
@@ -1818,15 +1818,15 @@ export function generateSteelKnight(scene: GameScene, team: 'ally' | 'enemy', pr
 }
 
 export function generateHeroKnight(scene: GameScene, team: 'ally' | 'enemy', props: CharacterProps): Character {
-    const entity = new Character(scene, props.x || 1000, props.y || 200, props.character.baseStats.speed, 
-        props.textureKey || 'heroKnight', 
+    const entity = new Character(scene, props.x || 1000, props.y || 200, props.character.baseStats.speed,
+        props.textureKey || 'heroKnight',
         props.character.progression.level,
         props.character.baseStats,
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
-        props.frameWidth || 140, props.frameHeight || 140, props.displayWidth ?? 140*(props.scale || 5), props.displayHeight ?? 140*(props.scale || 5), props.uiOffsetY || -160);
-    
+        props.frameWidth || 140, props.frameHeight || 140, props.displayWidth ?? 140 * (props.scale || 5), props.displayHeight ?? 140 * (props.scale || 5), props.uiOffsetY || -160);
+
     entity.setMaxHP(props.character.baseStats.maxHp);
     entity.setCooldownAttack(props.character.advancedStats.cooldownAttack);
 
@@ -1846,9 +1846,9 @@ export function generateHeroKnight(scene: GameScene, team: 'ally' | 'enemy', pro
 
     const baseDamage = props.character.baseStats.attack;
 
-    entity.onAttackFrame = (attackName: string, frameIndex: number): void => {
+    entity.onAttackFrame = (attackName: string, _: number): void => {
         const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
-        switch(attackName) {
+        switch (attackName) {
             case 'attack1': {
                 applyAttackDamage(scene, entity, enemies, 100, -40, 200, 200, baseDamage, CharacterModel.DamageType.PHYSICAL, 1);
                 break;
@@ -1872,7 +1872,7 @@ export function generateHeroKnight(scene: GameScene, team: 'ally' | 'enemy', pro
         }
     });
 
-    if(team === 'ally') {
+    if (team === 'ally') {
         entity.updateHPBarColor(0x00ff00)
         entity.updateHPBarBgColor(0x000000)
         scene.addAlly(entity);
@@ -1896,15 +1896,15 @@ export function generateHeroKnight(scene: GameScene, team: 'ally' | 'enemy', pro
     return entity;
 }
 export function generateMartialHero(scene: GameScene, team: 'ally' | 'enemy', props: CharacterProps): Character {
-    const entity = new Character(scene, props.x || 1000, props.y || 200, props.character.baseStats.speed, 
-        props.textureKey || 'martialHero', 
+    const entity = new Character(scene, props.x || 1000, props.y || 200, props.character.baseStats.speed,
+        props.textureKey || 'martialHero',
         props.character.progression.level,
         props.character.baseStats,
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
-        props.frameWidth || 200, props.frameHeight || 200, props.displayWidth ?? 200*(props.scale || 5), props.displayHeight ?? 200*(props.scale || 5), props.uiOffsetY || -160);
-    
+        props.frameWidth || 200, props.frameHeight || 200, props.displayWidth ?? 200 * (props.scale || 5), props.displayHeight ?? 200 * (props.scale || 5), props.uiOffsetY || -160);
+
     entity.setMaxHP(props.character.baseStats.maxHp);
     entity.setCooldownAttack(props.character.advancedStats.cooldownAttack);
 
@@ -1924,9 +1924,9 @@ export function generateMartialHero(scene: GameScene, team: 'ally' | 'enemy', pr
 
     const baseDamage = props.character.baseStats.attack;
 
-    entity.onAttackFrame = (attackName: string, frameIndex: number): void => {
+    entity.onAttackFrame = (attackName: string, _: number): void => {
         const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
-        switch(attackName) {
+        switch (attackName) {
             case 'attack1': {
                 applyAttackDamage(scene, entity, enemies, 240, -5, 400, 250, baseDamage, CharacterModel.DamageType.PHYSICAL, 1);
                 break;
@@ -1950,7 +1950,7 @@ export function generateMartialHero(scene: GameScene, team: 'ally' | 'enemy', pr
         }
     });
 
-    if(team === 'ally') {
+    if (team === 'ally') {
         entity.updateHPBarColor(0x00ff00)
         entity.updateHPBarBgColor(0x000000)
         scene.addAlly(entity);
@@ -1975,14 +1975,14 @@ export function generateMartialHero(scene: GameScene, team: 'ally' | 'enemy', pr
 }
 
 export function generateOldGolem(scene: GameScene, team: 'ally' | 'enemy', props: CharacterProps): Character {
-    const entity = new Character(scene, props.x || 1000, props.y || 200, props.character.baseStats.speed, 
-        props.textureKey || 'oldGolem', 
+    const entity = new Character(scene, props.x || 1000, props.y || 200, props.character.baseStats.speed,
+        props.textureKey || 'oldGolem',
         props.character.progression.level,
         props.character.baseStats,
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
-        props.frameWidth || 160, props.frameHeight || 160, props.displayWidth ?? 160*(props.scale || 5), props.displayHeight ?? 160*(props.scale || 5), props.uiOffsetY || -230);
+        props.frameWidth || 160, props.frameHeight || 160, props.displayWidth ?? 160 * (props.scale || 5), props.displayHeight ?? 160 * (props.scale || 5), props.uiOffsetY || -230);
 
     entity.setDirection(false);
     entity.setMaxHP(props.character.baseStats.maxHp);
@@ -2007,9 +2007,9 @@ export function generateOldGolem(scene: GameScene, team: 'ally' | 'enemy', props
 
     const baseDamage = props.character.baseStats.attack;
 
-    entity.onAttackFrame = (attackName: string, frameIndex: number): void => {
+    entity.onAttackFrame = (attackName: string, _: number): void => {
         const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
-        switch(attackName) {
+        switch (attackName) {
             case 'attack1':
                 applyAttackDamage(scene, entity, enemies, 150, 50, 350, 350, baseDamage, CharacterModel.DamageType.PHYSICAL, 1);
                 break;
@@ -2034,7 +2034,7 @@ export function generateOldGolem(scene: GameScene, team: 'ally' | 'enemy', props
     // entity.setDebugMode(true);
 
     entity.flipSpritesheet = true;
-    if(team === 'ally') {
+    if (team === 'ally') {
         entity.updateHPBarColor(0x00ff00)
         entity.updateHPBarBgColor(0x000000)
         scene.addAlly(entity);
@@ -2057,14 +2057,14 @@ export function generateOldGolem(scene: GameScene, team: 'ally' | 'enemy', props
 }
 
 export function generateOldGuardian(scene: GameScene, team: 'ally' | 'enemy', props: CharacterProps): Character {
-    const entity = new Character(scene, props.x || 1000, props.y || 200, props.character.baseStats.speed, 
-        props.textureKey || 'oldGuardian', 
+    const entity = new Character(scene, props.x || 1000, props.y || 200, props.character.baseStats.speed,
+        props.textureKey || 'oldGuardian',
         props.character.progression.level,
         props.character.baseStats,
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
-        props.frameWidth || 120, props.frameHeight || 120, props.displayWidth ?? 120*(props.scale || 5), props.displayHeight ?? 120*(props.scale || 5), props.uiOffsetY || -150);
+        props.frameWidth || 120, props.frameHeight || 120, props.displayWidth ?? 120 * (props.scale || 5), props.displayHeight ?? 120 * (props.scale || 5), props.uiOffsetY || -150);
 
     entity.setMaxHP(props.character.baseStats.maxHp);
     entity.setCooldownAttack(props.character.advancedStats.cooldownAttack);
@@ -2088,9 +2088,9 @@ export function generateOldGuardian(scene: GameScene, team: 'ally' | 'enemy', pr
 
     const baseDamage = props.character.baseStats.attack;
 
-    entity.onAttackFrame = (attackName: string, frameIndex: number): void => {
+    entity.onAttackFrame = (attackName: string, _: number): void => {
         const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
-        switch(attackName) {
+        switch (attackName) {
             case 'attack1': {
                 const dmg = baseDamage;
                 applyAttackDamage(scene, entity, enemies, 100, 0, 300, 300, dmg, CharacterModel.DamageType.PHYSICAL, 1);
@@ -2124,7 +2124,7 @@ export function generateOldGuardian(scene: GameScene, team: 'ally' | 'enemy', pr
 
     // entity.setDebugMode(true);
 
-    if(team === 'ally') {
+    if (team === 'ally') {
         entity.updateHPBarColor(0x00ff00)
         entity.updateHPBarBgColor(0x000000)
         scene.addAlly(entity);
@@ -2148,13 +2148,13 @@ export function generateOldGuardian(scene: GameScene, team: 'ally' | 'enemy', pr
 
 
 type AviableCharacter = 'firewarrior' | 'viking' | 'fireKing' | 'frostGuardian' | 'crystalKing' | 'warrior'
- | 'spearwoman' | 'demonSlime' | 'elementalWind'
- | 'groundMonk' | 'waterPriestess' | 'blueSlime' | 'greenSlime' | 'purpleSlime' 
- | 'fantasyWarrior' | 'kitsune' | 'minotaur' | 'bringerOfDeath' | 'nightBorne' | 'knight' | 'steelKnight' | 'heroKnight' | 'martialHero'
- | 'oldGolem' | 'oldGuardian';
+    | 'spearwoman' | 'demonSlime' | 'elementalWind'
+    | 'groundMonk' | 'waterPriestess' | 'blueSlime' | 'greenSlime' | 'purpleSlime'
+    | 'fantasyWarrior' | 'kitsune' | 'minotaur' | 'bringerOfDeath' | 'nightBorne' | 'knight' | 'steelKnight' | 'heroKnight' | 'martialHero'
+    | 'oldGolem' | 'oldGuardian';
 
 export default function generateCharacter(scene: GameScene, team: 'ally' | 'enemy', character: AviableCharacter, props: CharacterProps): Character {
-    switch(character) {
+    switch (character) {
         case 'fireKing':
             return generateFireKing(scene, team, props);
         case 'frostGuardian':
@@ -2172,7 +2172,7 @@ export default function generateCharacter(scene: GameScene, team: 'ally' | 'enem
         case 'demonSlime':
             return generateDemonSlime(scene, team, props);
         case 'elementalWind':
-            return generateElementalWind(scene, team, props); 
+            return generateElementalWind(scene, team, props);
         case 'groundMonk':
             return generateGroundMonk(scene, team, props);
         case 'waterPriestess':
@@ -2206,7 +2206,7 @@ export default function generateCharacter(scene: GameScene, team: 'ally' | 'enem
         case 'oldGuardian':
             return generateOldGuardian(scene, team, props);
         default:
-            const _: never = character;
-            throw new Error('Unknown character: ' + character);
+            const type: never = character;
+            throw new Error('Unknown character: ' + type);
     }
 }

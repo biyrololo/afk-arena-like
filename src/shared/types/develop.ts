@@ -3,69 +3,90 @@ import type { PlayerBalances } from "@/entities/player/model/player.model";
 import { usePlayerStore } from "@/entities/player/model/player.store";
 import usePlayerCharactersStore from "../store/PlayerCharactersStore";
 import { getCharacterEquipment } from "@/entities/character/lib/allCharacters";
+import { v4 } from "uuid";
+
+export const fixEquipment = () => {
+  const equipmentList = structuredClone(usePlayerCharactersStore.getState().equipment);
+  for (let i = 0; i < equipmentList.length; i++) {
+    for (let j = i + 1; j < equipmentList.length; j++) {
+      if (equipmentList[i].id === equipmentList[j].id) {
+        equipmentList[j].id = v4();
+        if (equipmentList[i].equippedCharacterId === equipmentList[j].equippedCharacterId && equipmentList[i].equippedCharacterId !== undefined) {
+          equipmentList[j].equippedCharacterId = undefined;
+        }
+      }
+    }
+  }
+
+  usePlayerCharactersStore.setState({ equipment: equipmentList });
+};
 
 export const RESOURES_FOR_LEVEL: { balances: PlayerBalances }[] = [
   // --- УРОВНИ 1-10 (Вступление) ---
-  { balances: { gold: 100, gems: 0, summons: 0 } },   // 1 → 2
-  { balances: { gold: 250, gems: 0, summons: 0 } },   // 2 → 3
-  { balances: { gold: 500, gems: 0, summons: 0 } },   // 3 → 4
-  { balances: { gold: 1000, gems: 50, summons: 0 } },  // 4 → 5 (Первый порог гемов)
-  { balances: { gold: 1500, gems: 0, summons: 0 } },  // 5 → 6
-  { balances: { gold: 2200, gems: 0, summons: 0 } },  // 6 → 7
-  { balances: { gold: 3000, gems: 0, summons: 0 } },  // 7 → 8
-  { balances: { gold: 4000, gems: 0, summons: 0 } },  // 8 → 9
-  { balances: { gold: 5500, gems: 100, summons: 1 } }, // 9 → 10 (Чекпоинт)
+  { balances: { gold: 50, gems: 0, summons: 0, summonsSpecial: 0 } },   // 1 → 2
+  { balances: { gold: 70, gems: 0, summons: 0, summonsSpecial: 0 } },
+  { balances: { gold: 100, gems: 0, summons: 0, summonsSpecial: 0 } },   // 1 → 2
+  { balances: { gold: 250, gems: 0, summons: 0, summonsSpecial: 0 } },   // 2 → 3
+  { balances: { gold: 500, gems: 0, summons: 0, summonsSpecial: 0 } },   // 3 → 4
+  { balances: { gold: 1000, gems: 0, summons: 0, summonsSpecial: 0 } },  // 4 → 5 (Первый порог гемов)
+  { balances: { gold: 1500, gems: 0, summons: 0, summonsSpecial: 0 } },  // 5 → 6
+  { balances: { gold: 2200, gems: 0, summons: 0, summonsSpecial: 0 } },  // 6 → 7
+  { balances: { gold: 3000, gems: 0, summons: 0, summonsSpecial: 0 } },  // 7 → 8
+  { balances: { gold: 4000, gems: 0, summons: 0, summonsSpecial: 0 } },  // 8 → 9
+  { balances: { gold: 5500, gems: 100, summons: 0, summonsSpecial: 0 } }, // 9 → 10 (Чекпоинт)
 
   // --- УРОВНИ 11-30 (Разгон) ---
   ...Array.from({ length: 20 }, (_, i) => {
     const lvl = i + 11;
-    const isGemStep = lvl % 5 === 0;
+    const isGemStep = lvl % 10 === 0;
     // Квадратичный рост золота: (lvl^2) * множитель
     const goldAmount = Math.round((Math.pow(lvl, 2.2) * 25) / 100) * 100;
     // Медленный рост гемов: +10-20 за каждые 5 уровней
-    const gemAmount = isGemStep ? 100 + (Math.floor(lvl / 5) * 10) : 0;
+    const gemAmount = isGemStep ? 100 + (Math.floor(lvl / 10) * 20) : 0;
 
-    return { balances: { gold: goldAmount, gems: gemAmount, summons: 0 } };
+    return { balances: { gold: goldAmount, gems: gemAmount, summons: 0, summonsSpecial: 0 } };
   }),
 
   // --- УРОВНИ 31-60 (Мид-гейм) ---
   ...Array.from({ length: 30 }, (_, i) => {
     const lvl = i + 31;
-    const isGemStep = lvl % 5 === 0;
+    const isGemStep = lvl % 10 === 0;
     const goldAmount = Math.round((Math.pow(lvl, 2.5) * 15) / 500) * 500;
     const gemAmount = isGemStep ? 150 + (Math.floor(lvl / 10) * 20) : 0;
 
-    return { balances: { gold: goldAmount, gems: gemAmount, summons: 0 } };
+    return { balances: { gold: goldAmount, gems: gemAmount, summons: 0, summonsSpecial: 0 } };
   }),
 
   // --- УРОВНИ 61-100 (Лейт-гейм / Энд-гейм) ---
   ...Array.from({ length: 40 }, (_, i) => {
     const lvl = i + 61;
-    const isGemStep = lvl % 5 === 0;
+    const isGemStep = lvl % 10 === 0;
     // Резкое удорожание золота
     const goldAmount = Math.round((Math.pow(lvl, 2.8) * 10) / 1000) * 1000;
     // Гемы остаются ценными и не инфлируют слишком сильно
-    const gemAmount = isGemStep ? 250 + (Math.floor(lvl / 20) * 50) : 0;
+    const gemAmount = isGemStep ? 250 + (Math.floor(lvl / 10) * 50) : 0;
 
-    return { balances: { gold: goldAmount, gems: gemAmount, summons: isGemStep ? 1 : 0 } };
+    return { balances: { gold: goldAmount, gems: gemAmount, summons: 0, summonsSpecial: 0 } };
   })
 ];
 export const EQUIPMENT_UPGRADE_COSTS: { balances: PlayerBalances }[] = [
   // --- УРОВНИ 1-10 (Начало: дешево и быстро) ---
-  { balances: { gold: 50, gems: 0, summons: 0 } },    // 1 → 2
-  { balances: { gold: 120, gems: 0, summons: 0 } },   // 2 → 3
-  { balances: { gold: 250, gems: 0, summons: 0 } },   // 3 → 4
-  { balances: { gold: 450, gems: 15, summons: 0 } },  // 4 → 5 (Первый порог)
-  { balances: { gold: 700, gems: 0, summons: 0 } },   // 5 → 6
-  { balances: { gold: 1000, gems: 0, summons: 0 } },  // 6 → 7
-  { balances: { gold: 1400, gems: 0, summons: 0 } },  // 7 → 8
-  { balances: { gold: 1900, gems: 0, summons: 0 } },  // 8 → 9
-  { balances: { gold: 2500, gems: 30, summons: 0 } }, // 9 → 10 (Оружие требует заточки)
+  { balances: { gold: 50, gems: 0, summons: 0, summonsSpecial: 0 } },    // 1 → 2
+  { balances: { gold: 50, gems: 0, summons: 0, summonsSpecial: 0 } },    // 1 → 2
+  { balances: { gold: 50, gems: 0, summons: 0, summonsSpecial: 0 } },    // 1 → 2
+  { balances: { gold: 120, gems: 0, summons: 0, summonsSpecial: 0 } },   // 2 → 3
+  { balances: { gold: 250, gems: 0, summons: 0, summonsSpecial: 0 } },   // 3 → 4
+  { balances: { gold: 500, gems: 0, summons: 0, summonsSpecial: 0 } },  // 4 → 5 (Первый порог)
+  { balances: { gold: 700, gems: 0, summons: 0, summonsSpecial: 0 } },   // 5 → 6
+  { balances: { gold: 1000, gems: 0, summons: 0, summonsSpecial: 0 } },  // 6 → 7
+  { balances: { gold: 1400, gems: 0, summons: 0, summonsSpecial: 0 } },  // 7 → 8
+  { balances: { gold: 1900, gems: 0, summons: 0, summonsSpecial: 0 } },  // 8 → 9
+  { balances: { gold: 2500, gems: 60, summons: 0, summonsSpecial: 0 } }, // 9 → 10 (Оружие требует заточки)
 
   // --- УРОВНИ 11-100 (Генерация прогрессии) ---
   ...Array.from({ length: 90 }, (_, i) => {
     const lvl = i + 11;
-    const isGemStep = lvl % 5 === 0;
+    const isGemStep = lvl % 10 === 0;
 
     // Золото: Скейлинг заметный, но мягче, чем у уровней игрока
     // Формула дает ~200k на 100 уровне (в 2-2.5 раза меньше уровня персонажа)
@@ -73,13 +94,14 @@ export const EQUIPMENT_UPGRADE_COSTS: { balances: PlayerBalances }[] = [
 
     // Гемы: Редкие траты, фиксированный медленный рост
     // На 100 уровне будет просить всего ~150 гемов за шаг
-    const gemAmount = isGemStep ? Math.floor(25 + (lvl * 1.2)) : 0;
+    const gemAmount = isGemStep ? Math.floor(120 + Math.log(lvl / 10) * 10) : 0;
 
     return {
       balances: {
         gold: goldAmount,
         gems: gemAmount,
-        summons: 0
+        summons: 0,
+        summonsSpecial: 0
       }
     };
   })
@@ -285,7 +307,8 @@ export const isEnoughResources = (
   return (
     resources.gems >= need.balances.gems &&
     resources.gold >= need.balances.gold &&
-    resources.summons >= need.balances.summons
+    resources.summons >= need.balances.summons &&
+    resources.summonsSpecial >= need.balances.summonsSpecial
   );
 };
 
@@ -302,7 +325,7 @@ export const upgradeEquipment = (equipmentId: string) => {
   const maxLevel = getMaxEquipmentLevel(equipment.rarity);
   if (equipment.level >= maxLevel) return;
 
-  const upgradeCost = EQUIPMENT_UPGRADE_COSTS[equipment.level];
+  const upgradeCost = EQUIPMENT_UPGRADE_COSTS[equipment.level + 1];
   if (!upgradeCost || !isEnoughResources(upgradeCost, playerResources)) return;
 
   // Deduct resources
@@ -396,11 +419,11 @@ export const calculateEquipmentUpgradeStats = (
 };
 
 const maxLevels: Record<Character.Rarity, number> = {
-  [Character.Rarity.COMMON]: 40,
-  [Character.Rarity.UNCOMMON]: 50,
-  [Character.Rarity.RARE]: 60,
-  [Character.Rarity.EPIC]: 70,
-  [Character.Rarity.LEGENDARY]: 80,
+  [Character.Rarity.COMMON]: 200,
+  [Character.Rarity.UNCOMMON]: 200,
+  [Character.Rarity.RARE]: 200,
+  [Character.Rarity.EPIC]: 200,
+  [Character.Rarity.LEGENDARY]: 200,
 };
 
 export const getMaxEquipmentLevel = (rarity: Character.Rarity): number => {

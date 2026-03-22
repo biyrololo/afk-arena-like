@@ -2,8 +2,9 @@ import { SOUNDS } from "@/assets/sound/sounds";
 import type { IStageReward } from "@/entities/chapter/lib/chapter.model";
 import { findStage, nextStage } from "@/entities/chapter/lib/chapters";
 import { EquipmentCard } from "@/entities/character/ui/EquipmentCard/EquipmentCard";
+import { useGameStateStore } from "@/entities/game/model/game-state.store";
 import { usePlayerStore } from "@/entities/player/model/player.store";
-import { useSoundEffects } from "@/shared/hooks/useSoundEffects";
+import { useBackgroundMusic } from "@/shared/hooks/useBackgroundMusic";
 import usePlayerCharactersStore from "@/shared/store/PlayerCharactersStore";
 import { Icon } from "@/shared/ui/Icon/Icon";
 import { ResponsiveUI } from "@/shared/ui/ResponsiveUI/ResponsiveUI";
@@ -13,19 +14,19 @@ import { useShallow } from "zustand/shallow";
 
 export const GameEnd: FC = () => {
     const { state } = useLocation();
-    const sounds = useSoundEffects(SOUNDS);
+    const music = useBackgroundMusic(
+        state.win ? SOUNDS.vibraphone_level_complete : SOUNDS.vibraphone_defeated, {
+        loop: false,
+        volume: 0.5
+    }
+    );
     useEffect(() => {
-        if (!state) return;
-        if (state.win) {
-            setTimeout(() => {
-                sounds.playSound('vibraphone_level_complete');
-            }, 500);
-        } else {
-            setTimeout(() => {
-                sounds.playSound('vibraphone_defeated');
-            }, 500);
+        music.play();
+
+        return () => {
+            music.stop();
         }
-    }, [state])
+    }, [])
 
     const { setEquipment } = usePlayerCharactersStore();
 
@@ -54,7 +55,8 @@ export const GameEnd: FC = () => {
         setBalances({
             gold: balances.gold + (curStage?.rewards?.balances.gold || 0),
             gems: balances.gems + (curStage?.rewards?.balances.gems || 0),
-            summons: balances.summons + (curStage?.rewards?.balances.summons || 0)
+            summons: balances.summons + (curStage?.rewards?.balances.summons || 0),
+            summonsSpecial: balances.summonsSpecial + (curStage?.rewards?.balances.summonsSpecial || 0),
         })
 
         if (curStage?.rewards?.equipment) {
@@ -85,6 +87,7 @@ export const GameEnd: FC = () => {
 
     const goToMenu = () => {
         navigate('/');
+        useGameStateStore.getState().setAdAvailable(true);
     };
 
     if (state.win) {
@@ -149,7 +152,7 @@ export const GameEnd: FC = () => {
                         {
                             reward?.equipment && (
                                 <div
-                                    className="grid grid-cols-4 gap-4 mt-6"
+                                    className="flex justify-center gap-4 mt-6"
                                 >
                                     {
                                         reward.equipment.map(eq => (

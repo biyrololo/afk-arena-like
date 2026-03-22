@@ -20,6 +20,7 @@ import { MUSIC } from "@/assets/music/music";
 import { useEffect } from "react";
 import { useGameStateStore } from "@/entities/game/model/game-state.store";
 import { AdModal } from "../AdModal/AdModal";
+import { TogleMusicButton } from "../TogleMusicButton/TogleMusicButton";
 
 export default function MenuUI() {
   const [clicked, clickDone] = useGameStateStore(useShallow(state => [
@@ -52,21 +53,22 @@ export default function MenuUI() {
   );
 
   useEffect(() => {
-    if(clicked) {
+    if (clicked) {
+      console.log("Playing music...");
       music.play();
     }
     return () => {
       music.stop();
     }
-  }, [music.stop, clicked])
+  }, [clicked])
 
   return (
     <div className="absolute inset-0"
-    onClick={e => {
-      if(e.target === e.currentTarget) {
-        clickDone();
-      }
-    }}
+      onClick={e => {
+        if (e.target === e.currentTarget) {
+          clickDone();
+        }
+      }}
     >
       <Balances />
       <div
@@ -200,6 +202,7 @@ export default function MenuUI() {
           Выживание
         </span>
       </div>
+      <TogleMusicButton />
       <QuestsModal />
       <DailyRewardsModal />
       <AdModal />

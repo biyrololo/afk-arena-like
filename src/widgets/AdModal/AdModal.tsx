@@ -1,60 +1,40 @@
 import { useGameStateStore } from "@/entities/game/model/game-state.store";
 import { SDK } from "@/entities/sdk/model/sdk";
-import { Modal } from "@/shared/ui/Modal";
 import { useEffect, useState, type FC } from "react";
 import { useShallow } from "zustand/shallow";
 
 const AD_INTERVAL = 180000; // раз в 3 минуты
 
 export const AdModal: FC = () => {
-    const [lastAdAt, setLastAdAt, setPaused] = useGameStateStore(useShallow(state => [
-        state.lastAdAt, state.setLastAdAt, state.setPaused
+    const [lastAdAt, adAvailable, setLastAdAt, setPaused, setAdAvailable, setIsCurrentScreenPaused] = useGameStateStore(useShallow(state => [
+        state.lastAdAt, state.adAvailable, state.setLastAdAt, state.setPaused, state.setAdAvailable, state.setIsCurrentScreenPaused
     ]))
 
-    const [isOpened, setIsOpened] = useState(false);
-    const [timer, setTimer] = useState(0);
+    const [adShownThisSession, setAdShownThisSession] = useState(false);
 
     useEffect(() => {
         const now = new Date().getTime();
-        if (now - lastAdAt >= AD_INTERVAL) {
-            setIsOpened(true);
+        if (now - lastAdAt >= AD_INTERVAL && adAvailable && !adShownThisSession) {
+            setAdShownThisSession(true);
             setLastAdAt(now);
+            setAdAvailable(false);
             setPaused(true);
-            setTimer(5);
-        }
-    }, [lastAdAt])
-
-    useEffect(() => {
-        if (isOpened) {
-            const interval = setInterval(() => {
-                setTimer(timer => {
-                    if (timer > 0) return timer - 1;
-                    clearInterval(interval);
-                    SDK.getInstance()
-                        .showFullscreenAdv({
-                            onClose: () => {
-                                setIsOpened(false);
-                                setPaused(false);
-                            },
-                            onError: () => {
-                                setIsOpened(false);
-                                setPaused(false);
-                            },
-                        });
-                    return 0;
+            setIsCurrentScreenPaused(true);
+            SDK.getInstance()
+                .showFullscreenAdv({
+                    onClose: () => {
+                        setIsCurrentScreenPaused(false);
+                        setPaused(false);
+                        SDK.getInstance().gameStart();
+                    },
+                    onError: () => {
+                        setIsCurrentScreenPaused(false);
+                        setPaused(false);
+                        SDK.getInstance().gameStart();
+                    },
                 });
-            }, 1000);
-            return () => clearInterval(interval);
         }
-    }, [isOpened, setTimer, setPaused])
+    }, [])
 
-    return (
-        <Modal
-            isOpened={isOpened}
-            close={() => setIsOpened(false)}
-            maxWidth="1000px"
-        >
-            <div className="text-white text-6xl text-center">Реклама начнётся через {Math.max(0, timer)}</div>
-        </Modal>
-    )
+    return null;
 }

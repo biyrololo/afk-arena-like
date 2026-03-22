@@ -14,7 +14,7 @@ interface PlayerStatsStore {
 
 export const usePlayerStatsStore = create<PlayerStatsStore>()(
     devtools(
-        subscribeWithSelector((set, get) => ({
+        subscribeWithSelector((set) => ({
             killedEnemies: {},
             maxSurvivialDepthPerChapter: {},
 
@@ -45,5 +45,5 @@ export const usePlayerStatsStore = create<PlayerStatsStore>()(
                     },
                 })),
         })
-    )
-))
+        )
+    ))

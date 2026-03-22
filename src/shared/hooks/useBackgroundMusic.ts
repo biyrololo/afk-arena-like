@@ -18,6 +18,14 @@ export const useBackgroundMusic = (url: string, options: MusicOptions = {}) => {
 
   const [isPlaying, setIsPlaying] = useState(false);
 
+  const isMountedRef = useRef(true);
+
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
+
   const loadAudio = useCallback(async () => {
     if (!audioCtxRef.current) {
       const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
@@ -36,8 +44,13 @@ export const useBackgroundMusic = (url: string, options: MusicOptions = {}) => {
   }, [url]);
 
   const play = useCallback(async () => {
-    if(useGameStateStore.getState().paused) return;
+    if (useGameStateStore.getState().paused
+      || useGameStateStore.getState().musicDisabled) return;
     await loadAudio();
+
+    if (!isMountedRef.current)
+      return;
+
     const ctx = audioCtxRef.current;
     const gain = gainRef.current;
     const buffer = bufferRef.current;
@@ -65,7 +78,7 @@ export const useBackgroundMusic = (url: string, options: MusicOptions = {}) => {
   const stop = useCallback(() => {
     const source = sourceRef.current;
     if (!source) return;
-    
+
     source.stop();
     sourceRef.current = null;
     setIsPlaying(false);
@@ -77,23 +90,23 @@ export const useBackgroundMusic = (url: string, options: MusicOptions = {}) => {
 
   useEffect(() => {
     const unsubscribe = useGameStateStore.subscribe(
-      state => [state.paused],
-      ([paused]) => {
-        if (paused) stop();
+      state => [state.paused, state.musicDisabled],
+      ([paused, musicDisabled]) => {
+        if (paused || musicDisabled) stop();
         else playIfNotPlaying();
       }
     )
 
     return () => {
       unsubscribe();
-      // stop();
+      if (sourceRef.current) sourceRef.current.stop();
     };
-  }, [playIfNotPlaying, stop]);
+  }, [stop]);
 
   useEffect(() => {
     return () => {
       const source = sourceRef.current;
-      if(source)
+      if (source)
         source.stop();
     };
   }, [])

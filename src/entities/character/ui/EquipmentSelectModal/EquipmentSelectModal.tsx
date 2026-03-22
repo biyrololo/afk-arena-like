@@ -1,6 +1,5 @@
 import type { Character } from "@/shared/types/character";
 import { useEffect, useState, type FC } from "react";
-import { EquipmentCard } from "../EquipmentCard/EquipmentCard";
 import { Button } from "@/shared/ui/Button/Button";
 import cn from "classnames";
 import { EquipmentFullCard } from "../EquipmentCard/EquipmentFullCard";
@@ -39,7 +38,6 @@ export const EquipmentSelectModal: FC<IEquipmentSelectModalProps> = ({
   const sounds = useSoundEffects(SOUNDS)
   const navigate = useNavigate();
   const [page, setPage] = useState(0);
-  const [direction, setDirection] = useState(1);
 
   useEffect(() => {
     setPage(0);
@@ -70,12 +68,10 @@ export const EquipmentSelectModal: FC<IEquipmentSelectModalProps> = ({
   const handleNextClick = () => {
     if (isNextDisabled) return;
     setPage((prevPage) => prevPage + 1);
-    setDirection(1);
   };
   const handlePrevClick = () => {
     if (isPrevDisabled) return;
     setPage((prevPage) => prevPage - 1);
-    setDirection(-1);
   };
 
   const handleUpgradeClick = () => {
@@ -164,24 +160,32 @@ export const EquipmentSelectModal: FC<IEquipmentSelectModalProps> = ({
                   className="bg-purple-700 hover:bg-purple-600 text-xl px-6 py-3 min-h-[80px] min-w-[500px] justify-center"
                   disabled={!canUpgrade || !currentEquipment}
                 >
-                  УЛУЧШИТЬ
-                  {currentEquipment && (
-                    <div className="flex justify-center gap-8 relative">
-                      {Object.entries(resources.balances)
-                        .filter(([resource, amount]) => amount > 0)
-                        .map(([resource, amount]) => {
-                          return (
-                            <div
-                              key={resource}
-                              className="flex items-center gap-2"
-                            >
-                              {amount}
-                              <Icon icon={resource as any} />
-                            </div>
-                          );
-                        })}
-                    </div>
-                  )}
+                  {
+                    currentEquipment ? (
+                      <>
+                        УЛУЧШИТЬ
+                        {currentEquipment && (
+                          <div className="flex justify-center gap-8 relative">
+                            {Object.entries(resources.balances)
+                              .filter(([_, amount]) => amount > 0)
+                              .map(([resource, amount]) => {
+                                return (
+                                  <div
+                                    key={resource}
+                                    className="flex items-center gap-2"
+                                  >
+                                    {amount}
+                                    <Icon icon={resource as any} />
+                                  </div>
+                                );
+                              })}
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      <>МАКСИМАЛЬНЫЙ УРОВЕНЬ</>
+                    )
+                  }
                 </Button>
               </div>
             </div>

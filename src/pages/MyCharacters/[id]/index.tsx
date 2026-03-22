@@ -29,18 +29,28 @@ import PhaserGame from "@/shared/ui/PhaserGame";
 import { ResponsiveUI } from "@/shared/ui/ResponsiveUI/ResponsiveUI";
 import { EventBus } from "@/utils/eventBus";
 import { Balances } from "@/widgets/Balances/Balances";
+import { ClassesModal } from "@/widgets/ClassesModal/ClassesModal";
 import { useEffect, useMemo, useState, type FC } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useShallow } from "zustand/react/shallow";
 
 export const MyCharacterPage: FC = () => {
   const music = useBackgroundMusic(MUSIC.menu, { loop: true, volume: 0.2 });
+  useEffect(() => {
+    music.play();
+    return () => {
+      music.stop();
+    };
+  }, []);
+
   const sounds = useSoundEffects(SOUNDS);
   const { id } = useParams();
 
   useEffect(() => {
     EventBus.emit("load:start");
   }, []);
+
+  const [isClassesModalOpened, setIsClassesModalOpened] = useState(false);
 
   const banalces = usePlayerStore(useShallow((state) => state.balances));
 
@@ -117,13 +127,6 @@ export const MyCharacterPage: FC = () => {
     console.log("levelUp", current.id);
   };
 
-  useEffect(() => {
-    music.play();
-    return () => {
-      music.stop();
-    };
-  }, [music.play]);
-
   if (!totalStats) {
     // navigate('/')
     return null;
@@ -180,7 +183,9 @@ export const MyCharacterPage: FC = () => {
                             rounded-xl
                             px-4
                             py-1
+                            cursor-pointer
                         `}
+              onClick={() => setIsClassesModalOpened(true)}
             >
               <div
                 className="text-white text-2xl flex items-center gap-4"
@@ -192,9 +197,9 @@ export const MyCharacterPage: FC = () => {
                     <div className="flex gap-1 items-center">
                       {
                         Array.from({ length: current.progression.ascension })
-                        .map((_, i) => (
-                          <Icon icon="star" key={i} size={30} />
-                        ))
+                          .map((_, i) => (
+                            <Icon icon="star" key={i} size={30} />
+                          ))
                       }
                     </div>
                   )
@@ -208,12 +213,12 @@ export const MyCharacterPage: FC = () => {
                 {
                   current && (
                     <>
-                    <div className="rounded-full overflow-hidden size-[40px] relative">
-                      <Icon icon={`faction_${current.faction}`} className="absolute !w-[60px] !h-[60px] max-w-none top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
-                    </div>
-                    <div className="rounded-full overflow-hidden size-[40px] relative">
-                      <Icon icon={`role_${current.role}`} />
-                    </div>
+                      <div className="rounded-full overflow-hidden size-[40px] relative">
+                        <Icon icon={`faction_${current.faction}`} className="absolute !w-[60px] !h-[60px] max-w-none top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+                      </div>
+                      <div className="rounded-full overflow-hidden size-[40px] relative">
+                        <Icon icon={`role_${current.role}`} />
+                      </div>
                     </>
                   )
                 }
@@ -276,15 +281,15 @@ export const MyCharacterPage: FC = () => {
                       </span>
                     )}
                   <span
-                  className="transition-all"
-                  style={
-                    animatedPower !== totalStats?.power.toString() ? 
-                    { 
-                      color: "var(--color-green-600)",
-                      transform: 'scale(1.3)'
-                    } : 
-                    {}
-                  }
+                    className="transition-all"
+                    style={
+                      animatedPower !== totalStats?.power.toString() ?
+                        {
+                          color: "var(--color-green-600)",
+                          transform: 'scale(1.3)'
+                        } :
+                        {}
+                    }
                   >
                     {animatedPower}
                   </span>
@@ -297,7 +302,7 @@ export const MyCharacterPage: FC = () => {
                     totalNewStats &&
                     totalStats &&
                     totalStats.baseStats.maxHp !==
-                      totalNewStats.baseStats.maxHp && (
+                    totalNewStats.baseStats.maxHp && (
                       <span className="block mr-6 text-green-600">
                         {totalNewStats.baseStats.maxHp} {"<"}
                       </span>
@@ -311,7 +316,7 @@ export const MyCharacterPage: FC = () => {
                   {isHover &&
                     totalNewStats &&
                     totalStats.baseStats.attack !==
-                      totalNewStats.baseStats.attack && (
+                    totalNewStats.baseStats.attack && (
                       <span className="block mr-6 text-green-600">
                         {totalNewStats.baseStats.attack} {"<"}
                       </span>
@@ -325,7 +330,7 @@ export const MyCharacterPage: FC = () => {
                   {isHover &&
                     totalNewStats &&
                     totalStats.baseStats.speed !==
-                      totalNewStats.baseStats.speed && (
+                    totalNewStats.baseStats.speed && (
                       <span className="block mr-6 text-green-600">
                         {totalNewStats.baseStats.speed} {"<"}
                       </span>
@@ -339,7 +344,7 @@ export const MyCharacterPage: FC = () => {
                   {isHover &&
                     totalNewStats &&
                     totalStats.baseStats.defense !==
-                      totalNewStats.baseStats.defense && (
+                    totalNewStats.baseStats.defense && (
                       <span className="block mr-6 text-green-600">
                         {Math.floor(totalNewStats.baseStats.defense)} {"<"}
                       </span>
@@ -368,11 +373,11 @@ export const MyCharacterPage: FC = () => {
                   {isHover &&
                     totalNewStats &&
                     totalStats.advancedStats?.critChance !==
-                      totalNewStats.advancedStats?.critChance && (
+                    totalNewStats.advancedStats?.critChance && (
                       <span className="block mr-6 text-green-600">
                         {Math.floor(
                           (totalNewStats.advancedStats?.critChance || 0.5) *
-                            100,
+                          100,
                         )}
                         % {"<"}
                       </span>
@@ -389,11 +394,11 @@ export const MyCharacterPage: FC = () => {
                   {isHover &&
                     totalNewStats &&
                     totalStats.advancedStats?.critDamage !==
-                      totalNewStats.advancedStats?.critDamage && (
+                    totalNewStats.advancedStats?.critDamage && (
                       <span className="block mr-6 text-green-600">
                         {Math.floor(
                           (totalNewStats.advancedStats?.critDamage || 1.5) *
-                            100,
+                          100,
                         )}
                         % {"<"}
                       </span>
@@ -412,7 +417,7 @@ export const MyCharacterPage: FC = () => {
                   {isHover &&
                     totalNewStats &&
                     totalStats.advancedStats?.energyRegen !==
-                      totalNewStats.advancedStats?.energyRegen && (
+                    totalNewStats.advancedStats?.energyRegen && (
                       <span className="block mr-6 text-green-600">
                         {Math.floor(
                           totalNewStats.advancedStats?.energyRegen || 1,
@@ -429,7 +434,7 @@ export const MyCharacterPage: FC = () => {
                   {isHover &&
                     totalNewStats &&
                     totalStats.advancedStats?.dodge !==
-                      totalNewStats.advancedStats?.dodge && (
+                    totalNewStats.advancedStats?.dodge && (
                       <span className="block mr-6 text-green-600">
                         {Math.floor(
                           (totalNewStats.advancedStats?.dodge || 0.01) * 100,
@@ -446,7 +451,7 @@ export const MyCharacterPage: FC = () => {
                   {isHover &&
                     totalNewStats &&
                     totalStats.advancedStats?.accuracy !==
-                      totalNewStats.advancedStats?.accuracy && (
+                    totalNewStats.advancedStats?.accuracy && (
                       <span className="block mr-6 text-green-600">
                         {Math.floor(
                           (totalNewStats.advancedStats?.accuracy || 0.01) * 100,
@@ -509,6 +514,7 @@ export const MyCharacterPage: FC = () => {
             </div>
             {isMaxLevel ? (
               <button
+                tabIndex={-1}
                 className={`
                                     relative
                                     px-12 py-6
@@ -537,20 +543,20 @@ export const MyCharacterPage: FC = () => {
               </button>
             ) : (
               <button
+                tabIndex={-1}
                 className={`
                                     relative
                                     px-12 py-6
                                     text-4xl font-bold
-                                    ${
-                                      isHover
-                                        ? `
+                                    ${isHover
+                    ? `
                                         bg-gradient-to-r from-amber-500 to-amber-700 text-yellow-100
                                         border-amber-400 hover:from-amber-500 hover:to-amber-700 cursor-pointer
                                         hover:scale-105
                                         active:scale-95
                                         group
                                         `
-                                        : `
+                    : `
                                         cursor-not-allowed
                                         bg-stone-500
                                         text-yellow-100
@@ -560,7 +566,7 @@ export const MyCharacterPage: FC = () => {
                                         transform transition-all duration-300
                                         overflow-hidden
                                         `
-                                    }
+                  }
                                     border-4
                                     rounded-2xl
                                     shadow-lg
@@ -598,7 +604,7 @@ export const MyCharacterPage: FC = () => {
                   УЛУЧШИТЬ
                   <div className="flex justify-center gap-8 relative">
                     {Object.entries(resources.balances)
-                      .filter(([resource, amount]) => amount > 0)
+                      .filter(([_, amount]) => amount > 0)
                       .map(([resource, amount]) => {
                         return (
                           <div
@@ -619,6 +625,7 @@ export const MyCharacterPage: FC = () => {
             )}
           </div>
         </div>
+        <ClassesModal isOpened={isClassesModalOpened} close={() => setIsClassesModalOpened(false)} />
         {isEquipmentModalOpen && (
           <EquipmentSelectModal
             currentEquipment={equipment[isEquipmentModalOpen]}

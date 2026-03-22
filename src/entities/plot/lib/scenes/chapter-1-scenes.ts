@@ -1,9 +1,16 @@
 import * as CHARACTERS from '@/entities/character/lib/allCharacters'
-import type { IStatement, IPlot, IPlotScene, IPlotStore } from "../plot.model";
+import type { IPlotScene } from "../plot.model";
 import { Avatars } from "@/shared/avatars";
 import { usePlayerStore } from '@/entities/player/model/player.store';
 import usePlayerCharactersStore from '@/shared/store/PlayerCharactersStore';
 import { cloneCharacter } from '@/shared/types/character';
+
+import scene1 from '@/assets/scenes/scene-1.webp'
+import scene2 from '@/assets/scenes/scene-2.webp'
+import scene3 from '@/assets/scenes/scene-3.webp'
+import scene4 from '@/assets/scenes/scene-4.webp'
+import scene5 from '@/assets/scenes/scene-5.webp'
+import scene6 from '@/assets/scenes/scene-6.webp'
 
 const checkProgress = (chapter: number, stage: number) => {
   const { chapterNumber, stageNumber } = usePlayerStore.getState()
@@ -22,6 +29,7 @@ export const CHAPTER_1_SCENES: IPlotScene[] = [
         id: "c1s1",
         author: CHARACTERS.FIRE_KING_CHARACTER.name,
         color: "green",
+        backgroundImage: scene1,
         text: "Недавно открылся портал в бездну. И оттуда хлынули монстры",
         avatar: Avatars.fireKing,
       },
@@ -29,14 +37,16 @@ export const CHAPTER_1_SCENES: IPlotScene[] = [
         id: "c1s2",
         author: CHARACTERS.FIRE_KING_CHARACTER.name,
         color: "green",
-        text: "Теперь они оттуда распространяются по всему миру",
+        backgroundImage: scene1,
+        text: "Твари лезут изо всех щелей. Если их не остановить, от мира останется только пепел",
         avatar: Avatars.fireKing,
       },
       {
         id: "c1s3",
         author: CHARACTERS.FIRE_KING_CHARACTER.name,
         color: "green",
-        text: "Вот и слизни.. Как их много. Сначала надо разобраться с ними",
+        backgroundImage: scene2,
+        text: "Слизни? Прямо на пороге? Что ж, проверим, как быстро они испаряются!",
         avatar: Avatars.fireKing,
       },
     ],
@@ -49,6 +59,7 @@ export const CHAPTER_1_SCENES: IPlotScene[] = [
         author: CHARACTERS.FIRE_KING_CHARACTER.name,
         color: "green",
         text: "А это кто? Неужели она тоже поражена бездной?",
+        backgroundImage: scene3,
         avatar: Avatars.fireKing,
         isAvailable: () => checkProgress(1, 3)
       },
@@ -58,6 +69,7 @@ export const CHAPTER_1_SCENES: IPlotScene[] = [
         color: "orange",
         authorPosition: 'right',
         text: "Ещё один монстр из бездны?",
+        backgroundImage: scene3,
         avatar: Avatars.warrior,
       },
       {
@@ -65,6 +77,7 @@ export const CHAPTER_1_SCENES: IPlotScene[] = [
         author: CHARACTERS.FIRE_KING_CHARACTER.name,
         color: "green",
         text: "Ты ошибаешься, я борюсь с бездной!",
+        backgroundImage: scene3,
         avatar: Avatars.fireKing,
       },
       {
@@ -73,6 +86,7 @@ export const CHAPTER_1_SCENES: IPlotScene[] = [
         color: "orange",
         authorPosition: 'right',
         text: "Я помню такую силу только от монтсров бездны",
+        backgroundImage: scene3,
         avatar: Avatars.warrior,
       },
       {
@@ -81,6 +95,7 @@ export const CHAPTER_1_SCENES: IPlotScene[] = [
         color: "orange",
         authorPosition: 'right',
         text: "Приготовься к битве",
+        backgroundImage: scene4,
         avatar: Avatars.warrior,
       },
     ],
@@ -93,7 +108,8 @@ export const CHAPTER_1_SCENES: IPlotScene[] = [
         author: CHARACTERS.WARRIOR_CHARACTER.name,
         color: "green",
         authorPosition: "right",
-        text: "Ты действительно не из бездны",
+        text: "Ты, действительно, не из бездны",
+        backgroundImage: scene5,
         avatar: Avatars.warrior,
         isAvailable: () => checkProgress(1, 4)
       },
@@ -102,6 +118,7 @@ export const CHAPTER_1_SCENES: IPlotScene[] = [
         author: CHARACTERS.FIRE_KING_CHARACTER.name,
         color: "green",
         text: "Я сражаюсь с бездной",
+        backgroundImage: scene5,
         avatar: Avatars.fireKing,
       },
       {
@@ -109,6 +126,7 @@ export const CHAPTER_1_SCENES: IPlotScene[] = [
         author: CHARACTERS.FIRE_KING_CHARACTER.name,
         color: "green",
         text: "Бездна становится сильнее каждый день, но и мои способности увеличиваются",
+        backgroundImage: scene5,
         avatar: Avatars.fireKing,
       },
       {
@@ -117,6 +135,7 @@ export const CHAPTER_1_SCENES: IPlotScene[] = [
         color: "green",
         authorPosition: "right",
         text: "Почему твоя сила похожа на неё?",
+        backgroundImage: scene5,
         avatar: Avatars.warrior,
       },
       {
@@ -124,6 +143,7 @@ export const CHAPTER_1_SCENES: IPlotScene[] = [
         author: CHARACTERS.FIRE_KING_CHARACTER.name,
         color: "green",
         text: "Я уверен, что причина - в открытом портале",
+        backgroundImage: scene5,
         avatar: Avatars.fireKing,
       },
       {
@@ -131,6 +151,7 @@ export const CHAPTER_1_SCENES: IPlotScene[] = [
         author: CHARACTERS.FIRE_KING_CHARACTER.name,
         color: "green",
         text: "Если бездна дошла в наш далекий регион, значит, нужно торопиться",
+        backgroundImage: scene5,
         avatar: Avatars.fireKing,
       },
       {
@@ -138,6 +159,7 @@ export const CHAPTER_1_SCENES: IPlotScene[] = [
         author: CHARACTERS.FIRE_KING_CHARACTER.name,
         color: "green",
         text: "Нужно отправляться в снежный регион",
+        backgroundImage: scene5,
         avatar: Avatars.fireKing,
       },
       {
@@ -146,11 +168,13 @@ export const CHAPTER_1_SCENES: IPlotScene[] = [
         color: "green",
         authorPosition: "right",
         text: "У нас одна цель. Я буду сражаться вместе с тобой",
+        backgroundImage: scene6,
         avatar: Avatars.warrior,
       },
       {
         id: "c1aw9",
         color: "green",
+        backgroundImage: scene6,
         text: `Получен персонаж: ${CHARACTERS.WARRIOR_CHARACTER.name}`,
       },
     ],

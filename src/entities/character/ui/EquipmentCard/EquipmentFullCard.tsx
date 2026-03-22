@@ -1,6 +1,4 @@
-import type { Icons } from "@/shared/icons";
 import type { Character } from "@/shared/types/character";
-import { Icon } from "@/shared/ui/Icon/Icon";
 import { getRarityColor } from "../../lib/getRarityColor";
 import { EquipmentCard } from "./EquipmentCard";
 import {
@@ -75,7 +73,7 @@ export const EquipmentFullCard = ({
             <p className="text-white font-bold text-4xl mb-4">
               МОЩЬ:
               <div className="text-amber-400 inline-block">
-                <span 
+                <span
                   className="transition-all inline-block mx-2"
                   style={{
                     color: isAnimatingPower ? "var(--color-green-600)" : undefined,

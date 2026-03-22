@@ -11,34 +11,34 @@ export const QUESTS: IQuest[] = [
         id: 'boss-warrior-1',
         title: "Пройдите 3 этапа",
         reward: 'summons',
-        count: 1,
+        count: 10,
         rewardRarity: Character.Rarity.RARE,
         getProgressText: () => {
             const { stageNumber, chapterNumber } = usePlayerStore.getState();
-            if(chapterNumber === 1 && stageNumber <= 3) {
+            if (chapterNumber === 1 && stageNumber <= 3) {
                 return `${stageNumber - 1} / 3`
             }
             return `3 / 3`
         },
         getProgress: () => {
             const { stageNumber, chapterNumber } = usePlayerStore.getState();
-            if(chapterNumber === 1 && stageNumber <= 3)
+            if (chapterNumber === 1 && stageNumber <= 3)
                 return (stageNumber - 1) / 3;
             return 1;
         },
         onClaim: () => {
-            usePlayerStore.getState().addBalance('summons', 1);
+            usePlayerStore.getState().addBalance('summons', 10);
         }
     },
     {
         id: 'half-way-chapter-1',
         title: "Экватор: Пройти 12 стадий",
         reward: 'gems',
-        count: 320, // 2 призыва
-        rewardRarity: Character.Rarity.EPIC,
+        count: 360, // 2 призыва
+        rewardRarity: Character.Rarity.RARE,
         getProgressText: () => {
             const { stageNumber, chapterNumber } = usePlayerStore.getState();
-            if(chapterNumber === 1 && stageNumber <= 12) {
+            if (chapterNumber === 1 && stageNumber <= 12) {
                 return `${stageNumber - 1} / 12`
             }
             return `12 / 12`
@@ -49,14 +49,60 @@ export const QUESTS: IQuest[] = [
             return Math.min((stageNumber - 1) / 12, 1);
         },
         onClaim: () => {
-            usePlayerStore.getState().addBalance('gems', 320);
+            usePlayerStore.getState().addBalance('gems', 360);
+        }
+    },
+    {
+        id: 'full-chapter-1',
+        title: "В путь: Пройти 1 главу",
+        reward: 'summonsSpecial',
+        count: 10,
+        rewardRarity: Character.Rarity.EPIC,
+        getProgressText: () => {
+            const { chapterNumber } = usePlayerStore.getState();
+            if (chapterNumber > 1) {
+                return `1 / 1`
+            }
+            return `0 / 1`
+        },
+        getProgress: () => {
+            const { stageNumber, chapterNumber } = usePlayerStore.getState();
+            if (chapterNumber > 1) return 1;
+            return Math.min((stageNumber - 1) / 25, 1);
+        },
+        onClaim: () => {
+            usePlayerStore.getState().addBalance('summonsSpecial', 10);
+        }
+    },
+    {
+        id: 'full-chapter-2',
+        title: "Мастер холода: Пройти 2 главу",
+        reward: 'summonsSpecial',
+        count: 10,
+        rewardRarity: Character.Rarity.EPIC,
+        getProgressText: () => {
+            const { chapterNumber } = usePlayerStore.getState();
+            if (chapterNumber > 2) {
+                return `2 / 2`
+            }
+            if (chapterNumber === 2) return `1 / 2`
+            return `0 / 2`
+        },
+        getProgress: () => {
+            const { stageNumber, chapterNumber } = usePlayerStore.getState();
+            if (chapterNumber > 2) return 1;
+            if (chapterNumber === 2) return Math.min((stageNumber - 1) / 40 / 2 + 0.5, 1);
+            return Math.min((stageNumber - 1) / 25 / 2, 1);
+        },
+        onClaim: () => {
+            usePlayerStore.getState().addBalance('summonsSpecial', 10);
         }
     },
     {
         id: 'fire-warrior-slayer',
         title: "Укротитель огня: Победить воина огня",
         reward: 'gems',
-        count: 500,
+        count: 400,
         rewardRarity: Character.Rarity.LEGENDARY,
         getProgressText: () => {
             const { stageNumber, chapterNumber } = usePlayerStore.getState();
@@ -67,7 +113,7 @@ export const QUESTS: IQuest[] = [
             return (stageNumber > 20 || chapterNumber > 1) ? 1 : 0;
         },
         onClaim: () => {
-            usePlayerStore.getState().addBalance('gems', 500);
+            usePlayerStore.getState().addBalance('gems', 400);
         }
     },
 
@@ -76,7 +122,7 @@ export const QUESTS: IQuest[] = [
         id: 'slime-hunter',
         title: "Истребитель слизней (50 шт.)",
         reward: 'gold',
-        count: 15000,
+        count: 20000,
         rewardRarity: Character.Rarity.COMMON,
         getProgressText: () => {
             const { killedEnemies } = usePlayerStatsStore.getState();
@@ -93,14 +139,14 @@ export const QUESTS: IQuest[] = [
             return Math.min((blue + green + purple) / 50, 1);
         },
         onClaim: () => {
-            usePlayerStore.getState().addBalance('gold', 15000);
+            usePlayerStore.getState().addBalance('gold', 20000);
         }
     },
     {
         id: 'knight-honor',
         title: "Рыцарский турнир: Победить 10 Стальных Рыцарей",
         reward: 'summons',
-        count: 2,
+        count: 10,
         rewardRarity: Character.Rarity.RARE,
         getProgressText: () => {
             const { killedEnemies } = usePlayerStatsStore.getState();
@@ -111,16 +157,34 @@ export const QUESTS: IQuest[] = [
             return Math.min((killedEnemies['steelKnight'] || 0) / 10, 1);
         },
         onClaim: () => {
-            usePlayerStore.getState().addBalance('summons', 2);
+            usePlayerStore.getState().addBalance('summons', 10);
+        }
+    },
+    {
+        id: 'ice-slayer',
+        title: "Властитель льда: Победить морозного стража",
+        reward: 'summons',
+        count: 10,
+        rewardRarity: Character.Rarity.EPIC,
+        getProgressText: () => {
+            const { killedEnemies } = usePlayerStatsStore.getState();
+            return `${Math.min(killedEnemies['frostGuardian'] || 0, 1)} / 1`;
+        },
+        getProgress: () => {
+            const { killedEnemies } = usePlayerStatsStore.getState();
+            return Math.min((killedEnemies['frostGuardian'] || 0), 1);
+        },
+        onClaim: () => {
+            usePlayerStore.getState().addBalance('summons', 10);
         }
     },
 
     // --- ВЫЖИВАНИЕ ---
     {
         id: 'survival-rookie',
-        title: "Выживший: Пройти 5 этапов выживания",
-        reward: 'gems',
-        count: 160, // 1 призыв
+        title: "Новичок выживания: Пройти 5 этапов выживания",
+        reward: 'gold',
+        count: 10000, // 1 призыв
         rewardRarity: Character.Rarity.RARE,
         getProgressText: () => {
             const { maxSurvivialDepthPerChapter } = usePlayerStatsStore.getState();
@@ -131,7 +195,43 @@ export const QUESTS: IQuest[] = [
             return Math.min((maxSurvivialDepthPerChapter[1] || 0) / 5, 1);
         },
         onClaim: () => {
-            usePlayerStore.getState().addBalance('gems', 160);
+            usePlayerStore.getState().addBalance('gold', 10000);
+        }
+    },
+    {
+        id: 'survival-expert',
+        title: "Эксперт выживания: Пройти 10 этапов выживания",
+        reward: 'gold',
+        count: 50000,
+        rewardRarity: Character.Rarity.RARE,
+        getProgressText: () => {
+            const { maxSurvivialDepthPerChapter } = usePlayerStatsStore.getState();
+            return `${Math.min(maxSurvivialDepthPerChapter[1] || 0, 10)} / 10`;
+        },
+        getProgress: () => {
+            const { maxSurvivialDepthPerChapter } = usePlayerStatsStore.getState();
+            return Math.min((maxSurvivialDepthPerChapter[1] || 0) / 10, 1);
+        },
+        onClaim: () => {
+            usePlayerStore.getState().addBalance('gold', 50000);
+        }
+    },
+    {
+        id: 'survival-master',
+        title: "Мастер выживания: Пройти все этапы выживания",
+        reward: 'summonsSpecial',
+        count: 20,
+        rewardRarity: Character.Rarity.EPIC,
+        getProgressText: () => {
+            const { maxSurvivialDepthPerChapter } = usePlayerStatsStore.getState();
+            return `${Math.min(maxSurvivialDepthPerChapter[1] || 0, 15)} / 15`;
+        },
+        getProgress: () => {
+            const { maxSurvivialDepthPerChapter } = usePlayerStatsStore.getState();
+            return Math.min((maxSurvivialDepthPerChapter[1] || 0) / 15, 1);
+        },
+        onClaim: () => {
+            usePlayerStore.getState().addBalance('summonsSpecial', 20);
         }
     },
 ];
@@ -177,7 +277,7 @@ interface QuestsStore {
 export const useQuestsStore = create<QuestsStore>()(
     devtools(
         subscribeWithSelector(
-            (set, get) => ({
+            (set) => ({
                 completedQuests: [],
                 isModalOpen: false,
                 completeQuest: (id) => {
@@ -191,7 +291,7 @@ export const useQuestsStore = create<QuestsStore>()(
                 setIsModalOpen: (isModalOpen) => {
                     set(() => ({ isModalOpen }), false, 'setIsModalOpen');
                 },
-                
+
             })
         )
     )

@@ -1,5 +1,5 @@
-import crystalKing from '@/assets/crystalKing.png';
-import fireKing from '@/assets/fireKing.png';
+import crystalKing from '@/assets/characters/crystalKing.png';
+import fireKing from '@/assets/characters/fireKing.png';
 import frostGuardian from '@/assets/frost_guardian.png';
 import warrior from '@/assets/characters/warrior.png';
 import spearwoman from '@/assets/characters/spearwoman.png';
@@ -24,16 +24,8 @@ import martialHero from '@/assets/characters/martialHero.png'
 import oldGolem from '@/assets/characters/oldGolem.png'
 import oldGuardian from '@/assets/characters/oldGuardian.png'
 
-import summonBg from '@/assets/backgrounds/summon.webp';
-import menuBg from '@/assets/menu/menu.webp';
-
-
-import magic_field_bg from '@/assets/backgrounds/magic_field.png';
 import { EventBus } from '@/utils/eventBus';
 
-import { Avatars } from '@/shared/avatars';
-import { Icons } from '@/shared/icons';
-import { Backgrounds } from '@/shared/backgrounds';
 import { MUSIC } from '@/assets/music/music';
 import { SOUNDS } from '@/assets/sound/sounds';
 
@@ -110,7 +102,7 @@ export default class BootScene extends Phaser.Scene {
         });
         this.load.spritesheet("bringerOfDeath", bringerOfDeath, {
             frameWidth: 140,
-                frameHeight: 93,
+            frameHeight: 93,
         });
         this.load.spritesheet("nightBorne", nightBorne, {
             frameWidth: 80,
@@ -149,24 +141,9 @@ export default class BootScene extends Phaser.Scene {
         Object.entries(SOUNDS).forEach(([key, path]) => {
             this.load.audio(key, path);
         });
-        
+
         this.load.font('Birthstone', 'assets/fonts/Birthstone-Regular.ttf');
-        this.load.image('magic_field_bg', magic_field_bg);
-        this.load.image('summonBg', summonBg);
-        this.load.image('menuBg', menuBg);
 
-        for (const avatar in Avatars) {
-            this.load.image(`avatar_${avatar}`, Avatars[avatar as keyof typeof Avatars]);
-        }
-
-        for (const icon in Icons) {
-            this.load.image(`icon_${icon}`, Icons[icon as keyof typeof Icons]);
-        }
-
-        for(const bg in Backgrounds) {
-            this.load.image(`bg_${bg}`, Backgrounds[bg as keyof typeof Backgrounds]);
-        }
-        
         this.load.on('progress', (value: number) => {
             EventBus.emit('load:progress', value)
         })

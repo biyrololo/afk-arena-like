@@ -11,7 +11,7 @@ export const createEquipment = (props: CreateEquipmentProps): Character.Equipmen
         equippedCharacterId: undefined
     }
 
-    if(!(`${props.key}_${props.slot}` in Icons)) {
+    if (!(`${props.key}_${props.slot}` in Icons)) {
         throw new Error(`Icon for ${props.key}_${props.slot} does not exist`);
     }
 
@@ -24,11 +24,11 @@ export const equipItem = (characterId: Character.Character['id'], equipmentId: C
     const eq = equipment.find((e) => e.id === equipmentId);
     if (!eq) return;
 
-    usePlayerCharactersStore.setState((state) => {
+    usePlayerCharactersStore.setState(() => {
         const updatedEquipment = equipment.map((e) => {
             if (e.id === equipmentId) {
                 return { ...e, equippedCharacterId: characterId };
-            } else if(e.equippedCharacterId === characterId && e.slot === eq.slot) {
+            } else if (e.equippedCharacterId === characterId && e.slot === eq.slot) {
                 return { ...e, equippedCharacterId: undefined };
             }
             return e;
@@ -40,7 +40,7 @@ export const equipItem = (characterId: Character.Character['id'], equipmentId: C
 export const unequipItem = (equipmentId: Character.Equipment['id']) => {
     const equipment = usePlayerCharactersStore.getState().equipment;
 
-    usePlayerCharactersStore.setState((state) => {
+    usePlayerCharactersStore.setState(() => {
         const updatedEquipment = equipment.map((e) => {
             if (e.id === equipmentId) {
                 return { ...e, equippedCharacterId: undefined };

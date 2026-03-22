@@ -62,6 +62,9 @@ export const QuestsModal: FC = () => {
                 initial={{ scale: 0.5 }}
                 animate={{ scale: 1 }}
                 exit={{ scale: 0.5 }}
+                transition={{
+                    repeatDelay: 0.0001
+                }}
             >
                 <div className="flex flex-col gap-4 text-white text-6xl text-center mb-8">
                     Задания
@@ -75,14 +78,14 @@ export const QuestsModal: FC = () => {
                 </div>
                 <div className="mt-8 flex justify-between items-center">
                     <Button className="text-center justify-center" onClick={() => prevPage()}
-                    disabled={page <= 0}
+                        disabled={page <= 0}
                     >
                         Назад
                     </Button>
                     <p className="text-white text-2xl">{page + 1} / {totalPages}</p>
-                    <Button 
-                    className="text-center justify-center" onClick={() => nextPage()}
-                    disabled={page >= totalPages - 1}
+                    <Button
+                        className="text-center justify-center" onClick={() => nextPage()}
+                        disabled={page >= totalPages - 1}
                     >
                         Вперёд
                     </Button>

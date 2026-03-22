@@ -26,11 +26,12 @@ interface PlayerStore {
 export const usePlayerStore = create<PlayerStore>()(
     devtools(
         subscribeWithSelector(
-            (set, get) => ({
+            (set) => ({
                 balances: {
-                    gold: 100,
-                    gems: 160,
-                    summons: 1000
+                    gold: 0,
+                    gems: 0,
+                    summons: 0,
+                    summonsSpecial: 0
                 },
                 chapterNumber: 1,
                 stageNumber: 1,

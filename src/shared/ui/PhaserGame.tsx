@@ -1,8 +1,7 @@
 import * as Phaser from 'phaser';
 
-import { useEffect, useLayoutEffect, useRef } from "react"
+import { useLayoutEffect, useRef } from "react"
 
-import { EventBus } from "@/utils/eventBus";
 import { startGame } from "../phaserConfig";
 
 import styles from './PhaserGame.module.css';
@@ -15,14 +14,14 @@ export default function PhaserGame({ scenes }: PhaserGameProps) {
     const game = useRef<Phaser.Game | null>(null);
 
     useLayoutEffect(() => {
-        if(game.current === null) {
+        if (game.current === null) {
             game.current = startGame('game-container', scenes);
         }
 
         return () => {
-            if(game.current) {
+            if (game.current) {
                 game.current.destroy(true);
-                if(game.current !== null) {
+                if (game.current !== null) {
                     game.current = null;
                 }
             }

@@ -1,32 +1,20 @@
-import { type IChapter, type IStage, StageTypeEnum } from "../chapter.model";
+import { type IStage } from "../chapter.model";
 
 import {
   BLUE_SLIME_CHARACTER,
   PURPLE_SLIME_CHARACTER,
 
-  CRYSTAL_KING,
-  DEMON_SLIME,
-  ELEMENTAL_WIND_CHARACTER,
-  FIRE_KING_CHARACTER,
   FIREWARRIOR_CHARACTER,
-  FROST_GUARDIAN,
   GREEN_SLIME_CHARACTER,
-  GROUND_MONK_CHARACTER,
-  SPEARWOMAN_CHARACTER,
   WARRIOR_CHARACTER,
-  WATER_PRIESTESS_CHARACTER,
-  FANTASY_WARRIOR_CHARACTER,
-  KITSUNE_CHARACTER,
-  VIKING_CHARACTER,
   MINOTAUR_CHARACTER,
   BRINGER_OF_DEATH_CHARACTER,
   NIGHT_BORNE_CHARACTER,
   KNIGHT_CHARACTER,
   STEEL_KNIGHT_CHARACTER,
   HERO_KNIGHT_CHARACTER,
-  MARTIAL_HERO_CHARACTER,
   OLD_GUARDIAN_CHARACTER,
-  OLD_GOLEM_CHARACTER,
+  MARTIAL_HERO_CHARACTER,
 } from "@/entities/character/lib/allCharacters";
 import { createEquipment } from "@/entities/character/lib/allEquipment";
 import {
@@ -47,7 +35,7 @@ export const CHAPTER_1_STAGES: IStage[] = [
       cloneCharacter(BLUE_SLIME_CHARACTER, 1),
     ],
     rewards: {
-      balances: { gold: 150, gems: 0, summons: 0 },
+      balances: { gold: 150, gems: 0, summons: 0, summonsSpecial: 0 },
       equipment: [
         createEquipment(AllEquipment.EQUIPMENT.browngreen.helmet),
         createEquipment(Weapons.WEAPONS.sharp_pink),
@@ -64,7 +52,7 @@ export const CHAPTER_1_STAGES: IStage[] = [
       cloneCharacter(GREEN_SLIME_CHARACTER, 1),
     ],
     rewards: {
-      balances: { gold: 250, gems: 0, summons: 0 },
+      balances: { gold: 250, gems: 0, summons: 0, summonsSpecial: 0 },
       equipment: [],
     },
   },
@@ -81,7 +69,7 @@ export const CHAPTER_1_STAGES: IStage[] = [
     ],
     ost: 'battle',
     rewards: {
-      balances: { gold: 1000, gems: 50, summons: 1 },
+      balances: { gold: 1000, gems: 50, summons: 1, summonsSpecial: 0 },
       equipment: [
         createEquipment(AllEquipment.EQUIPMENT.gold.boots),
         // createEquipment(Weapons.WEAPONS.emerald),
@@ -96,12 +84,12 @@ export const CHAPTER_1_STAGES: IStage[] = [
     background: "grass_bg",
     enemies: [
       cloneCharacter(GREEN_SLIME_CHARACTER, 8),
-      cloneCharacter(BLUE_SLIME_CHARACTER, 10),
+      cloneCharacter(BLUE_SLIME_CHARACTER, 11),
       cloneCharacter(GREEN_SLIME_CHARACTER, 8),
-      cloneCharacter(BLUE_SLIME_CHARACTER, 10),
+      cloneCharacter(BLUE_SLIME_CHARACTER, 11),
     ],
     rewards: {
-      balances: { gold: 400, gems: 0, summons: 0 },
+      balances: { gold: 400, gems: 0, summons: 0, summonsSpecial: 0 },
       equipment: [],
     },
   },
@@ -110,13 +98,13 @@ export const CHAPTER_1_STAGES: IStage[] = [
     stageNumber: 5,
     background: "volcano_bg",
     enemies: [
-      cloneCharacter(GREEN_SLIME_CHARACTER, 10),
-      cloneCharacter(MINOTAUR_CHARACTER, 10),
-      cloneCharacter(BLUE_SLIME_CHARACTER, 10),
-      cloneCharacter(MINOTAUR_CHARACTER, 10),
+      cloneCharacter(GREEN_SLIME_CHARACTER, 12),
+      cloneCharacter(MINOTAUR_CHARACTER, 12),
+      cloneCharacter(BLUE_SLIME_CHARACTER, 12),
+      cloneCharacter(MINOTAUR_CHARACTER, 12),
     ],
     rewards: {
-      balances: { gold: 600, gems: 0, summons: 0 },
+      balances: { gold: 600, gems: 0, summons: 0, summonsSpecial: 0 },
       equipment: [],
     },
   },
@@ -126,12 +114,12 @@ export const CHAPTER_1_STAGES: IStage[] = [
     background: "volcano_bg",
     enemies: [
       cloneCharacter(BLUE_SLIME_CHARACTER, 12),
-      cloneCharacter(MINOTAUR_CHARACTER, 10),
-      cloneCharacter(MINOTAUR_CHARACTER, 10),
+      cloneCharacter(MINOTAUR_CHARACTER, 13),
+      cloneCharacter(MINOTAUR_CHARACTER, 13),
       cloneCharacter(BLUE_SLIME_CHARACTER, 12),
     ],
     rewards: {
-      balances: { gold: 800, gems: 0, summons: 0 },
+      balances: { gold: 800, gems: 0, summons: 0, summonsSpecial: 0 },
       equipment: [
         // createEquipment(AllEquipment.EQUIPMENT.gold.chest),
         // createEquipment(AllEquipment.EQUIPMENT.orange.helmet),
@@ -145,12 +133,12 @@ export const CHAPTER_1_STAGES: IStage[] = [
     background: "volcano_bg",
     enemies: [
       cloneCharacter(BLUE_SLIME_CHARACTER, 12),
-      cloneCharacter(MINOTAUR_CHARACTER, 10),
-      cloneCharacter(MINOTAUR_CHARACTER, 10),
-      cloneCharacter(MINOTAUR_CHARACTER, 10),
+      cloneCharacter(MINOTAUR_CHARACTER, 14),
+      cloneCharacter(MINOTAUR_CHARACTER, 14),
+      cloneCharacter(MINOTAUR_CHARACTER, 13),
     ],
     rewards: {
-      balances: { gold: 1000, gems: 0, summons: 0 },
+      balances: { gold: 1000, gems: 0, summons: 0, summonsSpecial: 0 },
       equipment: [
         createEquipment(Weapons.WEAPONS.solid_purple),
         // createEquipment(Weapons.WEAPONS.torch),
@@ -162,13 +150,13 @@ export const CHAPTER_1_STAGES: IStage[] = [
     stageNumber: 8,
     background: "volcano_bg",
     enemies: [
-      cloneCharacter(MINOTAUR_CHARACTER, 12),
-      cloneCharacter(MINOTAUR_CHARACTER, 12),
-      cloneCharacter(BRINGER_OF_DEATH_CHARACTER, 10),
-      cloneCharacter(BRINGER_OF_DEATH_CHARACTER, 10),
+      cloneCharacter(MINOTAUR_CHARACTER, 13),
+      cloneCharacter(MINOTAUR_CHARACTER, 13),
+      cloneCharacter(BRINGER_OF_DEATH_CHARACTER, 14),
+      cloneCharacter(BRINGER_OF_DEATH_CHARACTER, 14),
     ],
     rewards: {
-      balances: { gold: 1500, gems: 0, summons: 0 },
+      balances: { gold: 1500, gems: 0, summons: 0, summonsSpecial: 0 },
       equipment: [
         // createEquipment(AllEquipment.EQUIPMENT.steel.helmet),
         // createEquipment(AllEquipment.EQUIPMENT.steel.chest),
@@ -181,13 +169,13 @@ export const CHAPTER_1_STAGES: IStage[] = [
     stageNumber: 9,
     background: "abyss_bg_2",
     enemies: [
-      cloneCharacter(PURPLE_SLIME_CHARACTER, 8),
-      cloneCharacter(MINOTAUR_CHARACTER, 8),
-      cloneCharacter(PURPLE_SLIME_CHARACTER, 8),
-      cloneCharacter(NIGHT_BORNE_CHARACTER, 8),
+      cloneCharacter(PURPLE_SLIME_CHARACTER, 11),
+      cloneCharacter(MINOTAUR_CHARACTER, 11),
+      cloneCharacter(PURPLE_SLIME_CHARACTER, 11),
+      cloneCharacter(NIGHT_BORNE_CHARACTER, 11),
     ],
     rewards: {
-      balances: { gold: 1800, gems: 5, summons: 0 },
+      balances: { gold: 1800, gems: 5, summons: 0, summonsSpecial: 0 },
       equipment: [
         createEquipment(Accessories.ACCESSORIES.wooden_shield)
       ],
@@ -199,13 +187,13 @@ export const CHAPTER_1_STAGES: IStage[] = [
     stageNumber: 10,
     background: "abyss_bg_2",
     enemies: [
-      cloneCharacter(PURPLE_SLIME_CHARACTER, 12),
-      cloneCharacter(BRINGER_OF_DEATH_CHARACTER, 12),
-      cloneCharacter(MINOTAUR_CHARACTER, 10),
-      cloneCharacter(NIGHT_BORNE_CHARACTER, 10),
+      cloneCharacter(PURPLE_SLIME_CHARACTER, 16),
+      cloneCharacter(BRINGER_OF_DEATH_CHARACTER, 16),
+      cloneCharacter(MINOTAUR_CHARACTER, 14),
+      cloneCharacter(NIGHT_BORNE_CHARACTER, 14),
     ],
     rewards: {
-      balances: { gold: 2500, gems: 0, summons: 0 },
+      balances: { gold: 2500, gems: 0, summons: 0, summonsSpecial: 0 },
       equipment: [],
     },
   },
@@ -214,13 +202,13 @@ export const CHAPTER_1_STAGES: IStage[] = [
     stageNumber: 11,
     background: "abyss_bg_2",
     enemies: [
-      cloneCharacter(BRINGER_OF_DEATH_CHARACTER, 10),
-      cloneCharacter(PURPLE_SLIME_CHARACTER, 12),
-      cloneCharacter(NIGHT_BORNE_CHARACTER, 10),
-      cloneCharacter(NIGHT_BORNE_CHARACTER, 12),
+      cloneCharacter(BRINGER_OF_DEATH_CHARACTER, 15),
+      cloneCharacter(PURPLE_SLIME_CHARACTER, 17),
+      cloneCharacter(NIGHT_BORNE_CHARACTER, 15),
+      cloneCharacter(NIGHT_BORNE_CHARACTER, 17),
     ],
     rewards: {
-      balances: { gold: 2600, gems: 0, summons: 0 },
+      balances: { gold: 2600, gems: 0, summons: 0, summonsSpecial: 0 },
       equipment: [],
     },
   },
@@ -229,13 +217,13 @@ export const CHAPTER_1_STAGES: IStage[] = [
     stageNumber: 12,
     background: "abyss_bg_2",
     enemies: [
-      cloneCharacter(BRINGER_OF_DEATH_CHARACTER, 10),
-      cloneCharacter(MINOTAUR_CHARACTER, 12),
-      cloneCharacter(BRINGER_OF_DEATH_CHARACTER, 10),
-      cloneCharacter(NIGHT_BORNE_CHARACTER, 10),
+      cloneCharacter(BRINGER_OF_DEATH_CHARACTER, 19),
+      cloneCharacter(MINOTAUR_CHARACTER, 19),
+      cloneCharacter(BRINGER_OF_DEATH_CHARACTER, 19),
+      cloneCharacter(NIGHT_BORNE_CHARACTER, 27),
     ],
     rewards: {
-      balances: { gold: 2800, gems: 0, summons: 0 },
+      balances: { gold: 2800, gems: 0, summons: 0, summonsSpecial: 0 },
       equipment: [],
     },
   },
@@ -244,13 +232,13 @@ export const CHAPTER_1_STAGES: IStage[] = [
     stageNumber: 13,
     background: "night_castle_bg",
     enemies: [
-      cloneCharacter(KNIGHT_CHARACTER, 14),
-      cloneCharacter(HERO_KNIGHT_CHARACTER, 12),
-      cloneCharacter(HERO_KNIGHT_CHARACTER, 12),
-      cloneCharacter(KNIGHT_CHARACTER, 10),
+      cloneCharacter(KNIGHT_CHARACTER, 23),
+      cloneCharacter(HERO_KNIGHT_CHARACTER, 24),
+      cloneCharacter(HERO_KNIGHT_CHARACTER, 24),
+      cloneCharacter(KNIGHT_CHARACTER, 21),
     ],
     rewards: {
-      balances: { gold: 2100, gems: 35, summons: 0 },
+      balances: { gold: 2100, gems: 35, summons: 0, summonsSpecial: 0 },
       equipment: [
         createEquipment(AllEquipment.EQUIPMENT.steel_browngreen.chest),
         createEquipment(AllEquipment.EQUIPMENT.steel_browngreen.helmet),
@@ -263,13 +251,13 @@ export const CHAPTER_1_STAGES: IStage[] = [
     stageNumber: 14,
     background: "night_castle_bg",
     enemies: [
-      cloneCharacter(HERO_KNIGHT_CHARACTER, 16),
-      cloneCharacter(BRINGER_OF_DEATH_CHARACTER, 18),
-      cloneCharacter(BLUE_SLIME_CHARACTER, 16),
-      cloneCharacter(HERO_KNIGHT_CHARACTER, 16),
+      cloneCharacter(HERO_KNIGHT_CHARACTER, 23),
+      cloneCharacter(BRINGER_OF_DEATH_CHARACTER, 24),
+      cloneCharacter(BLUE_SLIME_CHARACTER, 23),
+      cloneCharacter(HERO_KNIGHT_CHARACTER, 23),
     ],
     rewards: {
-      balances: { gold: 3500, gems: 75, summons: 0 },
+      balances: { gold: 3500, gems: 75, summons: 0, summonsSpecial: 0 },
       equipment: [
         createEquipment(Weapons.WEAPONS.short_blue),
       ],
@@ -281,13 +269,13 @@ export const CHAPTER_1_STAGES: IStage[] = [
     stageNumber: 15,
     background: "night_castle_bg",
     enemies: [
-      cloneCharacter(PURPLE_SLIME_CHARACTER, 10),
-      cloneCharacter(STEEL_KNIGHT_CHARACTER, 10),
-      cloneCharacter(STEEL_KNIGHT_CHARACTER, 10),
-      cloneCharacter(HERO_KNIGHT_CHARACTER, 10),
+      cloneCharacter(PURPLE_SLIME_CHARACTER, 13),
+      cloneCharacter(STEEL_KNIGHT_CHARACTER, 13),
+      cloneCharacter(STEEL_KNIGHT_CHARACTER, 13),
+      cloneCharacter(HERO_KNIGHT_CHARACTER, 13),
     ],
     rewards: {
-      balances: { gold: 2400, gems: 0, summons: 0 },
+      balances: { gold: 2400, gems: 0, summons: 0, summonsSpecial: 0 },
       equipment: [],
     },
   },
@@ -297,13 +285,13 @@ export const CHAPTER_1_STAGES: IStage[] = [
     stageNumber: 16,
     background: "night_castle_bg",
     enemies: [
-      cloneCharacter(STEEL_KNIGHT_CHARACTER, 9),
-      cloneCharacter(KNIGHT_CHARACTER, 10),
-      cloneCharacter(BRINGER_OF_DEATH_CHARACTER, 8),
-      cloneCharacter(STEEL_KNIGHT_CHARACTER, 9),
+      cloneCharacter(STEEL_KNIGHT_CHARACTER, 18),
+      cloneCharacter(KNIGHT_CHARACTER, 18),
+      cloneCharacter(BRINGER_OF_DEATH_CHARACTER, 16),
+      cloneCharacter(STEEL_KNIGHT_CHARACTER, 18),
     ],
     rewards: {
-      balances: { gold: 2700, gems: 0, summons: 0 },
+      balances: { gold: 2700, gems: 0, summons: 0, summonsSpecial: 0 },
       equipment: [],
     },
   },
@@ -312,13 +300,13 @@ export const CHAPTER_1_STAGES: IStage[] = [
     stageNumber: 17,
     background: "night_castle_bg",
     enemies: [
-      cloneCharacter(KNIGHT_CHARACTER, 18),
-      cloneCharacter(HERO_KNIGHT_CHARACTER, 19),
-      cloneCharacter(KNIGHT_CHARACTER, 18),
-      cloneCharacter(KNIGHT_CHARACTER, 18),
+      cloneCharacter(KNIGHT_CHARACTER, 23),
+      cloneCharacter(HERO_KNIGHT_CHARACTER, 22),
+      cloneCharacter(MARTIAL_HERO_CHARACTER, 23),
+      cloneCharacter(KNIGHT_CHARACTER, 27),
     ],
     rewards: {
-      balances: { gold: 2800, gems: 0, summons: 0 },
+      balances: { gold: 2800, gems: 0, summons: 0, summonsSpecial: 0 },
       equipment: [],
     },
   },
@@ -327,13 +315,13 @@ export const CHAPTER_1_STAGES: IStage[] = [
     stageNumber: 18,
     background: "night_castle_bg",
     enemies: [
-      cloneCharacter(STEEL_KNIGHT_CHARACTER, 11),
-      cloneCharacter(HERO_KNIGHT_CHARACTER, 11),
-      cloneCharacter(MINOTAUR_CHARACTER, 12),
-      cloneCharacter(BRINGER_OF_DEATH_CHARACTER, 9),
+      cloneCharacter(STEEL_KNIGHT_CHARACTER, 21),
+      cloneCharacter(HERO_KNIGHT_CHARACTER, 21),
+      cloneCharacter(MINOTAUR_CHARACTER, 21),
+      cloneCharacter(BRINGER_OF_DEATH_CHARACTER, 19),
     ],
     rewards: {
-      balances: { gold: 3000, gems: 0, summons: 0 },
+      balances: { gold: 3000, gems: 0, summons: 0, summonsSpecial: 0 },
       equipment: [],
     },
   },
@@ -342,13 +330,13 @@ export const CHAPTER_1_STAGES: IStage[] = [
     stageNumber: 19,
     background: "ancient_bg",
     enemies: [
-      cloneCharacter(STEEL_KNIGHT_CHARACTER, 14),
-      cloneCharacter(KNIGHT_CHARACTER, 12),
-      cloneCharacter(MINOTAUR_CHARACTER, 9),
-      cloneCharacter(MINOTAUR_CHARACTER, 9),
+      cloneCharacter(KNIGHT_CHARACTER, 15),
+      cloneCharacter(STEEL_KNIGHT_CHARACTER, 25),
+      cloneCharacter(MINOTAUR_CHARACTER, 21),
+      cloneCharacter(MINOTAUR_CHARACTER, 21),
     ],
     rewards: {
-      balances: { gold: 3500, gems: 0, summons: 0 },
+      balances: { gold: 3500, gems: 0, summons: 0, summonsSpecial: 0 },
       equipment: [],
     },
   },
@@ -359,13 +347,13 @@ export const CHAPTER_1_STAGES: IStage[] = [
     stageNumber: 20,
     background: "ancient_bg",
     enemies: [
-      cloneCharacter(FIREWARRIOR_CHARACTER, 36, {
-        hp: 1800
+      cloneCharacter(FIREWARRIOR_CHARACTER, 50, {
+        hp: 1100
       } as PlayerCharacterState),
     ],
     ost: 'battle2',
     rewards: {
-      balances: { gold: 6000, gems: 200, summons: 2 },
+      balances: { gold: 6000, gems: 200, summons: 2, summonsSpecial: 0 },
       equipment: [
         createEquipment(AllEquipment.EQUIPMENT.steel_light.chest),
         createEquipment(Weapons.WEAPONS.hellstone),
@@ -378,13 +366,13 @@ export const CHAPTER_1_STAGES: IStage[] = [
     stageNumber: 21,
     background: "ancient_bg",
     enemies: [
-      cloneCharacter(STEEL_KNIGHT_CHARACTER, 16),
-      cloneCharacter(BLUE_SLIME_CHARACTER, 12),
-      cloneCharacter(MINOTAUR_CHARACTER, 14),
-      cloneCharacter(BRINGER_OF_DEATH_CHARACTER, 10),
+      cloneCharacter(STEEL_KNIGHT_CHARACTER, 21),
+      cloneCharacter(BLUE_SLIME_CHARACTER, 22),
+      cloneCharacter(MINOTAUR_CHARACTER, 23),
+      cloneCharacter(BRINGER_OF_DEATH_CHARACTER, 23),
     ],
     rewards: {
-      balances: { gold: 4000, gems: 15, summons: 0 },
+      balances: { gold: 4000, gems: 15, summons: 0, summonsSpecial: 0 },
       equipment: [
         createEquipment(AllEquipment.EQUIPMENT.bworn.chest),
       ],
@@ -396,13 +384,13 @@ export const CHAPTER_1_STAGES: IStage[] = [
     stageNumber: 22,
     background: "ancient_bg",
     enemies: [
-      cloneCharacter(NIGHT_BORNE_CHARACTER, 18),
-      cloneCharacter(BLUE_SLIME_CHARACTER, 16),
-      cloneCharacter(MINOTAUR_CHARACTER, 18),
-      cloneCharacter(BRINGER_OF_DEATH_CHARACTER, 18),
+      cloneCharacter(NIGHT_BORNE_CHARACTER, 23),
+      cloneCharacter(BLUE_SLIME_CHARACTER, 23),
+      cloneCharacter(PURPLE_SLIME_CHARACTER, 23),
+      cloneCharacter(BRINGER_OF_DEATH_CHARACTER, 23),
     ],
     rewards: {
-      balances: { gold: 4500, gems: 0, summons: 0 },
+      balances: { gold: 4500, gems: 0, summons: 0, summonsSpecial: 0 },
       equipment: [],
     },
   },
@@ -411,11 +399,13 @@ export const CHAPTER_1_STAGES: IStage[] = [
     stageNumber: 23,
     background: "ancient_bg",
     enemies: [
-      cloneCharacter(NIGHT_BORNE_CHARACTER, 26),
-      cloneCharacter(NIGHT_BORNE_CHARACTER, 26),
+      cloneCharacter(NIGHT_BORNE_CHARACTER, 21),
+      cloneCharacter(STEEL_KNIGHT_CHARACTER, 21),
+      cloneCharacter(NIGHT_BORNE_CHARACTER, 21),
+      cloneCharacter(NIGHT_BORNE_CHARACTER, 21),
     ],
     rewards: {
-      balances: { gold: 5000, gems: 0, summons: 0 },
+      balances: { gold: 5000, gems: 0, summons: 0, summonsSpecial: 0 },
       equipment: [],
     },
   },
@@ -425,12 +415,12 @@ export const CHAPTER_1_STAGES: IStage[] = [
     background: "ancient_bg",
     enemies: [
       cloneCharacter(NIGHT_BORNE_CHARACTER, 22),
-      cloneCharacter(BRINGER_OF_DEATH_CHARACTER, 19),
-      cloneCharacter(GREEN_SLIME_CHARACTER, 18),
-      cloneCharacter(NIGHT_BORNE_CHARACTER, 16),
+      cloneCharacter(BRINGER_OF_DEATH_CHARACTER, 21),
+      cloneCharacter(STEEL_KNIGHT_CHARACTER, 22),
+      cloneCharacter(NIGHT_BORNE_CHARACTER, 27),
     ],
     rewards: {
-      balances: { gold: 5500, gems: 50, summons: 0 },
+      balances: { gold: 5500, gems: 50, summons: 0, summonsSpecial: 0 },
       equipment: [],
     },
   },
@@ -441,11 +431,11 @@ export const CHAPTER_1_STAGES: IStage[] = [
     stageNumber: 25,
     background: "ancient_bg",
     enemies: [
-      cloneCharacter(OLD_GUARDIAN_CHARACTER, 35),
+      cloneCharacter(OLD_GUARDIAN_CHARACTER, 44),
     ],
     ost: 'battle',
     rewards: {
-      balances: { gold: 20000, gems: 500, summons: 5 },
+      balances: { gold: 20000, gems: 500, summons: 5, summonsSpecial: 0 },
       equipment: [
         createEquipment(AllEquipment.EQUIPMENT.bworn.boots),
       ],

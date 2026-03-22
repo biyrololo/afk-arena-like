@@ -13,11 +13,11 @@ import { useGameStateStore } from "@/entities/game/model/game-state.store";
 import { SDK } from "@/entities/sdk/model/sdk";
 
 export const isEnoughResourcesForShopItem = (price: IShopItem['price'], priceType: IShopItem['priceType'], balances: PlayerBalances) => {
-    if(priceType === ShopPriceType.Ad) return true;
+    if (priceType === ShopPriceType.Ad) return true;
     return balances[priceType] >= price;
 }
 
-const EquipmentItem = (props: { equipment: CreateEquipmentProps}) => {
+const EquipmentItem = (props: { equipment: CreateEquipmentProps }) => {
     return (
         <div className="flex flex-col gap-2 items-center justify-center px-4">
             <EquipmentCard equipment={props.equipment as Character.Equipment} />
@@ -36,8 +36,8 @@ const CharacterItem = (props: { character: Character.Character }) => {
 }
 
 const createEquipmentItem = (
-    equipment: CreateEquipmentProps, 
-    price: number, 
+    equipment: CreateEquipmentProps,
+    price: number,
     priceType: ShopPriceType,
     rarity?: Character.Rarity
 ): IShopItem => {
@@ -45,14 +45,14 @@ const createEquipmentItem = (
         item: <EquipmentItem equipment={equipment} />,
         price,
         priceType,
-        onBuy: () => { 
+        onBuy: () => {
             usePlayerStore.getState().spend(priceType as keyof PlayerBalances, price);
             usePlayerCharactersStore.getState().addEquipment(
                 createEquipment(equipment)
             );
         },
         rarity: rarity || Character.Rarity.COMMON,
-        
+
     }
 }
 
@@ -66,26 +66,31 @@ const createBalanceItem = (
     return {
         item: <div className="flex justify-center items-center gap-4">
             <div
-            className="relative p-4"
+                className="relative p-4"
             >
-                <div className="absolute rounded-full bg-black/30 inset-0 top-16 -bottom-4 blur-md"/>
+                <div className="absolute rounded-full bg-black/30 inset-0 top-16 -bottom-4 blur-md" />
                 <Icon icon={valueType} size={100} />
             </div>
             <span className="text-white text-4xl font-bold text-center text-balance">x{value}</span>
         </div>,
         price: price,
         priceType: priceType,
-        onBuy: () => { 
-            if(priceType === ShopPriceType.Ad) {
-                const setPaused = useGameStateStore.getState().setPaused;
-                setPaused(true);
+        onBuy: () => {
+            if (priceType === ShopPriceType.Ad) {
+                useGameStateStore.getState().setPaused(true);
+                useGameStateStore.getState().setIsCurrentScreenPaused(true);
                 SDK.getInstance()
                     .showRewardedVideo({
                         onClose: () => {
-                            setPaused(false);
+                            useGameStateStore.getState().setPaused(false);
+                            useGameStateStore.getState().setIsCurrentScreenPaused(false);
+                            SDK.getInstance().gameStart();
                         },
                         onRewarded: () => {
                             usePlayerStore.getState().addBalance(valueType, value);
+                            useGameStateStore.getState().setPaused(false);
+                            useGameStateStore.getState().setIsCurrentScreenPaused(false);
+                            SDK.getInstance().gameStart();
                         },
                     })
             } else {
@@ -107,7 +112,7 @@ const createCharacterItem = (
         item: <CharacterItem character={character} />,
         price: price,
         priceType: priceType,
-        onBuy: () => { 
+        onBuy: () => {
             usePlayerStore.getState().spend(priceType as keyof PlayerBalances, price);
             usePlayerCharactersStore.getState().addCharacter(structuredClone(character));
         },
@@ -125,23 +130,23 @@ const getRandomItems = () => {
 
     const items = [
         [
-            createCharacterItem(FANTASY_WARRIOR_CHARACTER, 6000, ShopPriceType.Gems, Character.Rarity.EPIC),
-            createEquipmentItem(AllEquipment.EQUIPMENT.steel_green.helmet, 6000, ShopPriceType.Gold, Character.Rarity.EPIC),
-            createEquipmentItem(AllEquipment.EQUIPMENT.steel_orange.chest, 6000, ShopPriceType.Gold, Character.Rarity.EPIC),
-            createEquipmentItem(AllEquipment.EQUIPMENT.steel_green.boots, 6000, ShopPriceType.Gold, Character.Rarity.EPIC),
-            createEquipmentItem(Weapons.WEAPONS.ancient_heavy, 6000, ShopPriceType.Gold, Character.Rarity.EPIC),
-            createEquipmentItem(AllEquipment.EQUIPMENT.steel.helmet, 2000, ShopPriceType.Gold, Character.Rarity.RARE),
-            createEquipmentItem(AllEquipment.EQUIPMENT.steel_browngreen.chest, 2000, ShopPriceType.Gold, Character.Rarity.RARE),
-            createEquipmentItem(AllEquipment.EQUIPMENT.steel_brown.boots, 2000, ShopPriceType.Gold, Character.Rarity.RARE),
-            createEquipmentItem(Weapons.WEAPONS.consecration, 2000, ShopPriceType.Gold, Character.Rarity.RARE),
-            createEquipmentItem(AllEquipment.EQUIPMENT.light.helmet, 1000, ShopPriceType.Gold, Character.Rarity.UNCOMMON),
-            createEquipmentItem(AllEquipment.EQUIPMENT.orange.chest, 1000, ShopPriceType.Gold, Character.Rarity.UNCOMMON),
-            createEquipmentItem(AllEquipment.EQUIPMENT.green.boots, 1000, ShopPriceType.Gold, Character.Rarity.UNCOMMON),
-            createEquipmentItem(Weapons.WEAPONS.solid_purple, 1000, ShopPriceType.Gold, Character.Rarity.UNCOMMON),
-            createEquipmentItem(AllEquipment.EQUIPMENT.browngreen.helmet, 500, ShopPriceType.Gold, Character.Rarity.COMMON),
-            createEquipmentItem(AllEquipment.EQUIPMENT.browngreen.chest, 500, ShopPriceType.Gold, Character.Rarity.COMMON),
-            createEquipmentItem(AllEquipment.EQUIPMENT.browngreen.boots, 500, ShopPriceType.Gold, Character.Rarity.COMMON),
-            createEquipmentItem(Weapons.WEAPONS.bone, 500, ShopPriceType.Gold, Character.Rarity.COMMON),
+            createCharacterItem(FANTASY_WARRIOR_CHARACTER, 19999, ShopPriceType.Gems, Character.Rarity.EPIC),
+            createEquipmentItem(AllEquipment.EQUIPMENT.steel_green.helmet, 999, ShopPriceType.Gems, Character.Rarity.EPIC),
+            createEquipmentItem(AllEquipment.EQUIPMENT.steel_orange.chest, 999, ShopPriceType.Gems, Character.Rarity.EPIC),
+            createEquipmentItem(AllEquipment.EQUIPMENT.steel_green.boots, 999, ShopPriceType.Gems, Character.Rarity.EPIC),
+            createEquipmentItem(Weapons.WEAPONS.ancient_heavy, 999, ShopPriceType.Gems, Character.Rarity.EPIC),
+            createEquipmentItem(AllEquipment.EQUIPMENT.steel.helmet, 99_000, ShopPriceType.Gold, Character.Rarity.RARE),
+            createEquipmentItem(AllEquipment.EQUIPMENT.steel_browngreen.chest, 99_000, ShopPriceType.Gold, Character.Rarity.RARE),
+            createEquipmentItem(AllEquipment.EQUIPMENT.steel_brown.boots, 99_000, ShopPriceType.Gold, Character.Rarity.RARE),
+            createEquipmentItem(Weapons.WEAPONS.consecration, 99_000, ShopPriceType.Gold, Character.Rarity.RARE),
+            createEquipmentItem(AllEquipment.EQUIPMENT.light.helmet, 19_000, ShopPriceType.Gold, Character.Rarity.UNCOMMON),
+            createEquipmentItem(AllEquipment.EQUIPMENT.orange.chest, 19_000, ShopPriceType.Gold, Character.Rarity.UNCOMMON),
+            createEquipmentItem(AllEquipment.EQUIPMENT.green.boots, 19_000, ShopPriceType.Gold, Character.Rarity.UNCOMMON),
+            createEquipmentItem(Weapons.WEAPONS.solid_purple, 19_000, ShopPriceType.Gold, Character.Rarity.UNCOMMON),
+            createEquipmentItem(AllEquipment.EQUIPMENT.browngreen.helmet, 2000, ShopPriceType.Gold, Character.Rarity.COMMON),
+            createEquipmentItem(AllEquipment.EQUIPMENT.browngreen.chest, 2000, ShopPriceType.Gold, Character.Rarity.COMMON),
+            createEquipmentItem(AllEquipment.EQUIPMENT.browngreen.boots, 2000, ShopPriceType.Gold, Character.Rarity.COMMON),
+            createEquipmentItem(Weapons.WEAPONS.bone, 2000, ShopPriceType.Gold, Character.Rarity.COMMON),
         ]
     ]
 
@@ -149,8 +154,12 @@ const getRandomItems = () => {
 }
 
 export const getShopItems = (): IShopItem[] => [
-    createBalanceItem(1, 'summons', 160, ShopPriceType.Gems, Character.Rarity.EPIC),
-    createBalanceItem(10, 'summons', 160 * 9, ShopPriceType.Gems, Character.Rarity.EPIC),
-    createBalanceItem(10, 'gems', 160 * 9, ShopPriceType.Ad, Character.Rarity.EPIC),
+    createBalanceItem(1, 'summonsSpecial', 200, ShopPriceType.Gems, Character.Rarity.EPIC),
+    createBalanceItem(30, 'gems', 0, ShopPriceType.Ad, Character.Rarity.LEGENDARY),
+    createBalanceItem(1, 'summons', 200, ShopPriceType.Gems, Character.Rarity.EPIC),
+    createBalanceItem(10000, 'gold', 200, ShopPriceType.Gems, Character.Rarity.RARE),
+    createBalanceItem(100_000, 'gold', 1000, ShopPriceType.Gems, Character.Rarity.LEGENDARY),
     ...getRandomItems(),
+    createBalanceItem(10, 'summonsSpecial', 200 * 9, ShopPriceType.Gems, Character.Rarity.EPIC),
+    createBalanceItem(10, 'summons', 200 * 9, ShopPriceType.Gems, Character.Rarity.EPIC),
 ]

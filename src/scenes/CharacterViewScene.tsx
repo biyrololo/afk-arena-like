@@ -4,8 +4,8 @@ import type { PlayerCharacter } from "@/shared/types/PlayerCharacter";
 import { EventBus } from "@/utils/eventBus";
 import Phaser from 'phaser';
 
-import crystalKing from '@/assets/crystalKing.png';
-import fireKing from '@/assets/fireKing.png';
+import crystalKing from '@/assets/characters/crystalKing.png';
+import fireKing from '@/assets/characters/fireKing.png';
 import frostGuardian from '@/assets/frost_guardian.png';
 import warrior from '@/assets/characters/warrior.png';
 import spearwoman from '@/assets/characters/spearwoman.png';
@@ -30,8 +30,7 @@ import martialHero from '@/assets/characters/martialHero.png'
 import oldGolem from '@/assets/characters/oldGolem.png'
 import oldGuardian from '@/assets/characters/oldGuardian.png'
 
-import magic_field_bg from '@/assets/backgrounds/magic_field.png';
-
+import sky_bg from "@/assets/backgrounds/sky_bg.webp";
 
 export default class CharacterViewScene extends Phaser.Scene {
     private character: Character | null = null;
@@ -46,7 +45,7 @@ export default class CharacterViewScene extends Phaser.Scene {
         this.load.spritesheet('crystalKing', crystalKing, {
             frameWidth: 288,
             frameHeight: 128
-        }); 
+        });
         this.load.spritesheet('fireKing', fireKing, {
             frameWidth: 288,
             frameHeight: 128
@@ -143,9 +142,8 @@ export default class CharacterViewScene extends Phaser.Scene {
             frameWidth: 120,
             frameHeight: 120,
         });
-        
 
-        this.load.image('magic_field_bg', magic_field_bg);
+        this.load.image('sky_bg', sky_bg);
 
         this.load.on('progress', (value: number) => {
             EventBus.emit('load:progress', value);
@@ -153,7 +151,7 @@ export default class CharacterViewScene extends Phaser.Scene {
     }
 
     create(): void {
-        this.background = this.add.image(0, 0, 'magic_field_bg');
+        this.background = this.add.image(0, 0, 'sky_bg');
 
         // масштаб по высоте
         const scale = this.scale.width / this.background.width;
@@ -180,10 +178,10 @@ export default class CharacterViewScene extends Phaser.Scene {
     }
 
     handlePlayAnimation(animation: string) {
-        if(animation === 'attack1') {
+        if (animation === 'attack1') {
             const animsCount = this.character?.getAttacksConfig().attacksCount;
 
-            if(animsCount)
+            if (animsCount)
                 animation = `attack${Phaser.Math.Between(1, animsCount)}`;
         }
         this.character?.playAnimation(animation, animation as any);
@@ -203,7 +201,7 @@ export default class CharacterViewScene extends Phaser.Scene {
     }
 
     private setCharacter(char: PlayerCharacter | null) {
-        if(!char) {
+        if (!char) {
             this.character = null;
             return;
         }

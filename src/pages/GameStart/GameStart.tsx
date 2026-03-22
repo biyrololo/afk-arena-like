@@ -11,10 +11,10 @@ import {
   type SquadList,
 } from "@/entities/player/model/player.store";
 import { useShallow } from "zustand/shallow";
-import { findStage } from "@/entities/chapter/lib/chapters";
+import { findStage, nextStage } from "@/entities/chapter/lib/chapters";
 
 import background from "@/assets/backgrounds/gamestart.webp";
-import { calculateCharacterPower, calculateStatsWithEquipment } from "@/shared/types/develop";
+import { calculateStatsWithEquipment } from "@/shared/types/develop";
 import { AnimatePresence, motion } from "framer-motion";
 
 const PER_PAGE = 4 * 3;
@@ -39,6 +39,9 @@ export default function GameStart() {
       state.setLastSquad,
     ]),
   );
+
+  const nextStageR = nextStage(chapterNumber, stageNumber);
+  const isNextStageAvailable = !(nextStageR[0] == 1 && nextStageR[1] == 1);
 
   useEffect(() => {
     setSelectedCharacters(
@@ -146,6 +149,7 @@ export default function GameStart() {
       >
         <div className="absolute inset-0 py-4 flex">
           <button
+            tabIndex={-1}
             className="
                           absolute left-4
                           px-6 py-3
@@ -165,103 +169,120 @@ export default function GameStart() {
             <span className="text-3xl">←</span>
             Назад
           </button>
-          <div className="w-[1000px] mx-auto flex flex-col gap-4">
-            <div className="flex flex-col gap-4 items-center">
-              <p className="text-white text-5xl">
-                Этап {chapterNumber}-{stageNumber}
-              </p>
-              <div className="flex gap-4 justify-between w-full px-20 relative z-200">
-                <p className="text-white text-2xl">
-                  Мощь отряда:{" "}
-                  <span
-                    className={`font-bold text-3xl ${totalPower < enemiesPower ? "text-red-500" : totalPower > enemiesPower ? "text-green-500 text-shadow-[0px_0px_10px_rgba(0,0,0,0.5)]" : ""}`}
-                  >
-                    {totalPower}
-                  </span>
-                </p>
-                <p className="text-white text-2xl">
-                  Мощь врагов:{" "}
-                  <span className={`font-bold text-3xl`}>{enemiesPower}</span>
-                </p>
-              </div>
-            </div>
-            <div className="flex flex-col gap-4 items-center h-full">
-              <section className="grid gap-4 grid-cols-4 bg-black/50 p-2 rounded-xl relative z-100">
-                {selectedCharacters.map((character, index) => (
-                  <div key={index} className="size-[200px] relative bg-stone-600/80">
-                    <AnimatePresence>
-                      {
-                        character && (
-                          <motion.div
-                          key={character.id}
-                          initial={{ scale: 0.5, opacity: 0 }}
-                          animate={{ scale: 1, opacity: 1 }}
-                          exit={{ scale: 0, opacity: 0 }}
-                          >
+          {
+            isNextStageAvailable ? (
+              <>
+                <div className="w-[1000px] mx-auto flex flex-col gap-4">
+                  <div className="flex flex-col gap-4 items-center">
+                    <p className="text-white text-5xl">
+                      Этап {chapterNumber}-{stageNumber}
+                    </p>
+                    <div className="flex gap-4 justify-between w-full px-20 relative z-200">
+                      <p className="text-white text-2xl">
+                        Мощь отряда:{" "}
+                        <span
+                          className={`font-bold text-3xl ${totalPower < enemiesPower ? "text-red-500" : totalPower > enemiesPower ? "text-green-500 text-shadow-[0px_0px_10px_rgba(0,0,0,0.5)]" : ""}`}
+                        >
+                          {totalPower}
+                        </span>
+                      </p>
+                      <p className="text-white text-2xl">
+                        Мощь врагов:{" "}
+                        <span className={`font-bold text-3xl`}>{enemiesPower}</span>
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-4 items-center h-full">
+                    <section className="grid gap-4 grid-cols-4 bg-black/50 p-2 rounded-xl relative z-100">
+                      {selectedCharacters.map((character, index) => (
+                        <div key={index} className="size-[200px] relative bg-stone-600/80">
+                          <AnimatePresence>
+                            {
+                              character && (
+                                <motion.div
+                                  key={character.id}
+                                  initial={{ scale: 0.5, opacity: 0 }}
+                                  animate={{ scale: 1, opacity: 1 }}
+                                  exit={{ scale: 0, opacity: 0 }}
+                                >
+                                  <HeroMiniCard
+                                    character={character}
+                                    onClick={() => toogleCharacter(character)}
+                                  />
+                                </motion.div>
+
+                              )
+                            }
+                          </AnimatePresence>
+                        </div>
+                      ))}
+                    </section>
+                    <AnimatePresence mode="wait">
+                      <motion.section className="grid grid-cols-4 gap-x-4 gap-y-2"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 20 }}
+                        transition={{ duration: 0.2 }}
+                        key={page}
+                      >
+                        {paginatedCharacters.map((character) => {
+                          return (
                             <HeroMiniCard
                               character={character}
+                              key={character.id}
+                              style={{
+                                opacity: selectedCharacters.some(
+                                  (c) => c?.key === character.key,
+                                )
+                                  ? 0.5
+                                  : 1,
+                              }}
                               onClick={() => toogleCharacter(character)}
                             />
-                          </motion.div>
-
-                        )
-                      }
+                          );
+                        })}
+                      </motion.section>
                     </AnimatePresence>
+                    <div className="flex gap-4 justify-between w-full px-20 mt-auto">
+                      <Button onClick={handlePrevious} disabled={isPreviousDisabled}>
+                        {"<"}
+                      </Button>
+                      <p className="text-white text-2xl flex items-center">
+                        {page + 1} / {Math.ceil(characters.length / PER_PAGE)}
+                      </p>
+                      <Button onClick={handleNext} disabled={isNextDisabled}>
+                        {">"}
+                      </Button>
+                    </div>
                   </div>
-                ))}
-              </section>
-              <AnimatePresence mode="wait">
-                <motion.section className="grid grid-cols-4 gap-x-4 gap-y-2"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 20 }}
-                transition={{ duration: 0.2 }}
-                key={page}
+                </div>
+                <Button
+                  className="text-3xl absolute top-4 right-4 text-white cursor-pointer"
+                  style={{
+                    opacity: isStartDisabled ? 0.5 : 1,
+                  }}
+                  disabled={isStartDisabled}
+                  onClick={handleStart}
                 >
-                  {paginatedCharacters.map((character, index) => {
-                    return (
-                      <HeroMiniCard
-                        character={character}
-                        key={character.id}
-                        style={{
-                          opacity: selectedCharacters.some(
-                            (c) => c?.key === character.key,
-                          )
-                            ? 0.5
-                            : 1,
-                        }}
-                        onClick={() => toogleCharacter(character)}
-                      />
-                    );
-                  })}
-                </motion.section>
-              </AnimatePresence>
-              <div className="flex gap-4 justify-between w-full px-20 mt-auto">
-                <Button onClick={handlePrevious} disabled={isPreviousDisabled}>
-                  {"<"}
+                  Начать
                 </Button>
-                <p className="text-white text-2xl flex items-center">
-                  {page + 1} / {Math.ceil(characters.length / PER_PAGE)}
+                <p className="text-white text-3xl absolute top-31 left-4 w-[450px] text-shadow-[0px_0px_4px_rgba(0,0,0,0.5)]">
+                  Это классический режим игры, в котором вы продвигаетесь по сюжету, боретесь с врагами и получаете опыт и ресурсы.
                 </p>
-                <Button onClick={handleNext} disabled={isNextDisabled}>
-                  {">"}
-                </Button>
-              </div>
-            </div>
-          </div>
-          <Button
-            className="text-3xl absolute top-4 right-4 text-white cursor-pointer"
-            style={{
-              opacity: isStartDisabled ? 0.5 : 1,
-            }}
-            disabled={isStartDisabled}
-            onClick={handleStart}
-          >
-            Начать
-          </Button>
-          <p className="text-white text-3xl absolute top-31 left-4 w-[450px] text-shadow-[0px_0px_4px_rgba(0,0,0,0.5)]">
-            Это классический режим игры, в котором вы продвигаетесь по сюжету, боритесь с врагами и получаете опыт и ресурсы.
-          </p>
+              </>
+            ) : (
+              <>
+                <div className="w-[1200px] mx-auto flex justify-center items-center">
+                  <p className="text-white text-6xl text-center bg-black/50 p-4 rounded-xl">
+                    Поздравляем! Все доступные на данный момент сюжетные уровни пройдены. Наша команда уже работает над новыми испытаниями и продолжением истории.
+                    <br />
+                    <br />
+                    Следи за обновлениями, чтобы не пропустить новые главы!
+                  </p>
+                </div>
+              </>
+            )
+          }
         </div>
       </div>
     </ResponsiveUI>

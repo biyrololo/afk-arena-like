@@ -4,14 +4,15 @@
 <head>
   <meta charset="UTF-8" />
   <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <script src="/sdk.js"></script>
   <title>Vite + TS</title>
 </head>
 
 <body>
   <div
-    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000000; z-index: -1; display: flex; justify-content: center; align-items: center;">
+    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000000; z-index: -1; display: flex; justify-content: center; align-items: center;"
+    id="loading">
     <div style="text-align: center; font-size: 2em; color: white;">Загрузка...</div>
   </div>
   <div id="app">

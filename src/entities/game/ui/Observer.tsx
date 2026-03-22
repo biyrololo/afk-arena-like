@@ -6,6 +6,7 @@ import { usePlayerStore } from "@/entities/player/model/player.store";
 import { usePlotStore } from "@/entities/plot/lib/plot.store";
 import { useQuestsStore } from "@/entities/quest/model/quest.store";
 import { SDK } from "@/entities/sdk/model/sdk";
+import { useDailyRewardsStore } from "@/entities/daily-reward/model/daily-reward.store";
 
 export const Observer: FC = () => {
   const [setPaused, inited] = useGameStateStore(useShallow((state) => [state.setPaused, state.inited]));
@@ -14,27 +15,37 @@ export const Observer: FC = () => {
   state.balances.gems, state.balances.gold, state.balances.summons]))
   const [completedScenes] = usePlotStore(useShallow(state => [state.completedScenes]))
   const [completedQuests] = useQuestsStore(useShallow(state => [state.completedQuests]))
+  const [currentDay, lastClaimedAt] = useDailyRewardsStore(useShallow(state => [state.currentDay, state.lastClaimedAt]))
 
   useEffect(() => {
     const controller = new AbortController();
-    window.addEventListener('blur', () => {
-      setPaused(true);
-    }, { signal: controller.signal })
 
-    window.addEventListener('focus', () => {
-      setPaused(false);
-    }, { signal: controller.signal })
-
-    return () => {
-      controller.abort();
+    const pause = () => setPaused(true);
+    const resume = () => {
+      if (useGameStateStore.getState().isCurrentScreenPaused) return;
+      if (!document.hidden) setPaused(false);
     };
-  }, [setPaused])
+
+    document.addEventListener("visibilitychange", () => {
+      if (useGameStateStore.getState().isCurrentScreenPaused) return;
+      setPaused(document.hidden);
+    }, { signal: controller.signal });
+
+    window.addEventListener("blur", pause, { signal: controller.signal });
+    window.addEventListener("focus", resume, { signal: controller.signal });
+
+    return () => controller.abort();
+  }, [setPaused]);
 
   useEffect(() => {
-    if (inited) {
+    if (!inited) return;
+    const timeoutId = setTimeout(() => {
+      console.log("Saving to Yandex Cloud...");
       SDK.getInstance().syncWithLocal();
-    }
-  }, [inited, characters, equipment, usedPromocodes, completedScenes, completedQuests, stageNumber, chapterNumber, gems, gold, summons])
+    }, 2000);
+
+    return () => clearTimeout(timeoutId);
+  }, [inited, characters, equipment, usedPromocodes, completedScenes, completedQuests, stageNumber, chapterNumber, gems, gold, summons, currentDay, lastClaimedAt])
 
   return null;
 }

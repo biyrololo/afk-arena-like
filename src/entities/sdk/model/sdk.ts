@@ -280,4 +280,25 @@ export class SDK {
         this.setData(dumpData())
         this.setStats(dumpStats())
     }
+
+    async getPurchases() {
+        return await this.ysdk?.payments.getPurchases();
+    }
+
+    async getCatalog() {
+        return await this.ysdk?.payments.getCatalog();
+    }
+
+    async purchase(id: string) {
+        return await this.ysdk?.payments.purchase({ id });
+    }
+
+    async consumePurchase(token: string) {
+        return await this.ysdk?.payments.consumePurchase(token);
+    }
+
+    hideBannerAdv() {
+        console.warn('Hide banner adv');
+        return this.ysdk?.adv.hideBannerAdv();
+    }
 }

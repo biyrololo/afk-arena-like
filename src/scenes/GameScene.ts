@@ -2,13 +2,13 @@ import { BotController } from "@/components/Bot";
 import Character from "@/components/Character";
 import { EventBus } from "@/utils/eventBus";
 import Phaser from "phaser";
-import type { PlayerCharacter, PlayerCharacterWithState } from "@/shared/types/PlayerCharacter";
+import type { PlayerCharacterWithState } from "@/shared/types/PlayerCharacter";
 import generateCharacter from "@/characters/characters";
 import type { IStage } from "@/entities/chapter/lib/chapter.model";
 import { calculateStatsWithEquipment } from "@/shared/types/develop";
 
-import crystalKing from "@/assets/crystalKing.png";
-import fireKing from "@/assets/fireKing.png";
+import crystalKing from "@/assets/characters/crystalKing.png";
+import fireKing from "@/assets/characters/fireKing.png";
 import frostGuardian from "@/assets/frost_guardian.png";
 import warrior from "@/assets/characters/warrior.png";
 import spearwoman from "@/assets/characters/spearwoman.png";
@@ -33,7 +33,6 @@ import martialHero from '@/assets/characters/martialHero.png'
 import oldGolem from '@/assets/characters/oldGolem.png'
 import oldGuardian from '@/assets/characters/oldGuardian.png'
 
-import magic_field_bg from "@/assets/backgrounds/magic_field.png";
 import castle_bg from "@/assets/backgrounds/castle.webp";
 
 import flamie_bg from "@/assets/backgrounds/flamie_bg.webp";
@@ -49,6 +48,11 @@ import ancient_bg from "@/assets/backgrounds/ancient_bg.webp";
 import night_castle_bg from "@/assets/backgrounds/night_castle_bg.webp";
 import ice_lake_bg from "@/assets/backgrounds/ice_lake_bg.webp";
 import snow_bg from "@/assets/backgrounds/snow_bg.webp";
+import ice_abyss_bg from "@/assets/backgrounds/ice_abyss_bg.webp";
+import ice_abyss_2_bg from "@/assets/backgrounds/ice_abyss_2_bg.webp";
+import ice_boss_1_bg from "@/assets/backgrounds/ice_boss_1_bg.webp";
+import ice_boss_2_bg from "@/assets/backgrounds/ice_boss_2_bg.webp";
+import ice_castle_bg from "@/assets/backgrounds/ice_castle_bg.webp";
 
 export default class GameScene extends Phaser.Scene {
   private background!: Phaser.GameObjects.Image;
@@ -200,7 +204,6 @@ export default class GameScene extends Phaser.Scene {
 
     this.load.font("Birthstone", "assets/fonts/Birthstone-Regular.ttf");
 
-    this.load.image("magic_field_bg", magic_field_bg);
     this.load.image("castle_bg", castle_bg);
 
     this.load.image("grass_bg", grass_bg);
@@ -216,6 +219,11 @@ export default class GameScene extends Phaser.Scene {
     this.load.image("night_castle_bg", night_castle_bg);
     this.load.image("ice_lake_bg", ice_lake_bg);
     this.load.image("snow_bg", snow_bg);
+    this.load.image("ice_abyss_bg", ice_abyss_bg);
+    this.load.image("ice_abyss_2_bg", ice_abyss_2_bg);
+    this.load.image("ice_boss_1_bg", ice_boss_1_bg);
+    this.load.image("ice_boss_2_bg", ice_boss_2_bg);
+    this.load.image("ice_castle_bg", ice_castle_bg);
 
     this.load.on("progress", (value: number) => {
       EventBus.emit("load:progress", value);
@@ -225,7 +233,7 @@ export default class GameScene extends Phaser.Scene {
   create(): void {
     console.log("CREATE SCENE");
 
-    this.background = this.add.image(0, 0, "magic_field_bg");
+    this.background = this.add.image(0, 0, "sky_bg");
 
     // масштаб по высоте
     const scale = this.scale.width / this.background.width;
@@ -390,7 +398,7 @@ export default class GameScene extends Phaser.Scene {
 
       if (enemy.state) {
         if (enemy.state.hp) {
-          entity.setEnergy(enemy.state.energy);
+          entity.setHP(enemy.state.hp);
         }
         if (enemy.state.energy) {
           entity.setEnergy(enemy.state.energy);

@@ -11,7 +11,7 @@ import {
   type SquadList,
 } from "@/entities/player/model/player.store";
 import { useShallow } from "zustand/shallow";
-import { SURVIVAL_CHAPTERS } from "@/entities/chapter/lib/chapters";
+import { getSurvivalChapters } from "@/entities/chapter/lib/chapters";
 
 import background from "@/assets/backgrounds/gamestart.webp";
 import { calculateCharacterPower, calculateStatsWithEquipment } from "@/shared/types/develop";
@@ -49,7 +49,7 @@ export default function GameStartSurvivial() {
 
   const enemiesPower = useMemo(() => {
     if (!stageNumber) return 0;
-    const stage = SURVIVAL_CHAPTERS.find(
+    const stage = getSurvivalChapters().find(
       (chapter) => chapter.stageNumber === +stageNumber,
     );
     if (!stage) return 0;
@@ -129,12 +129,12 @@ export default function GameStartSurvivial() {
 
   const totalPower = useMemo(() => {
     return selectedCharacters
-    .filter(c => c !== null)
-    .map((character) => calculateStatsWithEquipment(character))
-    .map(c => calculateCharacterPower(c))
-    .reduce((acc, power) => {
-      return acc + (power || 0);
-    }, 0);
+      .filter(c => c !== null)
+      .map((character) => calculateStatsWithEquipment(character))
+      .map(c => calculateCharacterPower(c))
+      .reduce((acc, power) => {
+        return acc + (power || 0);
+      }, 0);
   }, [selectedCharacters]);
 
   return (
@@ -151,6 +151,7 @@ export default function GameStartSurvivial() {
       >
         <div className="absolute inset-0 py-4 flex">
           <button
+            tabIndex={-1}
             className="
                           absolute left-4
                           px-6 py-3
@@ -198,10 +199,10 @@ export default function GameStartSurvivial() {
                       {
                         character && (
                           <motion.div
-                          key={character.id}
-                          initial={{ scale: 0.5, opacity: 0 }}
-                          animate={{ scale: 1, opacity: 1 }}
-                          exit={{ scale: 0, opacity: 0 }}
+                            key={character.id}
+                            initial={{ scale: 0.5, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0, opacity: 0 }}
                           >
                             <HeroMiniCard
                               character={character}
@@ -217,13 +218,13 @@ export default function GameStartSurvivial() {
               </section>
               <AnimatePresence mode="wait">
                 <motion.section className="grid grid-cols-4 gap-x-4 gap-y-2"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 20 }}
-                transition={{ duration: 0.2 }}
-                key={page}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 20 }}
+                  transition={{ duration: 0.2 }}
+                  key={page}
                 >
-                  {paginatedCharacters.map((character, index) => {
+                  {paginatedCharacters.map((character) => {
                     return (
                       <HeroMiniCard
                         character={character}
@@ -253,12 +254,12 @@ export default function GameStartSurvivial() {
           </div>
           <div>
             <Button
-            className="absolute top-4 right-4"
-            style={{
-              opacity: isStartDisabled ? 0.5 : 1,
-            }}
-            disabled={isStartDisabled}
-            onClick={handleStart}
+              className="absolute top-4 right-4"
+              style={{
+                opacity: isStartDisabled ? 0.5 : 1,
+              }}
+              disabled={isStartDisabled}
+              onClick={handleStart}
             >
               Начать
             </Button>

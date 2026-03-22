@@ -12,13 +12,14 @@ export interface IEquipmentCardProps {
     size?: number;
     iconSize?: number;
     withLevel?: boolean;
+    withoutAnimation?: boolean;
 }
 
-export const EquipmentCard = ({ equipment, onClick, size = 120, iconSize = 80, withLevel, fallback }: IEquipmentCardProps) => {
-    if(iconSize > size) iconSize = size - 20;
+export const EquipmentCard = ({ equipment, onClick, size = 120, iconSize = 80, withLevel, fallback, withoutAnimation = false }: IEquipmentCardProps) => {
+    if (iconSize > size) iconSize = size - 20;
     return (
         <div
-        className={`
+            className={`
         relative
         bg-black/50
         border-6
@@ -27,18 +28,18 @@ export const EquipmentCard = ({ equipment, onClick, size = 120, iconSize = 80, w
         flex items-center justify-center
         border-stone-500
         ${onClick ? 'transition-colors' : ''}
-        ${equipment?.rarity === Character.Rarity.LEGENDARY ? styles["fire-card"] : ""}
-        ${equipment?.rarity === Character.Rarity.EPIC ? styles["epic-wrapper"] : ""}
-        ${equipment?.rarity === Character.Rarity.RARE ? styles["rare-wrapper"] : ""}
+        ${equipment?.rarity === Character.Rarity.LEGENDARY && !withoutAnimation ? styles["fire-card"] : ""}
+        ${equipment?.rarity === Character.Rarity.EPIC && !withoutAnimation ? styles["epic-wrapper"] : ""}
+        ${equipment?.rarity === Character.Rarity.RARE && !withoutAnimation ? styles["rare-wrapper"] : ""}
         `}
-        style={{ 
-            width: size, 
-            height: size,
-            backgroundColor: equipment ? getRarityColor(equipment.rarity) + '77' : '',
-            borderColor: equipment ? getRarityColor(equipment.rarity) : '',
-            aspectRatio: '1/1',
-        }}
-        onClick={onClick}
+            style={{
+                width: size,
+                height: size,
+                backgroundColor: equipment ? getRarityColor(equipment.rarity) + '77' : '',
+                borderColor: equipment ? getRarityColor(equipment.rarity) : '',
+                aspectRatio: '1/1',
+            }}
+            onClick={onClick}
         >
             {
                 equipment ? (

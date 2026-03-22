@@ -1,5 +1,5 @@
 import * as CHARACTERS from '@/entities/character/lib/allCharacters'
-import type { IStatement, IPlot, IPlotScene, IPlotStore } from "../plot.model";
+import type { IPlotScene } from "../plot.model";
 import { Avatars } from "@/shared/avatars";
 import { usePlayerStore } from '@/entities/player/model/player.store';
 import usePlayerCharactersStore from '@/shared/store/PlayerCharactersStore';
@@ -39,7 +39,7 @@ export const CHAPTER_2_SCENES: IPlotScene[] = [
                 id: "c2s3",
                 author: CHARACTERS.FIRE_KING_CHARACTER.name,
                 color: "green",
-                text: "Нам нужно пробиться сквозь эти льды.",
+                text: "Лед может остановить людей. Но не огонь.",
                 avatar: Avatars.fireKing,
             },
         ],
@@ -131,19 +131,27 @@ export const CHAPTER_2_SCENES: IPlotScene[] = [
                 author: CHARACTERS.VIKING_CHARACTER.name,
                 color: "green",
                 authorPosition: "right",
-                text: "Ха-ха! Твое пламя греет не хуже доброго эля. Мой топор — твой!",
+                text: "Ха-ха! Твое пламя греет не хуже доброго эля.",
                 avatar: Avatars.viking,
                 isAvailable: () => checkProgress(2, 11)
             },
             {
                 id: "c2av2",
+                author: CHARACTERS.VIKING_CHARACTER.name,
+                color: "green",
+                authorPosition: "right",
+                text: "Я ищу достойную битву. Если вы идёте в самое сердце Бездны — я с вами.",
+                avatar: Avatars.viking,
+            },
+            {
+                id: "c2av3",
                 author: CHARACTERS.FIRE_KING_CHARACTER.name,
                 color: "green",
                 text: "Нам пригодится твоя сила. Тот Страж точно вернется сильнее, чем был.",
                 avatar: Avatars.fireKing,
             },
             {
-                id: "c2av3",
+                id: "c2av4",
                 color: "green",
                 text: `Получен персонаж: ${CHARACTERS.VIKING_CHARACTER.name}`,
             },
@@ -168,7 +176,7 @@ export const CHAPTER_2_SCENES: IPlotScene[] = [
                 author: CHARACTERS.WATER_PRIESTESS_CHARACTER.name,
                 color: "blue",
                 authorPosition: 'right',
-                text: "Вы принесли огонь в царство покоя. Воды этого края возмущены вашим присутствием.",
+                text: "Вы принесли огонь в царство покоя. Я чувствую в тебе огонь... но под ним скрывается тьма.",
                 avatar: Avatars.waterPriestess,
                 isAvailable: () => checkProgress(2, 20)
             },
@@ -238,7 +246,7 @@ export const CHAPTER_2_SCENES: IPlotScene[] = [
                 author: CHARACTERS.OLD_GOLEM_CHARACTER.name,
                 color: "red",
                 authorPosition: 'right',
-                text: "НАРУШИТЕЛИ... БУДУТ... РАЗДАВЛЕНЫ...",
+                text: "ДРЕВНИЙ ПРОТОКОЛ АКТИВЕН. ЗАРАЖЕНИЕ БЕЗДНОЙ ОБНАРУЖЕНО.",
                 avatar: Avatars.oldGolem,
             },
         ],
@@ -253,7 +261,7 @@ export const CHAPTER_2_SCENES: IPlotScene[] = [
                 author: CHARACTERS.FROST_GUARDIAN.name,
                 color: "red",
                 authorPosition: 'right',
-                text: "СИСТЕМА ВОССТАНОВЛЕНА. ЭНЕРГИЯ БЕЗДНЫ: 100%. ПОБЕДА — ЕДИНСТВЕННЫЙ ВЫХОД.",
+                text: "СИСТЕМА ВОССТАНОВЛЕНА. ЭНЕРГИЯ БЕЗДНЫ: 100%. ЗАПУСК ПРОТОКОЛА УНИЧТОЖЕНИЯ",
                 avatar: Avatars.frostGuardian,
                 isAvailable: () => checkProgress(2, 40)
             },

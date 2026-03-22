@@ -39,7 +39,7 @@ export const ShopItem: FC<Props> = ({
 
     return (
         <div
-        className={`
+            className={`
             border-4
             rounded-2xl p-6
             transform transition-all duration-300
@@ -49,32 +49,32 @@ export const ShopItem: FC<Props> = ({
             ${styles["shop-item"]}
             ${affordable ? "hover:border-yellow-400" : "opacity-70"}
         `}
-        style={{
-            '--border-color': getRarityColor(item.rarity),
-            '--border-color-hover': `${getRarityColor(item.rarity)}AA`,
-            '--background-color': `${getRarityColor(item.rarity)}22`,
-            '--background-color-hover': `${getRarityColor(item.rarity)}44`,
-        } as CSSProperties}
+            style={{
+                '--border-color': getRarityColor(item.rarity),
+                '--border-color-hover': `${getRarityColor(item.rarity)}AA`,
+                '--background-color': `${getRarityColor(item.rarity)}22`,
+                '--background-color-hover': `${getRarityColor(item.rarity)}44`,
+            } as CSSProperties}
         >
-            <motion.div 
-            animate={controls}
-            className={
-                `my-4 w-full grow flex items-center justify-center
+            <motion.div
+                animate={controls}
+                className={
+                    `my-4 w-full grow flex items-center justify-center
                 ${isAlreadyBought ? 'opacity-50' : ''}
                 `
-            }>
+                }>
                 {item.item}
             </motion.div>
             <div className="flex justify-between items-center mt-4 pt-4 border-t-2"
-            style={{
-                borderColor: getRarityColor(item.rarity),
-            }}
+                style={{
+                    borderColor: getRarityColor(item.rarity),
+                }}
             >
                 {
                     item.priceType === ShopPriceType.Ad ? (
                         <Button
                             onClick={() => {
-                                if(!isAlreadyBought)
+                                if (!isAlreadyBought)
                                     handleBuy()
                             }}
                             disabled={!affordable}
@@ -83,61 +83,57 @@ export const ShopItem: FC<Props> = ({
                                 w-full
                                 text-center
                                 justify-center
-                                ${
-                                affordable ?
-                                bought || isAlreadyBought ? "bg-gradient-to-r from-orange-500 to-orange-700 hover:from-orange-600 hover:to-orange-800" :
-                                    "bg-gradient-to-r from-amber-500 to-amber-700 hover:from-amber-600 hover:to-amber-800"
+                                ${affordable ?
+                                    bought || isAlreadyBought ? "bg-gradient-to-r from-orange-500 to-orange-700 hover:from-orange-600 hover:to-orange-800" :
+                                        "bg-gradient-to-r from-amber-500 to-amber-700 hover:from-amber-600 hover:to-amber-800"
                                     : "bg-gray-600 cursor-not-allowed"
                                 }
-                                ${
-                                    isAlreadyBought ? 'opacity-50' : ''
+                                ${isAlreadyBought ? 'opacity-50' : ''
                                 }
                             `}
-                            >
+                        >
                             {
                                 bought || isAlreadyBought ? "Не доступно" : "Реклама"
                             }
                         </Button>
                     ) : (
                         <>
-                        <div className="flex gap-3">
-                            <div
-                            className="flex items-center gap-1"
-                            >
-                                <Icon icon={item.priceType} size={64} />
-                                <div className="text-white text-3xl font-bold">
-                                    {item.price}
+                            <div className="flex gap-3">
+                                <div
+                                    className="flex items-center gap-1"
+                                >
+                                    <Icon icon={item.priceType} size={64} />
+                                    <div className={`text-white ${item.price.toString().length > 3 ? 'text-2xl' : 'text-3xl'} font-bold`}>
+                                        {item.price}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <Button
-                            onClick={() => {
-                                if(!isAlreadyBought)
-                                    handleBuy()
-                            }}
-                            disabled={!affordable}
-                            className={`
+                            <Button
+                                onClick={() => {
+                                    if (!isAlreadyBought)
+                                        handleBuy()
+                                }}
+                                disabled={!affordable}
+                                className={`
                                 px-4 py-2 text-xl font-bold
-                                ${
-                                affordable ?
-                                bought || isAlreadyBought ? "bg-gradient-to-r from-orange-500 to-orange-700 hover:from-orange-600 hover:to-orange-800" :
-                                    "bg-gradient-to-r from-amber-500 to-amber-700 hover:from-amber-600 hover:to-amber-800"
-                                    : "bg-gray-600 cursor-not-allowed"
-                                }
-                                ${
-                                    isAlreadyBought ? 'opacity-50' : ''
-                                }
+                                ${affordable ?
+                                        bought || isAlreadyBought ? "bg-gradient-to-r from-orange-500 to-orange-700 hover:from-orange-600 hover:to-orange-800" :
+                                            "bg-gradient-to-r from-amber-500 to-amber-700 hover:from-amber-600 hover:to-amber-800"
+                                        : "bg-gray-600 cursor-not-allowed"
+                                    }
+                                ${isAlreadyBought ? 'opacity-50' : ''
+                                    }
                             `}
                             >
-                            {
-                                bought || isAlreadyBought ? "Куплено" : "Купить"
-                            }
-                        </Button>
+                                {
+                                    bought || isAlreadyBought ? "Куплено" : "Купить"
+                                }
+                            </Button>
                         </>
                     )
                 }
             </div>
-            
+
         </div>
     )
 }

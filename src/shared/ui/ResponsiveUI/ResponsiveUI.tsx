@@ -1,5 +1,4 @@
 import {
-  useEffect,
   useLayoutEffect,
   useState,
   type FC,
@@ -17,7 +16,7 @@ export const ResponsiveUI: FC<PropsWithChildren<{ zIndex?: number }>> = ({
   const [scale, setScale] = useState(1);
 
   const [marginLeft, setMarginLeft] = useState(0);
-  const [marginTop, setMarginTop] = useState(0);
+  // const [marginTop, setMarginTop] = useState(0);
 
   useLayoutEffect(() => {
     const updateScale = () => {
@@ -27,7 +26,7 @@ export const ResponsiveUI: FC<PropsWithChildren<{ zIndex?: number }>> = ({
       // Вариант 1: масштабируем под ширину → получаем требуемую высоту
       const requiredHeight = vw / ASPECT_RATIO;
       // Вариант 2: масштабируем под высоту → получаем требуемую ширину
-      const requiredWidth = vh * ASPECT_RATIO;
+      // const requiredWidth = vh * ASPECT_RATIO;
 
       let newScale: number;
 
@@ -44,9 +43,9 @@ export const ResponsiveUI: FC<PropsWithChildren<{ zIndex?: number }>> = ({
       setMarginLeft(
         Math.max(0, window.innerWidth - LOGICAL_WIDTH * newScale) / 2,
       );
-      setMarginTop(
-        Math.max(0, window.innerHeight - LOGICAL_HEIGHT * newScale) / 2,
-      );
+      // setMarginTop(
+      //   Math.max(0, window.innerHeight - LOGICAL_HEIGHT * newScale) / 2,
+      // );
     };
 
     updateScale();

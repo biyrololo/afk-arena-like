@@ -11,21 +11,23 @@ export const HeroMiniCard: FC<{
   onClick?: () => void;
   style?: CSSProperties;
   size?: string;
-}> = ({ character, onClick, style, size = "200px" }) => {
+  withoutAnimation?: boolean;
+}> = ({ character, onClick, style, size = "200px", withoutAnimation = false }) => {
   return (
     <div
       className={`
         size-[${size}] rounded-2xl z-20 relative
-        ${character.rarity === Character.Rarity.LEGENDARY ? styles["fire-card"] : ""}
-        ${character.rarity === Character.Rarity.EPIC ? styles["epic-wrapper"] : ""}
-        ${character.rarity === Character.Rarity.RARE ? styles["rare-wrapper"] : ""}
+        ${character.rarity === Character.Rarity.LEGENDARY && !withoutAnimation ? styles["fire-card"] : ""}
+        ${character.rarity === Character.Rarity.EPIC && !withoutAnimation ? styles["epic-wrapper"] : ""}
+        ${character.rarity === Character.Rarity.RARE && !withoutAnimation ? styles["rare-wrapper"] : ""}
         `}
-        style={{
-          width: size,
-          height: size,
-        }}
+      style={{
+        width: size,
+        height: size,
+      }}
     >
       <button
+        tabIndex={-1}
         className={`
                 size-[${size}] relative bg-zinc-600 bg-cover cursor-pointer rounded-2xl
                 z-30
@@ -44,8 +46,8 @@ export const HeroMiniCard: FC<{
         <span className="absolute top-0 left-0 text-white text-lg font-bold backdrop-blur-2xl p-1 pr-2 rounded-md">
           Ур. {character.progression.level}
         </span>
-        <span 
-        className=
+        <span
+          className=
           "absolute flex gap-2 bottom-1 left-1 text-white text-lg font-bold"
         >
           <div className="rounded-full overflow-hidden size-[40px] relative border-2 border-black">

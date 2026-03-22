@@ -23,15 +23,15 @@ export const PlotModal: FC = () => {
     }, [])
 
     const statement = useMemo(() => {
-        if(!currentSceneId || !currentStatementId) return undefined;
+        if (!currentSceneId || !currentStatementId) return undefined;
         return findStatement(currentSceneId, currentStatementId);
     }, [currentSceneId, currentStatementId])
 
-    const [writtenIndex, setWrittenIndex] = useState(0);
+    const [writtenIndex, setWrittenIndex] = useState(1);
 
     const typeWriter = useEffectEvent(() => {
-        if(typeof statement?.text === 'string') {
-            if(writtenIndex < statement?.text.length) {
+        if (typeof statement?.text === 'string') {
+            if (writtenIndex < statement?.text.length) {
                 setWrittenIndex(prev => prev + 1)
                 return true;
             }
@@ -40,20 +40,20 @@ export const PlotModal: FC = () => {
     })
 
     useEffect(() => {
-        setWrittenIndex(0)
+        setWrittenIndex(1)
 
         const abortController = new AbortController();
         setInterval(() => {
-            if(typeWriter()) return;
+            if (typeWriter()) return;
             abortController.abort();
         }, 50, { signal: abortController.signal });
-        
+
         return () => abortController.abort();
     }, [setWrittenIndex, statement])
 
     const handleClick = () => {
-        if(statement && typeof statement.text === 'string') {
-            if(writtenIndex < statement.text.length) {
+        if (statement && typeof statement.text === 'string') {
+            if (writtenIndex < statement.text.length) {
                 setWrittenIndex(statement.text.length);
                 return
             }
@@ -61,10 +61,10 @@ export const PlotModal: FC = () => {
         nextStatement();
     }
 
-    if(!statement) return null;
+    if (!statement) return null;
 
     return (
-            <div
+        <div
             className="absolute inset-0 bg-black/50 flex flex-col cursor-pointer justify-end"
             style={{
                 pointerEvents: 'all',
@@ -73,11 +73,11 @@ export const PlotModal: FC = () => {
                 backgroundPosition: 'center',
             }}
             onClick={handleClick}
-            >
-                <AnimatePresence mode="wait">
-                    {
-                        statement.avatar && (
-                            <motion.img 
+        >
+            <AnimatePresence mode="wait">
+                {
+                    statement.avatar && (
+                        <motion.img
                             key={`${statement.avatar}-${statement.authorPosition}`}
                             initial={{ opacity: 0, scale: 0.5 }}
                             animate={{ opacity: 1, scale: 1 }}
@@ -90,34 +90,34 @@ export const PlotModal: FC = () => {
                                 alignSelf: statement.authorPosition === 'right' ? 'flex-end' : 'flex-start',
                                 transform: statement.authorPosition === 'right' ? 'rotateY(180deg)' : ''
                             }}
-                            />
-                        )
-                    }
-                </AnimatePresence>
-                <div
+                        />
+                    )
+                }
+            </AnimatePresence>
+            <div
                 className={`
                     bg-stone-900 p-8 rounded-xl border-2 border-stone-700 mx-10 mb-10
                     flex flex-col gap-4
                     `}
-                >
-                    <span
+            >
+                <span
                     className="font-bold text-5xl"
                     style={{
                         color: statement.color,
                         alignSelf: statement.authorPosition === 'right' ? 'flex-end' : 'flex-start'
                     }}
-                    >
-                        {statement.author}
-                    </span>
-                    <p className="text-white text-2xl">
-                        {
-                            typeof statement.text === 'string' ?
+                >
+                    {statement.author}
+                </span>
+                <p className="text-white text-2xl min-h-[1em]">
+                    {
+                        typeof statement.text === 'string' ?
                             statement.text.substring(0, writtenIndex) :
                             statement.text
-                        }
-                    </p>
-                </div>
+                    }
+                </p>
             </div>
+        </div>
     )
 
 } 

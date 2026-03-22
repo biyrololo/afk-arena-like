@@ -1,3 +1,4 @@
+import type { PlayerBalances } from "@/entities/player/model/player.model";
 import type { Character } from "@/shared/types/character";
 
 export interface Banner {
@@ -5,5 +6,7 @@ export interface Banner {
     name: string;
     description: string;
     image: string;
-    featuredCharachers?: Character.Character[]
+    featuredCharachers?: Character.Character[];
+    featuredEquipment?: Omit<Character.Equipment, 'id'>[];
+    valute: keyof PlayerBalances
 }

@@ -11,13 +11,13 @@ import { EQUIPMENT_UPGRADE_COSTS, isEnoughResources, upgradeEquipment } from "@/
 import { usePlayerStore } from "@/entities/player/model/player.store";
 import { useShallow } from "zustand/shallow";
 import { Icon } from "@/shared/ui/Icon/Icon";
-import { assets } from "@/shared/assets";
 import { getRarityColor } from "@/entities/character/lib/getRarityColor";
 import { Avatars } from "@/shared/avatars";
 import { useBackgroundMusic } from "@/shared/hooks/useBackgroundMusic";
 import { MUSIC } from "@/assets/music/music";
 import { useSoundEffects } from "@/shared/hooks/useSoundEffects";
 import { SOUNDS } from "@/assets/sound/sounds";
+import tavern from "@/assets/backgrounds/tavern.webp";
 
 export const MyEquipmentItemPage: FC = () => {
     const sounds = useSoundEffects(SOUNDS);
@@ -26,7 +26,7 @@ export const MyEquipmentItemPage: FC = () => {
 
     const navitate = useNavigate();
     const { equipment, characters } = usePlayerCharactersStore();
-    
+
     const handleBack = () => {
         navitate(-1);
     }
@@ -34,7 +34,7 @@ export const MyEquipmentItemPage: FC = () => {
     const currentEquipment = equipment.find(e => e.id === id);
 
     const resources = EQUIPMENT_UPGRADE_COSTS[(currentEquipment?.level || 0) + 1];
-    
+
     const balances = usePlayerStore(useShallow((state) => state.balances));
 
     const canUpgrade = isEnoughResources(resources, balances);
@@ -49,7 +49,7 @@ export const MyEquipmentItemPage: FC = () => {
         };
     }, [music.play]);
 
-    if(!currentEquipment) {
+    if (!currentEquipment) {
         navitate(-1);
         return null;
     }
@@ -62,13 +62,15 @@ export const MyEquipmentItemPage: FC = () => {
     return (
         <ResponsiveUI>
             <div
-            className={`
+                className={`
                 w-full h-full relative
-                bg-[url('/assets/backgrounds/tavern.png')]
-                bg-cover
-            `}>
+                bg-center bg-cover bg-no-repeat
+            `}
+                style={{ backgroundImage: `url(${tavern})` }}
+            >
                 <Balances />
-                <button 
+                <button
+                    tabIndex={-1}
                     className="
                         relative
                         top-4 left-4
@@ -105,17 +107,17 @@ export const MyEquipmentItemPage: FC = () => {
                         <div className="absolute -top-2 -right-2 w-6 h-6 border-t-4 border-r-4 border-amber-700 rounded-tr-lg"></div>
                         <div className="absolute -bottom-2 -left-2 w-6 h-6 border-b-4 border-l-4 border-amber-700 rounded-bl-lg"></div>
                         <div className="absolute -bottom-2 -right-2 w-6 h-6 border-b-4 border-r-4 border-amber-700 rounded-br-lg"></div>
-                        
+
                         <h2 className="text-4xl font-bold text-amber-300 text-center mb-8 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] border-b-2 border-amber-900/30 pb-4">
                             ПРОСМОТР ЭКИПИРОВКИ
                         </h2>
-                        
+
                         <div className="mb-8 bg-gray-800/50 rounded-xl p-6 border border-amber-900/20">
                             <div className="flex flex-col items-center gap-4">
                                 {
                                     char && (
                                         <div className="text-2xl cursor-pointer text-white mb-4 text-center flex items-center gap-4"
-                                        onClick={() => navitate(`/my-characters/${char.id}`)}
+                                            onClick={() => navitate(`/my-characters/${char.id}`)}
                                         >
                                             Экипировано на <span style={{ color: getRarityColor(char.rarity) }}>{char.name}</span>
                                             <img src={avatar} alt={char.name} className="w-12 h-12 rounded-full" />
@@ -124,24 +126,32 @@ export const MyEquipmentItemPage: FC = () => {
                                 }
                                 <EquipmentFullCard className="w-full" equipment={currentEquipment} withStats isWithUpgradeStats={canUpgrade} />
                                 <div className="flex gap-4 justify-end w-full">
-                                    <Button 
+                                    <Button
                                         onClick={() => handleUpgradeClick()}
                                         className="bg-purple-700 hover:bg-purple-600 text-xl px-6 py-3"
                                         disabled={!canUpgrade || !currentEquipment}
                                     >
-                                        УЛУЧШИТЬ
                                         {
-                                            currentEquipment && (
-                                                <div className="flex justify-center gap-8 relative">
-                                                    {Object.entries(resources.balances).map(([resource, amount]) => {
-                                                        return (
-                                                            <div key={resource} className="flex items-center gap-2">
-                                                                {amount}
-                                                                <Icon icon={resource as any} />
+                                            currentEquipment ? (
+                                                <>
+                                                    УЛУЧШИТЬ
+                                                    {
+                                                        currentEquipment && (
+                                                            <div className="flex justify-center gap-8 relative">
+                                                                {Object.entries(resources.balances).filter(([_, amount]) => amount > 0).map(([resource, amount]) => {
+                                                                    return (
+                                                                        <div key={resource} className="flex items-center gap-2">
+                                                                            {amount}
+                                                                            <Icon icon={resource as any} />
+                                                                        </div>
+                                                                    )
+                                                                })}
                                                             </div>
                                                         )
-                                                    })}
-                                                </div>
+                                                    }
+                                                </>
+                                            ) : (
+                                                <>МАКСИМАЛЬНЫЙ УРОВЕНЬ</>
                                             )
                                         }
                                     </Button>

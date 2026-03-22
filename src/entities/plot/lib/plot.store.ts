@@ -1,11 +1,7 @@
 import { create } from "zustand";
-import type { IStatement, IPlot, IPlotScene, IPlotStore } from "./plot.model";
+import type { IStatement, IPlot, IPlotStore } from "./plot.model";
 import { devtools, subscribeWithSelector } from "zustand/middleware";
 
-import { usePlayerStore } from "@/entities/player/model/player.store";
-import { Avatars } from "@/shared/avatars";
-
-import * as CHARACTERS from '@/entities/character/lib/allCharacters'
 import { CHAPTER_1_SCENES } from "./scenes/chapter-1-scenes";
 import { CHAPTER_2_SCENES } from "./scenes/chapter-2-scenes";
 

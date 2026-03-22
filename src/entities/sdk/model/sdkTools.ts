@@ -1,3 +1,4 @@
+import { useDailyRewardsStore } from "@/entities/daily-reward/model/daily-reward.store";
 import type { PlayerBalances } from "@/entities/player/model/player.model";
 import { usePlayerStore } from "@/entities/player/model/player.store"
 import { usePlotStore } from "@/entities/plot/lib/plot.store";
@@ -23,12 +24,19 @@ export const dumpData = (): Record<string, Serializable> => {
         completedQuests
     } = useQuestsStore.getState()
 
+    const {
+        currentDay,
+        lastClaimedAt
+    } = useDailyRewardsStore.getState()
+
     return {
         characters: JSON.stringify(characters),
         equipment: JSON.stringify(equipment),
         usedPromocodes: JSON.stringify(usedPromocodes),
         completedScenes: JSON.stringify(completedScenes),
-        completedQuests: JSON.stringify(completedQuests)
+        completedQuests: JSON.stringify(completedQuests),
+        currentDay,
+        lastClaimedAt,
     }
 }
 
@@ -50,20 +58,35 @@ export const loadData = (data: Record<string, Serializable | undefined>) => {
         setCompletedQuests
     } = useQuestsStore.getState()
 
-    if(data.characters && typeof data.characters === 'string') {
+    const {
+        setLastClaimedAt,
+        setCurrentDay
+    } = useDailyRewardsStore.getState()
+
+    if (data.characters && typeof data.characters === 'string') {
         setCharacters(JSON.parse(data.characters))
     }
-    if(data.equipment && typeof data.equipment === 'string') {
+    if (data.equipment && typeof data.equipment === 'string') {
         setEquipment(JSON.parse(data.equipment))
     }
-    if(data.usedPromocodes && typeof data.usedPromocodes === 'string') {
+    if (data.usedPromocodes && typeof data.usedPromocodes === 'string') {
         setUsedPromocodes(JSON.parse(data.usedPromocodes))
     }
-    if(data.completedScenes && typeof data.completedScenes === 'string') {
+    if (data.completedScenes && typeof data.completedScenes === 'string') {
         setCompletedScenes(JSON.parse(data.completedScenes))
     }
-    if(data.completedQuests && typeof data.completedQuests === 'string') {
+    if (data.completedQuests && typeof data.completedQuests === 'string') {
         setCompletedQuests(JSON.parse(data.completedQuests))
+    }
+
+    if (data.currentDay && typeof data.currentDay === 'number') {
+        setCurrentDay(data.currentDay)
+    }
+
+    if (data.lastClaimedAt && typeof data.lastClaimedAt === 'string') {
+        setLastClaimedAt(data.lastClaimedAt)
+    } else {
+        setLastClaimedAt(new Date(Date.now() - 86400000).toISOString());
     }
 }
 
@@ -79,7 +102,8 @@ export const dumpStats = (): Record<string, number> => {
         chapterNumber,
         gems: balances.gems,
         gold: balances.gold,
-        summons: balances.summons
+        summons: balances.summons,
+        summonsSpecial: balances.summonsSpecial
     }
 }
 
@@ -90,30 +114,35 @@ export const loadStats = (data: Record<string, number | undefined>) => {
         setBalances
     } = usePlayerStore.getState()
 
-    if(data.stageNumber) {
+    if (typeof data.stageNumber === 'number') {
         setStageNumber(data.stageNumber)
     }
 
-    if(data.chapterNumber) {
+    if (typeof data.chapterNumber === 'number') {
         setChapterNumber(data.chapterNumber)
     }
 
     const balances: PlayerBalances = {
         gems: 0,
         gold: 0,
-        summons: 0
+        summons: 0,
+        summonsSpecial: 0
     }
 
-    if(data.gems) {
+    if (typeof data.gems === 'number') {
         balances.gems = data.gems
     }
 
-    if(data.gold) {
+    if (typeof data.gold === 'number') {
         balances.gold = data.gold
     }
 
-    if(data.summons) {
+    if (typeof data.summons === 'number') {
         balances.summons = data.summons
+    }
+
+    if (typeof data.summonsSpecial === 'number') {
+        balances.summonsSpecial = data.summonsSpecial
     }
 
     setBalances(balances)

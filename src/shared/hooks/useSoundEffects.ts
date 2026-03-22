@@ -1,3 +1,4 @@
+import { useGameStateStore } from '@/entities/game/model/game-state.store';
 import { useEffect, useRef, useCallback } from 'react';
 
 export const useSoundEffects = (urls: Record<string, string>) => {
@@ -23,9 +24,10 @@ export const useSoundEffects = (urls: Record<string, string>) => {
   }, []);
 
   const playSound = useCallback((name: string, volume = 1) => {
+    if (useGameStateStore.getState().paused || useGameStateStore.getState().musicDisabled) return;
     const ctx = audioCtxRef.current;
     const buffer = buffersRef.current[name];
-    
+
     if (!ctx || !buffer) return;
 
     if (ctx.state === 'suspended') ctx.resume();
@@ -33,15 +35,15 @@ export const useSoundEffects = (urls: Record<string, string>) => {
     // Создаем "одноразовую" цепочку узлов для каждого выстрела/клика
     const source = ctx.createBufferSource();
     const gainNode = ctx.createGain();
-    
+
     source.buffer = buffer;
     gainNode.gain.value = volume;
-    
+
     source.connect(gainNode);
     gainNode.connect(ctx.destination);
-    
+
     source.start(0);
-    
+
     // Автоматическая очистка после завершения проигрывания
     source.onended = () => {
       source.disconnect();

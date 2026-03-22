@@ -49,14 +49,14 @@ export class BotController {
 
     public useSpecialAttack() {
         this.shouldSpecialAttack = true;
-        if(this.state !== 'attacking') {
+        if (this.state !== 'attacking') {
             this.pickAttack();
             this.shouldSpecialAttack = false;
         }
         this.character.setEnergy(0);
     }
 
-    update(time: number, delta: number) {
+    update(time: number, _: number) {
         if (this.state === 'cooldown' && time - this.lastAttackTime < this.attackCooldown) {
             return; // ждём окончания кд
         }
@@ -85,7 +85,7 @@ export class BotController {
 
         let targetX = undefined, targetY = undefined;
 
-        if(this.state !== 'attacking') {
+        if (this.state !== 'attacking') {
             if (distToTargetEdge > required.x) {
                 // console.log('dist x higher')
                 // console.log('moving', dist, Math.hypot(required.x, required.y), required);
@@ -100,23 +100,23 @@ export class BotController {
                 //     undefined,
                 //     0
                 // );
-            }  else if(distToTargetEdge < (required.minX ?? required.x - 10)) { 
+            } else if (distToTargetEdge < (required.minX ?? required.x - 10)) {
                 this.state = 'moving';
                 // console.log('dist x lower')
                 const offset = required.minX ?? (required.x + 20);
                 // this.character.moveTowards(isOnLeft ? thp.left - offset - 20 - hp.width : thp.right + offset + 20 + hp.width, thp.bottom - required.y - offsetY);
                 targetX = isOnLeft ? thp.left - offset - 20 - hp.width : thp.right + offset + 20 + hp.width;
-            } 
+            }
             if (distToTargetEdgeY < (required.minY ?? -10)) {
                 this.state = 'moving';
                 // console.log('dist y lower')
                 // this.character.moveTowards(this.character.getX(), this.character.getY() - distToTargetEdgeY + 30, undefined, 0)
-                if(required.minY !== undefined && required.minY > -10) {
+                if (required.minY !== undefined && required.minY > -10) {
                     targetY = this.character.getY() + 30;
                 } else {
                     targetY = this.character.getY() - distToTargetEdgeY + 30;
                 }
-            } 
+            }
             else if (distToTargetEdgeY > required.y) {
                 this.state = 'moving';
                 // console.log('dist y higher')
@@ -124,21 +124,21 @@ export class BotController {
                 targetY = this.character.getY() - distToTargetEdgeY - 30;
             }
         }
-        
-        if(targetX === undefined && targetY === undefined) {
+
+        if (targetX === undefined && targetY === undefined) {
             this.character.stopMoving();
             // атакуем
-            if(this.state !== 'attacking') {
+            if (this.state !== 'attacking') {
                 const isOnLeft = hp.centerX <= thp.centerX;
-                if(this.character.getDirection() !== isOnLeft) this.character.setFlipX(!isOnLeft);
-                if(this.currentAttack === 'special') {
+                if (this.character.getDirection() !== isOnLeft) this.character.setFlipX(!isOnLeft);
+                if (this.currentAttack === 'special') {
                     this.scene.events.emit('ultimateStarted', this.character)
                 }
                 this.character.playAnimation(this.currentAttack, this.currentAttack);
                 this.character.onAnimationEnd = () => {
                     this.pickAttack();
                     // console.log('attack end');
-                    if(!this.shouldSpecialAttack) {
+                    if (!this.shouldSpecialAttack) {
                         this.lastAttackTime = time;
                         this.state = 'cooldown';
                     } else {
@@ -150,12 +150,12 @@ export class BotController {
                 this.state = 'attacking';
             }
             // this.character.playAttack(this.currentAttack, () => {
-                //     this.character.hitTarget(this.currentTarget, this.currentAttack);
-                //     this.lastAttackTime = time;
-                //     this.state = 'cooldown';
-                // });
+            //     this.character.hitTarget(this.currentTarget, this.currentAttack);
+            //     this.lastAttackTime = time;
+            //     this.state = 'cooldown';
+            // });
         }
-        if(this.state === 'moving') {
+        if (this.state === 'moving') {
             this.character.moveTowards(targetX ?? this.character.getX(), targetY ?? this.character.getY(), undefined, 0);
         }
     }
@@ -163,7 +163,7 @@ export class BotController {
     private pickTarget() {
         // Если цель жива, то оставляем
         if (this.currentTarget && !this.currentTarget.isDestroyed() && !this.currentTarget.getIsDead() && this.currentTarget.getHP() > 0) {
-            return; 
+            return;
         }
 
         this.currentTarget = null;
@@ -188,7 +188,7 @@ export class BotController {
 
             case CharacterNS.Role.WARRIOR: {
                 // Приоритет - вражеский танк
-                this.currentTarget = getFirstByRole(CharacterNS.Role.TANK) 
+                this.currentTarget = getFirstByRole(CharacterNS.Role.TANK)
                     || getFirstByRole(CharacterNS.Role.ASSASSIN)
                     || sortedEnemies[0] || null;
                 break;
@@ -205,7 +205,7 @@ export class BotController {
     }
 
     private pickAttack() {
-        if(this.shouldSpecialAttack) {
+        if (this.shouldSpecialAttack) {
             this.currentAttack = 'special';
             return;
         }

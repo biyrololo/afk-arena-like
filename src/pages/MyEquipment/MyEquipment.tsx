@@ -1,18 +1,16 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
 import usePlayerCharactersStore from "@/shared/store/PlayerCharactersStore";
 import { ResponsiveUI } from "@/shared/ui/ResponsiveUI/ResponsiveUI";
-import { getRarityColor } from "@/entities/character/lib/getRarityColor";
 import { Balances } from "@/widgets/Balances/Balances";
-import { HeroMiniCard } from "@/entities/character/ui/HeroMiniCard/HeroMiniCard";
 import { useEffect, useMemo, type FC } from "react";
 import { Button } from "@/shared/ui/Button/Button";
 import { EquipmentFullCard } from "@/entities/character/ui/EquipmentCard/EquipmentFullCard";
-import { assets } from "@/shared/assets";
 import { calculateEquipmentPower } from "@/shared/types/develop";
 import { Avatars } from "@/shared/avatars";
 import { AnimatePresence, motion } from "framer-motion";
 import { useBackgroundMusic } from "@/shared/hooks/useBackgroundMusic";
 import { MUSIC } from "@/assets/music/music";
+import tavern from "@/assets/backgrounds/tavern.webp";
 
 const PER_PAGE = 3 * 3;
 
@@ -73,14 +71,17 @@ export const MyEquipmentPage: FC = () => {
       <div
         className={`
                 w-full h-full relative
-                bg-[url('/assets/backgrounds/tavern.png')]
                 bg-cover
             `}
+        style={{
+          backgroundImage: `url(${tavern})`,
+        }}
       >
         <Balances />
       </div>
       <div className="absolute inset-0 py-4 flex px-2">
         <button
+          tabIndex={-1}
           className="
                             absolute left-4
                             px-6 py-3

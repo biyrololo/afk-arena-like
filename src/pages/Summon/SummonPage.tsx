@@ -2,7 +2,6 @@ import { ResponsiveUI } from "@/shared/ui/ResponsiveUI/ResponsiveUI";
 import { useEffect, useState, type FC } from "react";
 import { Actions } from "./ui/Actions/Actions";
 import { useNavigate } from "react-router-dom";
-import { Balances } from "@/widgets/Balances/Balances";
 import { AllBanners } from "@/entities/summon/lib/summon.store";
 import { SummonBanner } from "./ui/Banner/Banner";
 import { SummonResult } from "./ui/SummonResult/SummonResult";
@@ -14,11 +13,16 @@ import { useBackgroundMusic } from "@/shared/hooks/useBackgroundMusic";
 import { MUSIC } from "@/assets/music/music";
 import { useSoundEffects } from "@/shared/hooks/useSoundEffects";
 import { SOUNDS } from "@/assets/sound/sounds";
+import { SummonBalances } from "@/widgets/Balances/SummonBalances";
+import { Button } from "@/shared/ui/Button/Button";
+import { ContentModal } from "./ui/ContentModal/ContentModal";
 
 export const SummonPage: FC = () => {
   const sounds = useSoundEffects(SOUNDS);
   const music = useBackgroundMusic(MUSIC.summon, { loop: true, volume: 0.2 });
   const navigate = useNavigate();
+
+  const [isContentModalOpened, setIsContentModalOpened] = useState(false);
 
   const [currentBanner, setCurrentBanner] = useState(0);
 
@@ -65,6 +69,7 @@ export const SummonPage: FC = () => {
           <>
             <SummonResult result={summonResult[0]} />
             <button
+              tabIndex={-1}
               className="absolute bottom-10 right-10 text-white text-6xl font-bold py-8 px-10 rounded bg-black/60 hover:bg-black/80 cursor-pointer"
               onClick={nextSummon}
             >
@@ -74,6 +79,7 @@ export const SummonPage: FC = () => {
         ) : (
           <>
             <button
+              tabIndex={-1}
               className="
                                   absolute left-4 top-4
                                   px-6 py-3
@@ -94,6 +100,7 @@ export const SummonPage: FC = () => {
               Назад
             </button>
             <button
+              tabIndex={-1}
               className="absolute top-1/2 left-10 text-white font-bold text-5xl bg-black/60 hover:bg-black/80 cursor-pointer py-10 px-10 rounded"
               onClick={() =>
                 setCurrentBanner(
@@ -105,6 +112,7 @@ export const SummonPage: FC = () => {
               {"<"}
             </button>
             <button
+              tabIndex={-1}
               className="absolute top-1/2 right-10 text-white font-bold text-5xl bg-black/60 hover:bg-black/80 cursor-pointer py-10 px-10 rounded"
               onClick={() =>
                 setCurrentBanner(
@@ -120,8 +128,14 @@ export const SummonPage: FC = () => {
                 key={AllBanners[currentBanner].id}
               />
             </AnimatePresence>
-            <Balances />
-            <Actions summon={handleSummon} bannerId={AllBanners[currentBanner]?.id} />
+            <SummonBalances />
+            <Button onClick={() => setIsContentModalOpened(true)} className="absolute bottom-10 py-6 bg-red-500 hover:not-disabled:bg-red-700 text-white font-bold text-2xl rounded left-60">
+              Содержимое
+            </Button>
+            <Actions summon={handleSummon} valute={AllBanners[currentBanner]?.valute} bannerId={AllBanners[currentBanner]?.id} />
+            <AnimatePresence>
+              <ContentModal key={1} isOpened={isContentModalOpened} close={() => setIsContentModalOpened(false)} bannerId={AllBanners[currentBanner]?.id} />
+            </AnimatePresence>
           </>
         )}
       </div>

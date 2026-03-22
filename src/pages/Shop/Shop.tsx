@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { ResponsiveUI } from "@/shared/ui/ResponsiveUI/ResponsiveUI";
 import { Button } from "@/shared/ui/Button/Button";
-import { Icon } from "@/shared/ui/Icon/Icon";
 import { usePlayerStore } from "@/entities/player/model/player.store";
 import { useShallow } from "zustand/shallow";
 
@@ -10,18 +9,40 @@ import shop from "@/assets/backgrounds/shop.webp";
 import { Balances } from "@/widgets/Balances/Balances";
 import { isEnoughResourcesForShopItem, getShopItems } from "@/entities/shop/model/shop.store";
 import { ShopItem } from "@/entities/shop/ui/ShopItem/ShopItem";
-import type { IShopItem } from "@/entities/shop/model/shop.model";
+import { ShopPriceType, type IShopItem } from "@/entities/shop/model/shop.model";
 import { PromocodeModal } from "@/entities/shop/ui/PromocodeModal/PromocodeModal";
 import { AnimatePresence } from "framer-motion";
 import { useBackgroundMusic } from "@/shared/hooks/useBackgroundMusic";
 import { MUSIC } from "@/assets/music/music";
 import { useSoundEffects } from "@/shared/hooks/useSoundEffects";
 import { SOUNDS } from "@/assets/sound/sounds";
+// import { type Product as SDKProduct } from "ysdk";
+type SDKProduct = any;
+import { SDK } from "@/entities/sdk/model/sdk";
+import { ProductShopItem } from "@/entities/shop/ui/ShopItem/ProductShopItem";
+import { consumePurchase } from "@/entities/sdk/model/sdkConsumePurchases";
+import { useGameStateStore } from "@/entities/game/model/game-state.store";
 
 const PER_PAGE = 6;
 
 export default function ShopPage() {
   const sounds = useSoundEffects(SOUNDS);
+  const [products, setProducts] = useState<SDKProduct[]>([]);
+
+  useEffect(() => {
+    SDK
+      .getInstance()
+      .getCatalog()
+      .then((products) => {
+        if (products) {
+          setProducts(products);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching catalog in Shop.tsx:", error);
+      });
+  }, [])
+
   const music = useBackgroundMusic(MUSIC.menu, { loop: true, volume: 0.2 });
   useEffect(() => {
     music.play();
@@ -41,14 +62,18 @@ export default function ShopPage() {
 
   const shopItems = getShopItems();
 
+  const allShopItems = useMemo(() => {
+    return [...products, ...shopItems];
+  }, [shopItems, products]);
+
   const paginatedShopItems = useMemo(() => {
-    return shopItems.slice(page * PER_PAGE, (page + 1) * PER_PAGE);
-  }, [page, shopItems]);
+    return allShopItems.slice(page * PER_PAGE, (page + 1) * PER_PAGE);
+  }, [page, allShopItems]);
 
   const isNextDisabled = useMemo(() => {
-      return page * PER_PAGE + PER_PAGE >= shopItems.length;
-  }, [shopItems, page, PER_PAGE]);
-  
+    return page * PER_PAGE + PER_PAGE >= allShopItems.length;
+  }, [allShopItems, page, PER_PAGE]);
+
   const isPreviousDisabled = useMemo(() => {
     return page === 0;
   }, [page]);
@@ -73,8 +98,26 @@ export default function ShopPage() {
   };
 
   const handleBuy = (item: IShopItem) => {
-    sounds.playSound('sci_fi_confirm', 0.8)
+    if (item.priceType !== ShopPriceType.Ad) {
+      sounds.playSound('sci_fi_confirm', 0.8)
+    }
     item.onBuy();
+  };
+
+  const handleBuyProduct = async (product: SDKProduct) => {
+    try {
+      useGameStateStore.getState().setPaused(true);
+      useGameStateStore.getState().setIsCurrentScreenPaused(true);
+      const res = await SDK.getInstance().purchase(product.id);
+      if (res) {
+        await consumePurchase(res.productID, res.purchaseToken);
+      }
+    } catch (error) {
+      console.error(`Error buying product ${product.title} :`, error);
+    } finally {
+      useGameStateStore.getState().setPaused(false);
+      useGameStateStore.getState().setIsCurrentScreenPaused(false);
+    }
   };
 
   return (
@@ -91,6 +134,7 @@ export default function ShopPage() {
         <div className="absolute inset-0 py-4 flex">
           {/* Back Button */}
           <button
+            tabIndex={-1}
             className="
                   absolute left-4
                   px-6 py-3
@@ -111,6 +155,7 @@ export default function ShopPage() {
             Назад
           </button>
           <button
+            tabIndex={-1}
             className="
                   absolute right-4
                   top-24
@@ -142,6 +187,15 @@ export default function ShopPage() {
             {/* Items Grid */}
             <div className="grid grid-cols-3 gap-6 px-4">
               {paginatedShopItems.map((item, index) => {
+                if ('imageURI' in item) {
+                  return (
+                    <ProductShopItem
+                      product={item}
+                      affordable
+                      buy={() => handleBuyProduct(item)}
+                    />
+                  )
+                }
                 const affordable = isEnoughResourcesForShopItem(item.price, item.priceType, balances);
 
                 return (
@@ -154,7 +208,7 @@ export default function ShopPage() {
                 {"<"}
               </Button>
               <span className="text-2xl font-bold text-white">
-                {page + 1} / {Math.ceil(shopItems.length / PER_PAGE)}
+                {page + 1} / {Math.ceil(allShopItems.length / PER_PAGE)}
               </span>
               <Button onClick={handleNext} disabled={isNextDisabled}>
                 {">"}

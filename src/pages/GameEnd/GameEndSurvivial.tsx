@@ -1,7 +1,8 @@
 import { SOUNDS } from "@/assets/sound/sounds";
 import { StageTypeEnum, type IStageReward } from "@/entities/chapter/lib/chapter.model";
-import { SURVIVAL_CHAPTERS } from "@/entities/chapter/lib/chapters";
+import { getSurvivalChapters } from "@/entities/chapter/lib/chapters";
 import { EquipmentCard } from "@/entities/character/ui/EquipmentCard/EquipmentCard";
+import { useGameStateStore } from "@/entities/game/model/game-state.store";
 import { usePlayerStatsStore } from "@/entities/player/model/player-stats.store";
 import { usePlayerStore } from "@/entities/player/model/player.store";
 import { useSoundEffects } from "@/shared/hooks/useSoundEffects";
@@ -46,7 +47,7 @@ export const GameEndSurvivial: FC = () => {
     if (!state.win) return;
     const { stage } = state;
 
-    const curStage = SURVIVAL_CHAPTERS.find((c) => c.stageNumber === stage);
+    const curStage = getSurvivalChapters().find((c) => c.stageNumber === stage);
     console.log("curStage", curStage);
     setReward(curStage?.rewards);
 
@@ -54,6 +55,7 @@ export const GameEndSurvivial: FC = () => {
       gold: balances.gold + (curStage?.rewards?.balances.gold || 0),
       gems: balances.gems + (curStage?.rewards?.balances.gems || 0),
       summons: balances.summons + (curStage?.rewards?.balances.summons || 0),
+      summonsSpecial: balances.summonsSpecial + (curStage?.rewards?.balances.summonsSpecial || 0),
     });
 
     if (curStage?.rewards?.equipment) {
@@ -67,7 +69,7 @@ export const GameEndSurvivial: FC = () => {
   }, [state, setReward, setEquipment]);
 
   const nextStage = state.stage
-    ? SURVIVAL_CHAPTERS.find((c) => c.stageNumber === state.stage + 1)
+    ? getSurvivalChapters().find((c) => c.stageNumber === state.stage + 1)
     : undefined;
 
   const characters: Array<PlayerCharacter | null> | undefined =
@@ -108,6 +110,7 @@ export const GameEndSurvivial: FC = () => {
 
   const goToMenu = () => {
     navigate("/");
+    useGameStateStore.getState().setAdAvailable(true);
   };
 
   if (state.win) {
@@ -167,7 +170,7 @@ export const GameEndSurvivial: FC = () => {
               )}
             </div>
             {reward?.equipment && (
-              <div className="grid grid-cols-4 gap-4 mt-6">
+              <div className="flex justify-center gap-4 mt-6">
                 {reward.equipment.map((eq) => (
                   <EquipmentCard key={eq.id} equipment={eq} />
                 ))}

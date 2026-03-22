@@ -13,8 +13,6 @@ interface Hero {
   maxHp: number;
 }
 
-const MAX_ENERGY = 50;
-
 export default function GameUI() {
   const [heroes, setHeroes] = useState<Hero[]>([]);
 
@@ -83,6 +81,7 @@ export default function GameUI() {
     >
       {heroes.map((h, i) => (
         <button
+          tabIndex={-1}
           key={i}
           className={cn(
             `
@@ -102,8 +101,8 @@ export default function GameUI() {
               h.energy < h.maxEnergy || h.hp <= 0 ? "not-allowed" : "pointer",
             ...(h.energy >= h.maxEnergy &&
               h.hp > 0 && {
-                scale: 1.1,
-              }),
+              scale: 1.1,
+            }),
             ...(h.hp <= 0 && {
               opacity: 0.5,
               filter: "grayscale(100%)",

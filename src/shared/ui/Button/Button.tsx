@@ -25,6 +25,7 @@ export const Button: FC<ButtonProps> = ({
         className,
       )}
       {...props}
+      tabIndex={-1}
     >
       {startIcon && <Icon icon={startIcon} />}
       {children}
