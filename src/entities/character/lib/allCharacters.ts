@@ -253,10 +253,10 @@ export const CRYSTAL_KING: Character.Character = {
   power: 30,
 
   baseStats: {
-    maxHp: 350,
+    maxHp: 450,
     attack: 100, // недостающий атрибут в исходном объекте
     speed: 150,
-    defense: 50, // недостающий атрибут в исходном объекте
+    defense: 70, // недостающий атрибут в исходном объекте
   },
   progression: {
     level: 1,
@@ -867,6 +867,111 @@ export const OLD_GUARDIAN_CHARACTER: Character.Character = {
     accuracy: 0.1,
     energyRegen: 10,
     cooldownAttack: 2500
+  },
+  skills: [],
+};
+
+export const METAL_BLADEKEEPER_CHARACTER: Character.Character = {
+  id: "17",
+  key: "metalBladekeeper",
+  name: "Элара",
+  description: 'Повелитель ножей',
+  rarity: Character.Rarity.EPIC,
+  role: Character.Role.ASSASSIN,
+  faction: Character.Faction.CRYSTAL,
+  damageType: Character.DamageType.PHYSICAL,
+  power: 100,
+
+  baseStats: {
+    maxHp: 550,
+    attack: 160,
+    speed: 180,
+    defense: 55,
+  },
+  progression: {
+    level: 1,
+    maxLevel: 999,
+    stars: 0,
+    ascension: 0,
+  },
+  advancedStats: {
+    critChance: 0.2,
+    critDamage: 1.5,
+    dodge: 0,
+    lifesteal: 0.5,
+    accuracy: 0.1,
+    energyRegen: 6,
+    cooldownAttack: 3000
+  },
+  skills: [],
+}
+
+export const WOMAN_WARRIOR_CHARACTER: Character.Character = {
+  id: "18",
+  key: "womanWarrior",
+  name: "Кетрин",
+  description: 'Женщина-воин',
+  rarity: Character.Rarity.EPIC,
+  role: Character.Role.WARRIOR,
+  faction: Character.Faction.ORDEN,
+  damageType: Character.DamageType.PHYSICAL,
+  power: 100,
+
+  baseStats: {
+    maxHp: 700,
+    attack: 90,
+    speed: 200,
+    defense: 100,
+  },
+  progression: {
+    level: 1,
+    maxLevel: 999,
+    stars: 0,
+    ascension: 0,
+  },
+  advancedStats: {
+    critChance: 0.2,
+    critDamage: 1.5,
+    dodge: 0.1,
+    lifesteal: 0.5,
+    accuracy: 0.1,
+    energyRegen: 10,
+    cooldownAttack: 1800
+  },
+  skills: [],
+}
+
+export const TREE_MAN_CHARACTER: Character.Character = {
+  id: "19",
+  key: "treeMan",
+  name: "Древнекоренное Существо",
+  description: 'Древнекоренное Существо',
+  rarity: Character.Rarity.EPIC,
+  role: Character.Role.WARRIOR,
+  faction: Character.Faction.ORDEN,
+  damageType: Character.DamageType.PHYSICAL,
+  power: 100,
+
+  baseStats: {
+    maxHp: 1000,
+    attack: 400,
+    speed: 100,
+    defense: 100,
+  },
+  progression: {
+    level: 1,
+    maxLevel: 999,
+    stars: 0,
+    ascension: 0,
+  },
+  advancedStats: {
+    critChance: 0.2,
+    critDamage: 1.5,
+    dodge: 0.1,
+    lifesteal: 0.5,
+    accuracy: 0.1,
+    energyRegen: 10,
+    cooldownAttack: 3000
   },
   skills: [],
 };

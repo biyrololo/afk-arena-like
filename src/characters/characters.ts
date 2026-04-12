@@ -56,13 +56,13 @@ export function generateFirewarrior(scene: GameScene, team: 'ally' | 'enemy', pr
         const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
         switch (attackName) {
             case 'attack1':
-                applyAttackDamage(scene, entity, enemies, 100, 0, 180, 200, baseDamage, CharacterModel.DamageType.FIRE, 1);
+                applyAttackDamage(scene, entity, enemies, 100, 0, 180, 200, baseDamage, CharacterModel.DamageType.FIRE, 1, 10);
                 break;
             case 'attack2':
-                applyAttackDamage(scene, entity, enemies, 100, 0, 180, 200, baseDamage, CharacterModel.DamageType.FIRE, 1);
+                applyAttackDamage(scene, entity, enemies, 100, 0, 180, 200, baseDamage, CharacterModel.DamageType.FIRE, 1, 10);
                 break;
             case 'attack3':
-                applyAttackDamage(scene, entity, enemies, 100, 20, 300, 100, baseDamage, CharacterModel.DamageType.FIRE, 1);
+                applyAttackDamage(scene, entity, enemies, 100, 20, 300, 100, baseDamage, CharacterModel.DamageType.FIRE, 1, 10);
                 break;
             case 'special':
                 applyAttackDamage(scene, entity, enemies, 200, 0, 400, 200, baseDamage / 2, CharacterModel.DamageType.FIRE);
@@ -165,7 +165,7 @@ export function generateViking(scene: GameScene, team: 'ally' | 'enemy', props: 
                 applyAttackDamage(scene, entity, enemies, 100, 50, 220, 200, baseDamage, CharacterModel.DamageType.PHYSICAL, 2);
                 break;
             case 'special':
-                applyAttackDamage(scene, entity, enemies, 0, 100, 500, 200, baseDamage * 3, CharacterModel.DamageType.PHYSICAL);
+                applyAttackDamage(scene, entity, enemies, 0, 100, 500, 200, baseDamage * 3, CharacterModel.DamageType.PHYSICAL, 5, 70);
                 break;
         }
     }
@@ -255,13 +255,13 @@ export function generateSpearwoman(scene: GameScene, team: 'ally' | 'enemy', pro
         const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
         switch (attackName) {
             case 'attack1':
-                applyAttackDamage(scene, entity, enemies, 100, 100, 220, 150, baseDamage, CharacterModel.DamageType.MAGIC, 1);
+                applyAttackDamage(scene, entity, enemies, 100, 100, 220, 150, baseDamage, CharacterModel.DamageType.MAGIC, 1, 20);
                 break;
             case 'attack2':
-                applyAttackDamage(scene, entity, enemies, 100, 100, 220, 150, baseDamage, CharacterModel.DamageType.MAGIC, 1);
+                applyAttackDamage(scene, entity, enemies, 100, 100, 220, 150, baseDamage, CharacterModel.DamageType.MAGIC, 1, 20);
                 break;
             case 'attack3':
-                applyAttackDamage(scene, entity, enemies, 100, 100, 320, 150, baseDamage / 3, CharacterModel.DamageType.MAGIC, 1);
+                applyAttackDamage(scene, entity, enemies, 100, 100, 320, 150, baseDamage / 3, CharacterModel.DamageType.MAGIC, 1, 20);
                 break;
             case 'special':
                 applyAttackDamage(scene, entity, enemies, 50, 200, 300, 200, baseDamage * 3.5, CharacterModel.DamageType.MAGIC);
@@ -347,10 +347,10 @@ export function generateWarrior(scene: GameScene, team: 'ally' | 'enemy', props:
         const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
         switch (attackName) {
             case 'attack1':
-                applyAttackDamage(scene, entity, enemies, 100, 20, 200, 150, baseDamage, CharacterModel.DamageType.PHYSICAL, 1);
+                applyAttackDamage(scene, entity, enemies, 100, 20, 200, 150, baseDamage, CharacterModel.DamageType.PHYSICAL, 1, 10);
                 break;
             case 'special':
-                applyAttackDamage(scene, entity, enemies, 100, 20, 200, 150, baseDamage * 2, CharacterModel.DamageType.PHYSICAL, 2);
+                applyAttackDamage(scene, entity, enemies, 100, 20, 200, 150, baseDamage * 2, CharacterModel.DamageType.PHYSICAL, 2, 20);
                 break;
         }
     }
@@ -430,19 +430,19 @@ export function generateCrystalKing(scene: GameScene, team: 'ally' | 'enemy', pr
         const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
         switch (attackName) {
             case 'attack1':
-                applyAttackDamage(scene, entity, enemies, 110, 200, 180, 200, baseDamage * 0.5, CharacterModel.DamageType.PHYSICAL, 1);
+                applyAttackDamage(scene, entity, enemies, 110, 200, 180, 200, baseDamage * 0.5, CharacterModel.DamageType.PHYSICAL, 1, 20);
                 break;
             case 'attack2':
-                applyAttackDamage(scene, entity, enemies, 110, 187.5, 200, 200, baseDamage, CharacterModel.DamageType.PHYSICAL, 1);
+                applyAttackDamage(scene, entity, enemies, 110, 187.5, 200, 200, baseDamage, CharacterModel.DamageType.PHYSICAL, 1, 20);
                 break;
             case 'attack3':
-                applyAttackDamage(scene, entity, enemies, 70, 200, 200, 187.5, baseDamage * 1.25, CharacterModel.DamageType.PHYSICAL, 1);
+                applyAttackDamage(scene, entity, enemies, 70, 200, 200, 187.5, baseDamage * 1.25, CharacterModel.DamageType.PHYSICAL, 1, 20);
                 break;
             case 'attack4':
-                applyAttackDamage(scene, entity, enemies, 350, 125, 250, 225, baseDamage * 0.75, CharacterModel.DamageType.PHYSICAL, 1);
+                applyAttackDamage(scene, entity, enemies, 350, 125, 250, 225, baseDamage * 0.75, CharacterModel.DamageType.PHYSICAL, 1, 20);
                 break;
             case 'special':
-                applyAttackDamage(scene, entity, enemies, 312.5, 200, 437.5, 225, baseDamage * 2.5, CharacterModel.DamageType.MAGIC);
+                applyAttackDamage(scene, entity, enemies, 312.5, 200, 437.5, 225, baseDamage * 2.5, CharacterModel.DamageType.MAGIC, 5, 40);
                 break;
         }
     }
@@ -532,10 +532,10 @@ export function generateFireKing(scene: GameScene, team: 'ally' | 'enemy', props
         const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
         switch (attackName) {
             case 'attack1':
-                applyAttackDamage(scene, entity, enemies, 160, 225, 300, 250, baseDamage, CharacterModel.DamageType.PHYSICAL, 2);
+                applyAttackDamage(scene, entity, enemies, 160, 225, 300, 250, baseDamage, CharacterModel.DamageType.PHYSICAL, 2, 20);
                 break;
             case 'special':
-                applyAttackDamage(scene, entity, enemies, 200, 200, 450, 250, baseDamage * 4, CharacterModel.DamageType.FIRE);
+                applyAttackDamage(scene, entity, enemies, 200, 200, 450, 250, baseDamage * 4, CharacterModel.DamageType.FIRE, 5, 60);
         }
     }
 
@@ -606,7 +606,7 @@ export function generateFrostGuardian(scene: GameScene, team: 'ally' | 'enemy', 
 
     entity.onAttackFrame = (attackName: string, _: number): void => {
         const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
-        applyAttackDamage(scene, entity, enemies, 230, 40, 450, 350, attackName === 'special' ? baseDamage * 4 : baseDamage, CharacterModel.DamageType.PHYSICAL, 1);
+        applyAttackDamage(scene, entity, enemies, 230, 40, 450, 350, attackName === 'special' ? baseDamage * 4 : baseDamage, CharacterModel.DamageType.PHYSICAL, 1, 20);
     }
 
     entity.setAttacksDistances({
@@ -666,8 +666,8 @@ export function generateDemonSlime(scene: GameScene, team: 'ally' | 'enemy', pro
     entity.createAnimation('special', 22 * 2, 22 * 2 + 14, 10, 0);
     entity.playAnimation('idle', 'idle');
 
-    entity.setAttackHitFrames('attack1', [9]);
-    entity.setAttackHitFrames('special', [9]);
+    entity.setAttackHitFrames('attack1', [10]);
+    entity.setAttackHitFrames('special', [10]);
 
     entity.setAttacksConfig(1, true);
 
@@ -676,7 +676,7 @@ export function generateDemonSlime(scene: GameScene, team: 'ally' | 'enemy', pro
     const baseDamage = props.character.baseStats.attack;
     entity.onAttackFrame = (attackName: string, _: number): void => {
         const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
-        applyAttackDamage(scene, entity, enemies, 300, 300, 600, 200, attackName === 'special' ? baseDamage * 4 : baseDamage, CharacterModel.DamageType.PHYSICAL);
+        applyAttackDamage(scene, entity, enemies, 300, 300, 600, 200, attackName === 'special' ? baseDamage * 4 : baseDamage, CharacterModel.DamageType.PHYSICAL, undefined, 80);
     }
 
     entity.setAttacksDistances({
@@ -853,12 +853,12 @@ export function generateGroundMonk(scene: GameScene, team: 'ally' | 'enemy', pro
         switch (attackName) {
             case 'attack1': {
                 const dmg = baseDamage;
-                applyAttackDamage(scene, entity, enemies, 100, 200, 150, 200, dmg, CharacterModel.DamageType.PHYSICAL, 1);
+                applyAttackDamage(scene, entity, enemies, 100, 200, 150, 200, dmg, CharacterModel.DamageType.PHYSICAL, 1, 20);
                 break;
             }
             case 'attack2': {
                 const dmg = baseDamage / 3;
-                applyAttackDamage(scene, entity, enemies, 100, 200, 150, 200, dmg, CharacterModel.DamageType.PHYSICAL, 1);
+                applyAttackDamage(scene, entity, enemies, 100, 200, 150, 200, dmg, CharacterModel.DamageType.PHYSICAL, 1, 20);
                 break;
             }
             case 'special':
@@ -949,12 +949,12 @@ export function generateWaterPriestess(scene: GameScene, team: 'ally' | 'enemy',
         switch (attackName) {
             case 'attack1': {
                 const dmg = baseDamage;
-                applyAttackDamage(scene, entity, enemies, 150, 200, 300, 300, dmg, CharacterModel.DamageType.MAGIC, 1);
+                applyAttackDamage(scene, entity, enemies, 150, 200, 300, 300, dmg, CharacterModel.DamageType.MAGIC, 1, 20);
                 break;
             }
             case 'attack2': {
                 const dmg = baseDamage / 3;
-                applyAttackDamage(scene, entity, enemies, 150, 200, 300, 300, dmg, CharacterModel.DamageType.MAGIC, 1);
+                applyAttackDamage(scene, entity, enemies, 150, 200, 300, 300, dmg, CharacterModel.DamageType.MAGIC, 1, 20);
                 break;
             }
             case 'special':
@@ -1278,14 +1278,14 @@ export function generateFantasyWarrior(scene: GameScene, team: 'ally' | 'enemy',
         switch (attackName) {
             case 'attack1': {
                 const dmg = baseDamage;
-                applyAttackDamage(scene, entity, enemies, 150, -40, 300, 300, dmg, CharacterModel.DamageType.MAGIC, 1);
+                applyAttackDamage(scene, entity, enemies, 150, -40, 300, 300, dmg, CharacterModel.DamageType.MAGIC, 1, 20);
                 break;
             }
             case 'attack2':
-                applyAttackDamage(scene, entity, enemies, 150, -40, 300, 300, baseDamage, CharacterModel.DamageType.MAGIC, 1);
+                applyAttackDamage(scene, entity, enemies, 150, -40, 300, 300, baseDamage, CharacterModel.DamageType.MAGIC, 1, 20);
                 break;
             case 'special':
-                applyAttackDamage(scene, entity, enemies, 150, -40, 300, 300, baseDamage * 3, CharacterModel.DamageType.MAGIC, 3);
+                applyAttackDamage(scene, entity, enemies, 150, -40, 300, 300, baseDamage * 3, CharacterModel.DamageType.MAGIC, 3, 30);
         }
     }
 
@@ -1370,7 +1370,7 @@ export function generateKitsune(scene: GameScene, team: 'ally' | 'enemy', props:
                 break;
             }
             case 'special':
-                applyAttackDamage(scene, entity, enemies, 100, 60, 200, 200, baseDamage * 2, CharacterModel.DamageType.MAGIC, 2);
+                applyAttackDamage(scene, entity, enemies, 100, 60, 200, 200, baseDamage * 2, CharacterModel.DamageType.MAGIC, 2, 30);
         }
     }
 
@@ -1444,11 +1444,11 @@ export function generateMinotaur(scene: GameScene, team: 'ally' | 'enemy', props
         const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
         switch (attackName) {
             case 'attack1': {
-                applyAttackDamage(scene, entity, enemies, 100, 80, 200, 200, baseDamage, CharacterModel.DamageType.PHYSICAL, 1);
+                applyAttackDamage(scene, entity, enemies, 100, 80, 200, 200, baseDamage, CharacterModel.DamageType.PHYSICAL, 1, 20);
                 break;
             }
             case 'special':
-                applyAttackDamage(scene, entity, enemies, 100, 80, 200, 200, baseDamage * 2, CharacterModel.DamageType.PHYSICAL, 1);
+                applyAttackDamage(scene, entity, enemies, 100, 80, 200, 200, baseDamage * 2, CharacterModel.DamageType.PHYSICAL, 1, 20);
                 break
         }
     }
@@ -1605,11 +1605,11 @@ export function generateNightBorne(scene: GameScene, team: 'ally' | 'enemy', pro
         const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
         switch (attackName) {
             case 'attack1': {
-                applyAttackDamage(scene, entity, enemies, 100, 40, 200, 160, baseDamage, CharacterModel.DamageType.MAGIC, 1);
+                applyAttackDamage(scene, entity, enemies, 100, 40, 200, 160, baseDamage, CharacterModel.DamageType.MAGIC, 1, 20);
                 break;
             }
             case 'special':
-                applyAttackDamage(scene, entity, enemies, 100, 40, 200, 160, baseDamage * 2, CharacterModel.DamageType.MAGIC, 1);
+                applyAttackDamage(scene, entity, enemies, 100, 40, 200, 160, baseDamage * 2, CharacterModel.DamageType.MAGIC, 1, 20);
                 break
         }
     }
@@ -1687,11 +1687,11 @@ export function generateKnight(scene: GameScene, team: 'ally' | 'enemy', props: 
         switch (attackName) {
             case 'attack1':
             case 'attack2': {
-                applyAttackDamage(scene, entity, enemies, 140, 0, 200, 160, baseDamage, CharacterModel.DamageType.PHYSICAL, 1);
+                applyAttackDamage(scene, entity, enemies, 140, 0, 200, 160, baseDamage, CharacterModel.DamageType.PHYSICAL, 1, 20);
                 break;
             }
             case 'special':
-                applyAttackDamage(scene, entity, enemies, 140, 0, 200, 160, baseDamage * 2, CharacterModel.DamageType.PHYSICAL, 1);
+                applyAttackDamage(scene, entity, enemies, 140, 0, 200, 160, baseDamage * 2, CharacterModel.DamageType.PHYSICAL, 1, 20);
                 break
         }
     }
@@ -1771,11 +1771,11 @@ export function generateSteelKnight(scene: GameScene, team: 'ally' | 'enemy', pr
         const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
         switch (attackName) {
             case 'attack1': {
-                applyAttackDamage(scene, entity, enemies, 100, 0, 200, 200, baseDamage, CharacterModel.DamageType.PHYSICAL, 1);
+                applyAttackDamage(scene, entity, enemies, 100, 0, 200, 200, baseDamage, CharacterModel.DamageType.PHYSICAL, 1, 20);
                 break;
             }
             case 'special':
-                applyAttackDamage(scene, entity, enemies, 200, 0, 300, 200, baseDamage * 3, CharacterModel.DamageType.PHYSICAL, 1);
+                applyAttackDamage(scene, entity, enemies, 200, 0, 300, 200, baseDamage * 3, CharacterModel.DamageType.PHYSICAL, 1, 30);
                 break
         }
     }
@@ -1928,11 +1928,11 @@ export function generateMartialHero(scene: GameScene, team: 'ally' | 'enemy', pr
         const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
         switch (attackName) {
             case 'attack1': {
-                applyAttackDamage(scene, entity, enemies, 240, -5, 400, 250, baseDamage, CharacterModel.DamageType.PHYSICAL, 1);
+                applyAttackDamage(scene, entity, enemies, 240, -5, 400, 250, baseDamage, CharacterModel.DamageType.PHYSICAL, 1, 30);
                 break;
             }
             case 'special':
-                applyAttackDamage(scene, entity, enemies, 240, -5, 400, 250, baseDamage * 2, CharacterModel.DamageType.PHYSICAL, 1);
+                applyAttackDamage(scene, entity, enemies, 240, -5, 400, 250, baseDamage * 2, CharacterModel.DamageType.PHYSICAL, 1, 30);
                 break
         }
     }
@@ -2011,10 +2011,10 @@ export function generateOldGolem(scene: GameScene, team: 'ally' | 'enemy', props
         const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
         switch (attackName) {
             case 'attack1':
-                applyAttackDamage(scene, entity, enemies, 150, 50, 350, 350, baseDamage, CharacterModel.DamageType.PHYSICAL, 1);
+                applyAttackDamage(scene, entity, enemies, 150, 50, 350, 350, baseDamage, CharacterModel.DamageType.PHYSICAL, 1, 20);
                 break;
             case 'special':
-                applyAttackDamage(scene, entity, enemies, 150, 50, 350, 350, baseDamage * 2, CharacterModel.DamageType.PHYSICAL, 3);
+                applyAttackDamage(scene, entity, enemies, 150, 50, 350, 350, baseDamage * 2, CharacterModel.DamageType.PHYSICAL, 3, 20);
         }
     }
 
@@ -2093,14 +2093,14 @@ export function generateOldGuardian(scene: GameScene, team: 'ally' | 'enemy', pr
         switch (attackName) {
             case 'attack1': {
                 const dmg = baseDamage;
-                applyAttackDamage(scene, entity, enemies, 100, 0, 300, 300, dmg, CharacterModel.DamageType.PHYSICAL, 1);
+                applyAttackDamage(scene, entity, enemies, 100, 0, 300, 300, dmg, CharacterModel.DamageType.PHYSICAL, 1, 30);
                 break;
             }
             case 'attack2':
-                applyAttackDamage(scene, entity, enemies, 100, 0, 300, 300, baseDamage, CharacterModel.DamageType.PHYSICAL, 1);
+                applyAttackDamage(scene, entity, enemies, 100, 0, 300, 300, baseDamage, CharacterModel.DamageType.PHYSICAL, 1, 30);
                 break;
             case 'special':
-                applyAttackDamage(scene, entity, enemies, 100, 0, 300, 300, baseDamage * 2, CharacterModel.DamageType.PHYSICAL, 3);
+                applyAttackDamage(scene, entity, enemies, 100, 0, 300, 300, baseDamage * 2, CharacterModel.DamageType.PHYSICAL, 3, 30);
         }
     }
 
@@ -2146,12 +2146,258 @@ export function generateOldGuardian(scene: GameScene, team: 'ally' | 'enemy', pr
     return entity;
 }
 
+export function generateMetalBladekeeper(scene: GameScene, team: 'ally' | 'enemy', props: CharacterProps): Character {
+    const entity = new Character(scene, props.x || 1000, props.y || 200, props.character.baseStats.speed,
+        props.textureKey || 'metalBladekeeper',
+        props.character.progression.level,
+        props.character.baseStats,
+        props.character.advancedStats,
+        props.character.role,
+        props.character.faction,
+        props.frameWidth || 288, props.frameHeight || 128, props.displayWidth ?? 288 * (props.scale || 5), props.displayHeight ?? 128 * (props.scale || 5), props.uiOffsetY || 80);
+
+    entity.setMaxHP(props.character.baseStats.maxHp);
+    entity.setCooldownAttack(props.character.advancedStats.cooldownAttack);
+
+    // 20 кадров в ряду
+    entity.createAnimation('idle', 0, 7, 10, -1);
+    entity.createAnimation('walk', 20, 20 + 7, 10, -1);
+    entity.createAnimation('attack1', 20 * 11, 20 * 11 + 17, 10, 0);
+    // entity.createAnimation('attack2', 150, 161, 10, 0);
+    // entity.createAnimation('attack3', 175, 197, 10, 0);
+    entity.createAnimation('special', 20 * 12, 20 * 12 + 10, 10, 0);
+
+    entity.setAttacksConfig(1, true);
+
+    const hitBoxScale = (props.scale || 5) / 5;
+    entity.setHitbox(100 * hitBoxScale, 200 * hitBoxScale, 0, 215 * hitBoxScale);
+
+    entity.setAttackHitFrames('attack1', [1, 4, 8, 12, 16]);
+    entity.setAttackHitFrames('special', [5, 7]);
+
+    const baseDamage = props.character.baseStats.attack;
+
+    entity.onAttackFrame = (attackName: string, _: number): void => {
+        const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
+        switch (attackName) {
+            case 'attack1': {
+                const dmg = baseDamage;
+                applyAttackDamage(scene, entity, enemies, 100, 220, 230, 200, dmg / 4, CharacterModel.DamageType.PHYSICAL, 1);
+                break;
+            }
+            case 'special':
+                applyAttackDamage(scene, entity, enemies, 0, 220, 450, 200, baseDamage, CharacterModel.DamageType.PHYSICAL);
+        }
+    }
+
+    entity.setAttacksDistances({
+        attack1: {
+            x: 60,
+            minX: 10,
+            y: 20
+        },
+        attack2: {
+            x: 60,
+            minX: 10,
+            y: 20
+        },
+        attack3: {
+            x: 60,
+            minX: 10,
+            y: 20
+        },
+        special: {
+            x: 100,
+            minX: 70,
+            y: 20
+        }
+    });
+
+    if (team === 'ally') {
+        entity.updateHPBarColor(0x00ff00)
+        entity.updateHPBarBgColor(0x000000)
+        scene.addAlly(entity);
+        entity.onEnergyChange = (energy: number) => {
+            EventBus.emit('allyEnergyChange', {
+                index: scene.getAllies().indexOf(entity),
+                energy
+            });
+        }
+    } else {
+        entity.updateHPBarColor(0xff0000)
+        entity.updateHPBarBgColor(0x000000)
+        scene.addEnemy(entity);
+        entity.setFlipX(true);
+    }
+
+    // entity.setDebugMode(true);
+
+    entity.playAnimation('idle', 'idle', true);
+
+    return entity;
+}
+
+export function generateWomanWarrior(scene: GameScene, team: 'ally' | 'enemy', props: CharacterProps): Character {
+    const entity = new Character(scene, props.x || 1000, props.y || 200, props.character.baseStats.speed,
+        props.textureKey || 'womanWarrior',
+        props.character.progression.level,
+        props.character.baseStats,
+        props.character.advancedStats,
+        props.character.role,
+        props.character.faction,
+        props.frameWidth || 142, props.frameHeight || 141, props.displayWidth ?? 142 * (props.scale || 5), props.displayHeight ?? 141 * (props.scale || 5), props.uiOffsetY || 0, -100);
+
+    entity.setMaxHP(props.character.baseStats.maxHp);
+    entity.setCooldownAttack(props.character.advancedStats.cooldownAttack);
+
+    // 12 кадров в ряду
+    entity.createAnimation('idle', 0, 7, 12, -1);
+    entity.createAnimation('walk', 12, 12 + 7, 12, -1);
+    entity.createAnimation('attack1', 12 * 2, 12 * 2 + 11, 12, 0);
+    entity.createAnimation('special', 12 * 2, 12 * 2 + 11, 12, 0);
+
+    entity.setAttacksConfig(1, true);
+
+    const hitBoxScale = (props.scale || 5) / 5;
+    entity.setHitbox(100 * hitBoxScale, 250 * hitBoxScale, 0, 160 * hitBoxScale);
+
+    entity.setAttackHitFrames('attack1', [5]);
+    entity.setAttackHitFrames('special', [5]);
+
+    const baseDamage = props.character.baseStats.attack;
+
+    entity.onAttackFrame = (attackName: string, _: number): void => {
+        const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
+        switch (attackName) {
+            case 'attack1': {
+                applyAttackDamage(scene, entity, enemies, 100, 160, 230, 240, baseDamage, CharacterModel.DamageType.PHYSICAL, 1, 20);
+                break;
+            }
+            case 'special':
+                applyAttackDamage(scene, entity, enemies, 100, 160, 230, 240, baseDamage * 3, CharacterModel.DamageType.PHYSICAL, 3, 20);
+        }
+    }
+
+    entity.setAttacksDistances({
+        attack1: {
+            x: 100,
+            minX: 10,
+            y: 20
+        },
+        special: {
+            x: 100,
+            minX: 70,
+            y: 20
+        }
+    });
+
+    if (team === 'ally') {
+        entity.updateHPBarColor(0x00ff00)
+        entity.updateHPBarBgColor(0x000000)
+        scene.addAlly(entity);
+        entity.onEnergyChange = (energy: number) => {
+            EventBus.emit('allyEnergyChange', {
+                index: scene.getAllies().indexOf(entity),
+                energy
+            });
+        }
+    } else {
+        entity.updateHPBarColor(0xff0000)
+        entity.updateHPBarBgColor(0x000000)
+        scene.addEnemy(entity);
+        entity.setFlipX(true);
+    }
+
+    // entity.setDebugMode(true);
+
+    entity.playAnimation('idle', 'idle', true);
+
+    return entity;
+}
+
+export function generateTreeMan(scene: GameScene, team: 'ally' | 'enemy', props: CharacterProps): Character {
+    const entity = new Character(scene, props.x || 1000, props.y || 200, props.character.baseStats.speed,
+        props.textureKey || 'treeMan',
+        props.character.progression.level,
+        props.character.baseStats,
+        props.character.advancedStats,
+        props.character.role,
+        props.character.faction,
+        props.frameWidth || 128, props.frameHeight || 128, props.displayWidth ?? 128 * (props.scale || 5), props.displayHeight ?? 128 * (props.scale || 5), props.uiOffsetY || -160, 40);
+
+    entity.setMaxHP(props.character.baseStats.maxHp);
+    entity.setCooldownAttack(props.character.advancedStats.cooldownAttack);
+
+    // 7 кадров в ряду
+    entity.createAnimation('idle', 0, 8, 4, -1);
+    entity.createAnimation('walk', 5 * 7 + 2, 5 * 7 + 5, 3, -1);
+    entity.createAnimation('attack1', 7 + 3, 7 + 4, 6, 0);
+    entity.createAnimation('special', 7 + 6, 7 + 7 + 2, 6, 0);
+
+    entity.setAttacksConfig(1, true);
+
+    const hitBoxScale = (props.scale || 5) / 5;
+    entity.setHitbox(128 * hitBoxScale, 280 * hitBoxScale, 0, 20 * hitBoxScale);
+
+    entity.setAttackHitFrames('attack1', [0, 1, 2]);
+    entity.setAttackHitFrames('special', [3]);
+
+    const baseDamage = props.character.baseStats.attack;
+
+    entity.onAttackFrame = (attackName: string, _: number): void => {
+        const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
+        switch (attackName) {
+            case 'attack1': {
+                applyAttackDamage(scene, entity, enemies, 140, 40, 230, 240, baseDamage, CharacterModel.DamageType.PHYSICAL, 1);
+                break;
+            }
+            case 'special':
+                applyAttackDamage(scene, entity, enemies, 160, 40, 260, 240, baseDamage, CharacterModel.DamageType.PHYSICAL, 1);
+        }
+    }
+
+    entity.setAttacksDistances({
+        attack1: {
+            x: 80,
+            minX: 10,
+            y: 20
+        },
+        special: {
+            x: 80,
+            minX: 70,
+            y: 20
+        }
+    });
+
+    if (team === 'ally') {
+        entity.updateHPBarColor(0x00ff00)
+        entity.updateHPBarBgColor(0x000000)
+        scene.addAlly(entity);
+        entity.onEnergyChange = (energy: number) => {
+            EventBus.emit('allyEnergyChange', {
+                index: scene.getAllies().indexOf(entity),
+                energy
+            });
+        }
+    } else {
+        entity.updateHPBarColor(0xff0000)
+        entity.updateHPBarBgColor(0x000000)
+        scene.addEnemy(entity);
+        entity.setFlipX(true);
+    }
+
+    // entity.setDebugMode(true);
+
+    entity.playAnimation('idle', 'idle', true);
+
+    return entity;
+}
 
 type AviableCharacter = 'firewarrior' | 'viking' | 'fireKing' | 'frostGuardian' | 'crystalKing' | 'warrior'
     | 'spearwoman' | 'demonSlime' | 'elementalWind'
     | 'groundMonk' | 'waterPriestess' | 'blueSlime' | 'greenSlime' | 'purpleSlime'
     | 'fantasyWarrior' | 'kitsune' | 'minotaur' | 'bringerOfDeath' | 'nightBorne' | 'knight' | 'steelKnight' | 'heroKnight' | 'martialHero'
-    | 'oldGolem' | 'oldGuardian';
+    | 'oldGolem' | 'oldGuardian' | 'metalBladekeeper' | 'womanWarrior' | 'treeMan';
 
 export default function generateCharacter(scene: GameScene, team: 'ally' | 'enemy', character: AviableCharacter, props: CharacterProps): Character {
     switch (character) {
@@ -2205,6 +2451,12 @@ export default function generateCharacter(scene: GameScene, team: 'ally' | 'enem
             return generateOldGolem(scene, team, props);
         case 'oldGuardian':
             return generateOldGuardian(scene, team, props);
+        case 'metalBladekeeper':
+            return generateMetalBladekeeper(scene, team, props);
+        case 'womanWarrior':
+            return generateWomanWarrior(scene, team, props);
+        case 'treeMan':
+            return generateTreeMan(scene, team, props);
         default:
             const type: never = character;
             throw new Error('Unknown character: ' + type);

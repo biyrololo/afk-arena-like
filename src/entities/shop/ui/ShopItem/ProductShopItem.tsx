@@ -6,6 +6,8 @@ import styles from "./ShopItem.module.css";
 import { useAnimation, motion } from "framer-motion";
 import type { Product } from "ysdk";
 import { Character } from "@/shared/types/character";
+import classNames from "classnames";
+import { Percent } from "lucide-react";
 
 interface Props {
     product: Product;
@@ -48,6 +50,7 @@ export const ProductShopItem: FC<Props> = ({
             hover:shadow-2xl
             backdrop-blur-2xl
             flex flex-col
+            relative
             ${styles["shop-item"]}
             ${affordable ? "hover:border-yellow-400" : "opacity-70"}
         `}
@@ -58,15 +61,26 @@ export const ProductShopItem: FC<Props> = ({
                 '--background-color-hover': `${getRarityColor(rarity)}44`,
             } as CSSProperties}
         >
+            {
+                product.id === 'starter_pack' && (
+                    <div className="absolute -top-3 -left-3 bg-red-500 text-white rounded-full p-2">
+                        <Percent width={40} height={40} />
+                    </div>
+                )
+            }
             <motion.div
                 animate={controls}
                 className={
-                    `my-4 w-full grow flex items-center justify-center
+                    `my-4 w-full grow flex items-center justify-center flex-col
                 ${isAlreadyBought ? 'opacity-50' : ''}
                 `
                 }>
                 <img src={product.imageURI} className="size-[100px]" alt={product.title} />
-                <div className="text-white text-2xl font-bold text-center text-balance">{product.title}</div>
+                <div className={
+                    classNames("text-white font-bold text-center text-balance",
+                        product.title.length > 20 ? 'text-xl' : 'text-2xl'
+                    )
+                }>{product.title}</div>
             </motion.div>
             <div className="flex justify-between items-center mt-4 pt-4 border-t-2"
                 style={{

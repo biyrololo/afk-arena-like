@@ -172,7 +172,7 @@ const getFeaturedKeys = () => {
         ],
         [
             VIKING_CHARACTER.key,
-            FIRE_KING_CHARACTER.key,
+            STEEL_KNIGHT_CHARACTER.key,
             FIREWARRIOR_CHARACTER.key
         ]
     ];

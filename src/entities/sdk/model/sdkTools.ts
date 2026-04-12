@@ -1,4 +1,5 @@
 import { useDailyRewardsStore } from "@/entities/daily-reward/model/daily-reward.store";
+import { usePlayerStatsStore } from "@/entities/player/model/player-stats.store";
 import type { PlayerBalances } from "@/entities/player/model/player.model";
 import { usePlayerStore } from "@/entities/player/model/player.store"
 import { usePlotStore } from "@/entities/plot/lib/plot.store";
@@ -29,6 +30,13 @@ export const dumpData = (): Record<string, Serializable> => {
         lastClaimedAt
     } = useDailyRewardsStore.getState()
 
+    const {
+        killedEnemies,
+        maxSurvivialDepthPerChapter,
+        visitedPages,
+        boughtProducts
+    } = usePlayerStatsStore.getState();
+
     return {
         characters: JSON.stringify(characters),
         equipment: JSON.stringify(equipment),
@@ -37,6 +45,10 @@ export const dumpData = (): Record<string, Serializable> => {
         completedQuests: JSON.stringify(completedQuests),
         currentDay,
         lastClaimedAt,
+        killedEnemies: JSON.stringify(killedEnemies),
+        maxSurvivialDepthPerChapter: JSON.stringify(maxSurvivialDepthPerChapter),
+        visitedPages: JSON.stringify(visitedPages),
+        boughtProducts: JSON.stringify(boughtProducts),
     }
 }
 
@@ -63,6 +75,13 @@ export const loadData = (data: Record<string, Serializable | undefined>) => {
         setCurrentDay
     } = useDailyRewardsStore.getState()
 
+    const {
+        setKilledEnemies,
+        setMaxSurvivialDepthPerChapter,
+        setVisitedPages,
+        setBoughtProducts,
+    } = usePlayerStatsStore.getState()
+
     if (data.characters && typeof data.characters === 'string') {
         setCharacters(JSON.parse(data.characters))
     }
@@ -87,6 +106,20 @@ export const loadData = (data: Record<string, Serializable | undefined>) => {
         setLastClaimedAt(data.lastClaimedAt)
     } else {
         setLastClaimedAt(new Date(Date.now() - 86400000).toISOString());
+    }
+
+    if (data.killedEnemies && typeof data.killedEnemies === 'string') {
+        setKilledEnemies(JSON.parse(data.killedEnemies))
+    }
+    if (data.maxSurvivialDepthPerChapter && typeof data.maxSurvivialDepthPerChapter === 'string') {
+        setMaxSurvivialDepthPerChapter(JSON.parse(data.maxSurvivialDepthPerChapter))
+    }
+    if (data.visitedPages && typeof data.visitedPages === 'string') {
+        setVisitedPages(JSON.parse(data.visitedPages))
+    }
+
+    if (data.boughtProducts && typeof data.boughtProducts === 'string') {
+        setBoughtProducts(JSON.parse(data.boughtProducts))
     }
 }
 

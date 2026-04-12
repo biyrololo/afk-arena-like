@@ -23,6 +23,9 @@ import heroKnight from '@/assets/avatars/heroKnight.png'
 import martialHero from '@/assets/avatars/martialHero.png'
 import oldGolem from '@/assets/avatars/oldGolem.png'
 import oldGuardian from '@/assets/avatars/oldGuardian.png'
+import metalBladekeeper from '@/assets/avatars/metalBladekeeper.webp'
+import womanWarrior from '@/assets/avatars/womanWarrior.webp'
+import treeMan from '@/assets/avatars/treeMan.png'
 
 export const Avatars = {
     firewarrior,
@@ -49,5 +52,8 @@ export const Avatars = {
     heroKnight,
     martialHero,
     oldGolem,
-    oldGuardian
+    oldGuardian,
+    womanWarrior,
+    metalBladekeeper,
+    treeMan,
 } as const;

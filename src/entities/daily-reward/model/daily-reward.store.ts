@@ -7,7 +7,8 @@ import type { PlayerBalances } from "@/entities/player/model/player.model";
 
 
 export const getDailyRewards = (): IDailyReward[] => {
-    const cycleIndex = Math.floor(useDailyRewardsStore.getState().currentDay / 21);
+    const currentDay = useDailyRewardsStore.getState().currentDay;
+    const cycleIndex = Math.floor((useDailyRewardsStore.getState().currentDay - 1) / 21);
 
     // Определяем "Настроение" цикла на 21 день
     // 0: Алмазный шторм (больше гемов)
@@ -15,7 +16,7 @@ export const getDailyRewards = (): IDailyReward[] => {
     // 2: Золотая лихорадка (огромные куши золота)
     const currentCycleType = cycleIndex % 3;
 
-    return Array.from({ length: 21 }).map((_, index) => {
+    const rewards = Array.from({ length: 21 }).map((_, index) => {
         const day = index + 1;
         let type: keyof PlayerBalances = 'gems';
         let count = 0;
@@ -23,32 +24,32 @@ export const getDailyRewards = (): IDailyReward[] => {
 
         if (day === 1) {
             type = 'summonsSpecial';
-            count = 10;
+            count = 10 + (cycleIndex * 2);
             rarity = Character.Rarity.LEGENDARY;
         } else
             // --- ЛОГИКА ГЛАВНЫХ ПРИЗОВ (Дни 7, 14, 21) ---
             if (day === 21) {
                 type = 'summonsSpecial';
-                count = 30; // Всегда десятка в конце
+                count = 50 + (cycleIndex * 4); // Всегда десятка в конце
                 rarity = Character.Rarity.LEGENDARY;
             }
             else if (day === 7) {
                 type = 'summonsSpecial';
                 // В цикле "Призыв титанов" (1) даем больше свитков на промежуточных этапах
-                count = 12;
+                count = 30 + (cycleIndex * 2);
                 rarity = Character.Rarity.LEGENDARY;
             }
             else if (day % 7 === 0) {
                 type = 'summons';
                 // В цикле "Призыв титанов" (1) даем больше свитков на промежуточных этапах
-                count = 10;
+                count = 40 + (cycleIndex * 2);
                 rarity = Character.Rarity.EPIC;
             }
             // --- ЛОГИКА БУДНЕЙ ---
             else if (day % 5 === 0) {
                 type = 'summons';
                 // В цикле "Призыв титанов" (1) даем больше свитков на промежуточных этапах
-                count = 4;
+                count = 10 + (cycleIndex * 2);
                 rarity = Character.Rarity.EPIC;
             }
             // --- ЛОГИКА БУДНЕЙ ---
@@ -58,7 +59,7 @@ export const getDailyRewards = (): IDailyReward[] => {
                 const baseGems = 160;
                 // В алмазном цикле (0) насыпаем +50% гемов
                 const bonus = currentCycleType === 0 ? 80 : 0;
-                count = baseGems + bonus + (Math.floor(index / 2) * 10);
+                count = baseGems + bonus + (Math.floor(index / 2) * 10) + (cycleIndex * 10);
                 rarity = Character.Rarity.EPIC;
             }
             else {
@@ -67,7 +68,7 @@ export const getDailyRewards = (): IDailyReward[] => {
                 const baseGold = 1000;
                 // В золотом цикле (2) удваиваем награду
                 const multiplier = currentCycleType === 2 ? 2.5 : 1;
-                count = Math.floor((baseGold + (index * 5000)) * multiplier);
+                count = Math.floor((baseGold + (index * 2000)) * multiplier) + (cycleIndex * 3000);
                 rarity = Character.Rarity.RARE;
             }
 
@@ -75,13 +76,17 @@ export const getDailyRewards = (): IDailyReward[] => {
             icon: type,
             rarity: rarity,
             count: count,
-            day: day,
+            day: day + cycleIndex * 21,
             onClaim: () => {
                 const state = usePlayerStore.getState();
                 state.addBalance(type, count);
             }
         };
     });
+
+    const weekNumber = Math.floor(((currentDay - 1) % 21) / 7);
+
+    return rewards.slice(weekNumber * 7, 7 * weekNumber + 7);
 }
 
 interface IDailyRewardsStore {

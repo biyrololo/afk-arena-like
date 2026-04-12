@@ -35,7 +35,7 @@ export const CHAPTER_1_STAGES: IStage[] = [
       cloneCharacter(BLUE_SLIME_CHARACTER, 1),
     ],
     rewards: {
-      balances: { gold: 150, gems: 0, summons: 0, summonsSpecial: 0 },
+      balances: { gold: 150, gems: 20, summons: 0, summonsSpecial: 0 },
       equipment: [
         createEquipment(AllEquipment.EQUIPMENT.browngreen.helmet),
         createEquipment(Weapons.WEAPONS.sharp_pink),
@@ -69,7 +69,7 @@ export const CHAPTER_1_STAGES: IStage[] = [
     ],
     ost: 'battle',
     rewards: {
-      balances: { gold: 1000, gems: 50, summons: 1, summonsSpecial: 0 },
+      balances: { gold: 1000, gems: 70, summons: 1, summonsSpecial: 0 },
       equipment: [
         createEquipment(AllEquipment.EQUIPMENT.gold.boots),
         // createEquipment(Weapons.WEAPONS.emerald),
@@ -220,7 +220,7 @@ export const CHAPTER_1_STAGES: IStage[] = [
       cloneCharacter(BRINGER_OF_DEATH_CHARACTER, 19),
       cloneCharacter(MINOTAUR_CHARACTER, 19),
       cloneCharacter(BRINGER_OF_DEATH_CHARACTER, 19),
-      cloneCharacter(NIGHT_BORNE_CHARACTER, 27),
+      cloneCharacter(NIGHT_BORNE_CHARACTER, 22),
     ],
     rewards: {
       balances: { gold: 2800, gems: 0, summons: 0, summonsSpecial: 0 },
@@ -399,10 +399,10 @@ export const CHAPTER_1_STAGES: IStage[] = [
     stageNumber: 23,
     background: "ancient_bg",
     enemies: [
-      cloneCharacter(NIGHT_BORNE_CHARACTER, 21),
-      cloneCharacter(STEEL_KNIGHT_CHARACTER, 21),
-      cloneCharacter(NIGHT_BORNE_CHARACTER, 21),
-      cloneCharacter(NIGHT_BORNE_CHARACTER, 21),
+      cloneCharacter(NIGHT_BORNE_CHARACTER, 20),
+      cloneCharacter(STEEL_KNIGHT_CHARACTER, 20),
+      cloneCharacter(NIGHT_BORNE_CHARACTER, 20),
+      cloneCharacter(NIGHT_BORNE_CHARACTER, 20),
     ],
     rewards: {
       balances: { gold: 5000, gems: 0, summons: 0, summonsSpecial: 0 },

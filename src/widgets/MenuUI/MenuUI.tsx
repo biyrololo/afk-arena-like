@@ -21,6 +21,12 @@ import { useEffect } from "react";
 import { useGameStateStore } from "@/entities/game/model/game-state.store";
 import { AdModal } from "../AdModal/AdModal";
 import { TogleMusicButton } from "../TogleMusicButton/TogleMusicButton";
+import { Analytics, GameGoal } from "@/shared/lib/analytics";
+import { PlotModal } from "@/entities/plot/ui/PlotModal/PlotModal";
+import { useDailyRewardsStore } from "@/entities/daily-reward/model/daily-reward.store";
+import classNames from "classnames";
+import { usePlayerStatsStore } from "@/entities/player/model/player-stats.store";
+import { Info } from "lucide-react";
 
 export default function MenuUI() {
   const [clicked, clickDone] = useGameStateStore(useShallow(state => [
@@ -28,6 +34,10 @@ export default function MenuUI() {
     state.clickDone
   ]))
   const music = useBackgroundMusic(MUSIC.menu, { loop: true, volume: 0.5 })
+
+  const [visitedPages, visitPage] = usePlayerStatsStore(useShallow(state => [state.visitedPages, state.visitPage]));
+
+  const isShopVisited = visitedPages.shop === true;
 
   const navigate = useNavigate();
 
@@ -51,6 +61,8 @@ export default function MenuUI() {
   const [chapterNumber, stageNumber] = usePlayerStore(
     useShallow((state) => [state.chapterNumber, state.stageNumber]),
   );
+
+  const isOpenedModal = useDailyRewardsStore(useShallow(state => state.isOpenedModal));
 
   useEffect(() => {
     if (clicked) {
@@ -92,14 +104,22 @@ export default function MenuUI() {
           right: 190,
           bottom: 220,
         }}
-        onClick={() => navigate("/summon")}
+        onClick={() => {
+          Analytics.send(GameGoal.ClickGachaMenu)
+          navigate("/summon")
+        }}
       >
         <span className="text-white bg-amber-950 border-4 border-amber-600 py-2 px-6 rounded-full text-5xl mt-40">
           Призыв
         </span>
       </div>
       <div
-        className="absolute flex flex-col items-center justify-center cursor-pointer hover:scale-110 transition-all duration-100"
+        className={
+          classNames(
+            "absolute flex flex-col items-center justify-center cursor-pointer hover:scale-110 transition-all duration-100",
+            stageNumber === 1 && chapterNumber === 1 && classes['start-game-scaling']
+          )
+        }
         style={{
           backgroundImage: `url(${sword})`,
           backgroundSize: "contain",
@@ -125,7 +145,10 @@ export default function MenuUI() {
           left: 150,
           bottom: 430,
         }}
-        onClick={() => navigate("/my-characters")}
+        onClick={() => {
+          Analytics.send(GameGoal.ClickHeroesInventory)
+          navigate("/my-characters");
+        }}
       >
         <span className="text-white bg-amber-950 border-4 border-amber-600 py-2 px-6 rounded-full text-5xl mt-80">
           Герои
@@ -180,8 +203,19 @@ export default function MenuUI() {
           right: 100,
           top: 120,
         }}
-        onClick={() => navigate("/shop")}
+        onClick={() => {
+          visitPage("shop");
+          Analytics.send(GameGoal.OpenShopScreen)
+          navigate("/shop");
+        }}
       >
+        {
+          Boolean(!isShopVisited && stageNumber > 1) && (
+            <div className="bg-red-500 p-2 absolute -top-4 -left-8 rounded-full">
+              <Info width={50} height={50} color="white" />
+            </div>
+          )
+        }
         <span className="text-white bg-amber-950 border-4 border-amber-600 py-2 px-6 rounded-full text-3xl mt-48">
           Магазин
         </span>
@@ -196,7 +230,10 @@ export default function MenuUI() {
           left: 200,
           bottom: 70,
         }}
-        onClick={() => navigate("/game/survival/start/1")}
+        onClick={() => {
+          Analytics.send(GameGoal.ClickStartBattleSurvival)
+          navigate("/game/survival/start/1");
+        }}
       >
         <span className="text-white bg-amber-950 border-4 border-amber-600 py-2 px-6 rounded-full text-5xl mt-48">
           Выживание
@@ -205,6 +242,7 @@ export default function MenuUI() {
       <TogleMusicButton />
       <QuestsModal />
       <DailyRewardsModal />
+      {!isOpenedModal && <PlotModal />}
       <AdModal />
     </div>
   );

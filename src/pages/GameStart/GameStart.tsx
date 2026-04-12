@@ -16,6 +16,8 @@ import { findStage, nextStage } from "@/entities/chapter/lib/chapters";
 import background from "@/assets/backgrounds/gamestart.webp";
 import { calculateStatsWithEquipment } from "@/shared/types/develop";
 import { AnimatePresence, motion } from "framer-motion";
+import { Analytics, GameGoal } from "@/shared/lib/analytics";
+import { ArrowLeft, Swords } from "lucide-react";
 
 const PER_PAGE = 4 * 3;
 
@@ -94,6 +96,10 @@ export default function GameStart() {
   };
 
   const handleStart = () => {
+    if (stageNumber === 1 && chapterNumber === 1) {
+      Analytics.send(GameGoal.FirstBattleStart);
+    }
+
     setLastSquad(
       selectedCharacters.map((character) => character?.id ?? null) as SquadList,
     );
@@ -152,9 +158,9 @@ export default function GameStart() {
             tabIndex={-1}
             className="
                           absolute left-4
-                          px-6 py-3
+                          px-6 py-6
                           bg-gradient-to-r from-amber-700 to-amber-900
-                          text-white text-2xl font-bold
+                          text-white text-4xl font-bold
                           rounded-xl
                           border-2 border-amber-500
                           shadow-lg
@@ -166,7 +172,7 @@ export default function GameStart() {
                       "
             onClick={handleBack}
           >
-            <span className="text-3xl">←</span>
+            <ArrowLeft strokeWidth={3} width={30} height={30} />
             Назад
           </button>
           {
@@ -257,7 +263,7 @@ export default function GameStart() {
                   </div>
                 </div>
                 <Button
-                  className="text-3xl absolute top-4 right-4 text-white cursor-pointer"
+                  className="text-4xl absolute top-4 right-4 text-white cursor-pointer flex items-center gap-2 py-8 px-12"
                   style={{
                     opacity: isStartDisabled ? 0.5 : 1,
                   }}
@@ -265,6 +271,7 @@ export default function GameStart() {
                   onClick={handleStart}
                 >
                   Начать
+                  <Swords width={50} height={50} />
                 </Button>
                 <p className="text-white text-3xl absolute top-31 left-4 w-[450px] text-shadow-[0px_0px_4px_rgba(0,0,0,0.5)]">
                   Это классический режим игры, в котором вы продвигаетесь по сюжету, боретесь с врагами и получаете опыт и ресурсы.
@@ -277,7 +284,13 @@ export default function GameStart() {
                     Поздравляем! Все доступные на данный момент сюжетные уровни пройдены. Наша команда уже работает над новыми испытаниями и продолжением истории.
                     <br />
                     <br />
-                    Следи за обновлениями, чтобы не пропустить новые главы!
+                    Следи за обновлениями в нашем <button
+                      tabIndex={-1}
+                      onClick={() => {
+                        window.open(import.meta.env.VITE_TG_LINK, "_blank");
+                      }}
+                      className="inline-flex text-green-500 cursor-pointer underline"
+                    >Сообществе</button>, чтобы не пропустить новые главы!
                   </p>
                 </div>
               </>

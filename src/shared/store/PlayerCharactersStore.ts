@@ -15,7 +15,7 @@ interface PlayerCharactersStore {
 const usePlayerCharactersStore = create<PlayerCharactersStore>((set) => ({
   characters: [
     cloneCharacter(FIRE_KING_CHARACTER),
-    // ...mockCharacters.map(c => {
+    // ...Object.values(CHARACTERS).filter(c => 'power' in c).map(c => {
     //   const copy = structuredClone(c);
     //   copy.power = calculateCharacterPower(copy);
     //   return copy;

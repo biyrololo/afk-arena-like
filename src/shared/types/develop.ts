@@ -312,6 +312,38 @@ export const isEnoughResources = (
   );
 };
 
+export const GEMS_FOR_SELL_BY_RARITY: Record<Character.Rarity, number> = {
+  [Character.Rarity.COMMON]: 0,
+  [Character.Rarity.UNCOMMON]: 10,
+  [Character.Rarity.RARE]: 20,
+  [Character.Rarity.EPIC]: 50,
+  [Character.Rarity.LEGENDARY]: 100,
+}
+
+export const sellEquipment = (equipmentId: string) => {
+  const equipmentQuery = usePlayerCharactersStore
+    .getState()
+    .equipment.find((e) => e.id === equipmentId);
+  if (!equipmentQuery) return;
+
+  const power = calculateEquipmentPower(equipmentQuery);
+
+  const { addBalance } = usePlayerStore.getState();
+
+  const gold = Math.floor(power * 3 * (100 + GEMS_FOR_SELL_BY_RARITY[equipmentQuery.rarity]) / 100);
+
+  addBalance('gold', gold);
+  addBalance('gems', GEMS_FOR_SELL_BY_RARITY[equipmentQuery.rarity]);
+
+  usePlayerCharactersStore
+    .getState()
+    .setEquipment(
+      usePlayerCharactersStore
+        .getState()
+        .equipment.filter((e) => e.id !== equipmentId),
+    );
+};
+
 export const upgradeEquipment = (equipmentId: string) => {
   const equipmentQuery = usePlayerCharactersStore
     .getState()

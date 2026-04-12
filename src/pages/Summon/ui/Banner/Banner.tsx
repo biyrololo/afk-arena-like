@@ -15,7 +15,7 @@ export const SummonBanner: FC<Banner> = (props) => {
       exit={{ opacity: 0, top: "-50%" }}
       animate={{ opacity: 1, top: "50%" }}
       transition={{ duration: 0.5 }}
-      className="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 w-4/5 h-2/3 bg-cover bg-center border-2 border-white rounded-lg"
+      className="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 w-4/5 h-2/3 bg-cover bg-center border-2 border-white rounded-lg z-50"
       style={{ backgroundImage: `url(${props.image})` }}
     >
       {

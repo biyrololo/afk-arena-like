@@ -10,6 +10,7 @@ import bg from '@/assets/backgrounds/characters.webp';
 import { calculateStatsWithEquipment } from "@/shared/types/develop";
 import { AnimatePresence, motion } from "framer-motion";
 import { Music } from "./Music";
+import { ArrowLeft } from "lucide-react";
 
 const PER_PAGE = 4 * 4;
 
@@ -69,9 +70,9 @@ export function MyCharacters() {
                         tabIndex={-1}
                         className="
                             absolute left-4
-                            px-6 py-3
+                            px-6 py-6
                             bg-gradient-to-r from-amber-700 to-amber-900
-                            text-white text-2xl font-bold
+                            text-white text-4xl font-bold
                             rounded-xl
                             border-2 border-amber-500
                             shadow-lg
@@ -83,7 +84,7 @@ export function MyCharacters() {
                         "
                         onClick={handleBack}
                     >
-                        <span className="text-3xl">←</span>
+                        <ArrowLeft strokeWidth={3} width={30} height={30} />
                         Назад
                     </button>
                     <div className="w-[1000px] mx-auto mt-24 flex flex-col gap-12 items-center">

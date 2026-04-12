@@ -3,6 +3,7 @@ import { usePlayerStore } from "@/entities/player/model/player.store";
 import { useShallow } from "zustand/shallow";
 import { Icon } from "@/shared/ui/Icon/Icon";
 import type { PlayerBalances } from "@/entities/player/model/player.model";
+import { useNavigate } from "react-router-dom";
 
 
 export const Actions: FC<{
@@ -10,6 +11,7 @@ export const Actions: FC<{
     valute: keyof PlayerBalances;
     bannerId: string;
 }> = ({ summon, bannerId, valute }) => {
+    const navigate = useNavigate();
     const balances = usePlayerStore(useShallow(state => state.balances))
 
     const summons = balances[valute];
@@ -22,7 +24,17 @@ export const Actions: FC<{
         >
             <button
                 tabIndex={-1}
-                className="bg-blue-500 flex items-center gap-4 hover:bg-blue-700 text-white font-bold text-2xl py-4 px-8 rounded disabled:opacity-50"
+                className="bg-green-500 cursor-pointer flex items-center gap-4 hover:bg-green-700 text-white font-bold text-3xl py-4 px-8 rounded disabled:opacity-50"
+                onClick={() => {
+                    navigate('/shop?from=/summon')
+                }}
+            >
+                Получить
+                <Icon icon={valute} />
+            </button>
+            <button
+                tabIndex={-1}
+                className="bg-blue-500 cursor-pointer flex items-center gap-4 hover:bg-blue-700 text-white font-bold text-2xl py-4 px-8 rounded disabled:opacity-50 disabled:cursor-not-allowed"
                 disabled={summons < 1}
                 onClick={() => summon(1)}
             >
@@ -31,7 +43,7 @@ export const Actions: FC<{
             </button>
             <button
                 tabIndex={-1}
-                className="bg-blue-500 flex items-center gap-4 hover:bg-blue-700 text-white font-bold text-2xl py-4 px-8 rounded disabled:opacity-50"
+                className="bg-blue-500 cursor-pointer flex items-center gap-4 hover:bg-blue-700 text-white font-bold text-2xl py-4 px-8 rounded disabled:opacity-50 disabled:cursor-not-allowed"
                 disabled={summons < manyCost}
                 onClick={() => summon(10)}
             >

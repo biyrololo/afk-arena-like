@@ -14,6 +14,7 @@ import firewarrior from '@/assets/characters/firewarrior.png';
 import demonSlime from "@/assets/characters/demonSlime.png";
 import elementalWind from "@/assets/characters/elementalWind.png";
 import groundMonk from "@/assets/characters/groundMonk.png";
+import metalBladekeeper from "@/assets/characters/metalBladekeeper.png";
 import waterPriestess from "@/assets/characters/waterPriestess.png";
 import blueSlime from "@/assets/characters/blueSlime.png";
 import greenSlime from "@/assets/characters/greenSlime.png";
@@ -29,6 +30,8 @@ import heroKnight from '@/assets/characters/heroKnight.png'
 import martialHero from '@/assets/characters/martialHero.png'
 import oldGolem from '@/assets/characters/oldGolem.png'
 import oldGuardian from '@/assets/characters/oldGuardian.png'
+import womanWarrior from '@/assets/characters/womanWarrior.png';
+import treeMan from '@/assets/characters/treeMan.png';
 
 import sky_bg from "@/assets/backgrounds/sky_bg.webp";
 
@@ -79,6 +82,10 @@ export default class CharacterViewScene extends Phaser.Scene {
             frameHeight: 128,
         });
         this.load.spritesheet("groundMonk", groundMonk, {
+            frameWidth: 288,
+            frameHeight: 128,
+        });
+        this.load.spritesheet("metalBladekeeper", metalBladekeeper, {
             frameWidth: 288,
             frameHeight: 128,
         });
@@ -141,6 +148,14 @@ export default class CharacterViewScene extends Phaser.Scene {
         this.load.spritesheet("oldGuardian", oldGuardian, {
             frameWidth: 120,
             frameHeight: 120,
+        });
+        this.load.spritesheet("womanWarrior", womanWarrior, {
+            frameWidth: 142,
+            frameHeight: 141,
+        });
+        this.load.spritesheet("treeMan", treeMan, {
+            frameWidth: 128,
+            frameHeight: 128,
         });
 
         this.load.image('sky_bg', sky_bg);

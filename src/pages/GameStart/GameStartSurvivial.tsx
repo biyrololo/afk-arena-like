@@ -17,6 +17,7 @@ import background from "@/assets/backgrounds/gamestart.webp";
 import { calculateCharacterPower, calculateStatsWithEquipment } from "@/shared/types/develop";
 import { StageTypeEnum } from "@/entities/chapter/lib/chapter.model";
 import { AnimatePresence, motion } from "framer-motion";
+import { ArrowLeft, Swords } from "lucide-react";
 
 const PER_PAGE = 4 * 3;
 
@@ -154,9 +155,9 @@ export default function GameStartSurvivial() {
             tabIndex={-1}
             className="
                           absolute left-4
-                          px-6 py-3
+                          px-6 py-6
                           bg-gradient-to-r from-amber-700 to-amber-900
-                          text-white text-2xl font-bold
+                          text-white text-4xl font-bold
                           rounded-xl
                           border-2 border-amber-500
                           shadow-lg
@@ -168,7 +169,7 @@ export default function GameStartSurvivial() {
                       "
             onClick={handleBack}
           >
-            <span className="text-3xl">←</span>
+            <ArrowLeft strokeWidth={3} width={30} height={30} />
             Назад
           </button>
           <div className="w-[1000px] mx-auto flex flex-col gap-4">
@@ -254,7 +255,7 @@ export default function GameStartSurvivial() {
           </div>
           <div>
             <Button
-              className="absolute top-4 right-4"
+              className="text-4xl absolute top-4 right-4 text-white cursor-pointer flex items-center gap-2 py-8 px-12"
               style={{
                 opacity: isStartDisabled ? 0.5 : 1,
               }}
@@ -262,6 +263,7 @@ export default function GameStartSurvivial() {
               onClick={handleStart}
             >
               Начать
+              <Swords width={50} height={50} />
             </Button>
             <p className="text-white text-3xl absolute top-31 left-4 w-[450px] text-shadow-[0px_0px_4px_rgba(0,0,0,0.5)]">
               В этом режиме вы можете бесконечно проходить этапы с самого первого и получать за это ресурсы! Противники, их сила и награды за каждый этап увеличиваются по мере усиления вашего отряда.

@@ -192,7 +192,7 @@ export const CHAPTER_2_STAGES: IStage[] = [
   },
   {
     chapterNumber: 2, stageNumber: 22, background: "ice_castle_bg",
-    enemies: [cloneCharacter(OLD_GUARDIAN_CHARACTER, 46, deepFrostTint), cloneCharacter(KNIGHT_CHARACTER, 46, deepFrostTint)],
+    enemies: [cloneCharacter(OLD_GUARDIAN_CHARACTER, 42, deepFrostTint), cloneCharacter(KNIGHT_CHARACTER, 42, deepFrostTint)],
     rewards: { balances: { gold: 8200, gems: 0, summons: 0, summonsSpecial: 0 }, equipment: [] }
   },
   {

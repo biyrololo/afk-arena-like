@@ -4,4 +4,6 @@ export interface DailyRewardProps {
     dailyReward: IDailyReward;
     claimed: boolean;
     available: boolean;
+    className?: string;
+    onClick?: () => void;
 }

@@ -66,6 +66,15 @@ export const MyEquipmentPage: FC = () => {
     };
   }, [music.play]);
 
+  useEffect(() => {
+    if (paginatedEquipment.length === 0 && equipment.length > 0) {
+      setParams({
+        ...params,
+        page: "0",
+      });
+    }
+  }, [paginatedEquipment, equipment])
+
   return (
     <ResponsiveUI>
       <div

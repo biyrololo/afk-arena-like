@@ -7,7 +7,7 @@ import { useEffect, type FC } from "react";
 import cn from "classnames";
 import { EquipmentFullCard } from "@/entities/character/ui/EquipmentCard/EquipmentFullCard";
 import { Button } from "@/shared/ui/Button/Button";
-import { EQUIPMENT_UPGRADE_COSTS, isEnoughResources, upgradeEquipment } from "@/shared/types/develop";
+import { calculateEquipmentPower, EQUIPMENT_UPGRADE_COSTS, GEMS_FOR_SELL_BY_RARITY, isEnoughResources, sellEquipment, upgradeEquipment } from "@/shared/types/develop";
 import { usePlayerStore } from "@/entities/player/model/player.store";
 import { useShallow } from "zustand/shallow";
 import { Icon } from "@/shared/ui/Icon/Icon";
@@ -18,6 +18,7 @@ import { MUSIC } from "@/assets/music/music";
 import { useSoundEffects } from "@/shared/hooks/useSoundEffects";
 import { SOUNDS } from "@/assets/sound/sounds";
 import tavern from "@/assets/backgrounds/tavern.webp";
+import type { PlayerBalances } from "@/entities/player/model/player.model";
 
 export const MyEquipmentItemPage: FC = () => {
     const sounds = useSoundEffects(SOUNDS);
@@ -58,6 +59,22 @@ export const MyEquipmentItemPage: FC = () => {
         sounds.playSound("weapon_upgrade", 0.5);
         upgradeEquipment(currentEquipment!.id);
     };
+
+    const handleSellClick = () => {
+        const id = currentEquipment!.id;
+        setTimeout(() => {
+            sellEquipment(id);
+        })
+        sounds.playSound("weapon_upgrade", 0.5);
+        navitate('/my-equipment');
+    }
+
+    const sellPrice: PlayerBalances = {
+        gems: GEMS_FOR_SELL_BY_RARITY[currentEquipment.rarity],
+        gold: Math.floor(calculateEquipmentPower(currentEquipment) * 3 * (100 + GEMS_FOR_SELL_BY_RARITY[currentEquipment.rarity]) / 100),
+        summons: 0,
+        summonsSpecial: 0
+    }
 
     return (
         <ResponsiveUI>
@@ -125,10 +142,25 @@ export const MyEquipmentItemPage: FC = () => {
                                     )
                                 }
                                 <EquipmentFullCard className="w-full" equipment={currentEquipment} withStats isWithUpgradeStats={canUpgrade} />
-                                <div className="flex gap-4 justify-end w-full">
+                                <div className="flex gap-4 justify-between w-full">
+                                    <Button
+                                        className="bg-red-700 hover:bg-red-600! text-xl px-6 py-3"
+                                        onClick={handleSellClick}
+                                    >
+                                        ПРОДАТЬ
+                                        {
+                                            Object.entries(sellPrice).filter(([_, amount]) => amount > 0)
+                                                .map(([resource, amount]) => (
+                                                    <div key={resource} className="flex items-center gap-2">
+                                                        {amount}
+                                                        <Icon icon={resource as any} />
+                                                    </div>
+                                                ))
+                                        }
+                                    </Button>
                                     <Button
                                         onClick={() => handleUpgradeClick()}
-                                        className="bg-purple-700 hover:bg-purple-600 text-xl px-6 py-3"
+                                        className="bg-purple-700 hover:bg-purple-600! text-xl px-6 py-3"
                                         disabled={!canUpgrade || !currentEquipment}
                                     >
                                         {

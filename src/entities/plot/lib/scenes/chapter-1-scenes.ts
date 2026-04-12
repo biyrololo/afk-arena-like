@@ -186,7 +186,7 @@ export const CHAPTER_1_SCENES: IPlotScene[] = [
         if (c.progression.ascension < 5) {
           c.progression.ascension += 1;
         } else {
-          usePlayerStore.getState().addBalance('gems', 20)
+          usePlayerStore.getState().addBalance('gems', 500)
         }
       } else {
         usePlayerCharactersStore.getState().addCharacter(cloneCharacter(CHARACTERS.WARRIOR_CHARACTER));

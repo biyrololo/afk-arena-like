@@ -6,6 +6,7 @@ import { getRarityColor } from "@/entities/character/lib/getRarityColor";
 
 import styles from "./ShopItem.module.css";
 import { useAnimation, motion } from "framer-motion";
+import { Play } from "lucide-react";
 
 interface Props {
     item: IShopItem;
@@ -36,6 +37,7 @@ export const ShopItem: FC<Props> = ({
 
     };
 
+    const opacity = affordable ? 1 : 0.5;
 
     return (
         <div
@@ -47,14 +49,19 @@ export const ShopItem: FC<Props> = ({
             backdrop-blur-2xl
             flex flex-col
             ${styles["shop-item"]}
-            ${affordable ? "hover:border-yellow-400" : "opacity-70"}
+            ${affordable ? "hover:border-yellow-400" : ""}
         `}
-            style={{
+            style={(affordable ? {
                 '--border-color': getRarityColor(item.rarity),
                 '--border-color-hover': `${getRarityColor(item.rarity)}AA`,
                 '--background-color': `${getRarityColor(item.rarity)}22`,
                 '--background-color-hover': `${getRarityColor(item.rarity)}44`,
-            } as CSSProperties}
+            } : {
+                '--border-color': 'transparent',
+                '--border-color-hover': 'transparent',
+                '--background-color': 'transparent',
+                '--background-color-hover': 'transparent',
+            }) as CSSProperties}
         >
             <motion.div
                 animate={controls}
@@ -62,12 +69,17 @@ export const ShopItem: FC<Props> = ({
                     `my-4 w-full grow flex items-center justify-center
                 ${isAlreadyBought ? 'opacity-50' : ''}
                 `
-                }>
+                }
+                style={{
+                    opacity
+                }}
+            >
                 {item.item}
             </motion.div>
             <div className="flex justify-between items-center mt-4 pt-4 border-t-2"
                 style={{
                     borderColor: getRarityColor(item.rarity),
+                    opacity
                 }}
             >
                 {
@@ -83,6 +95,7 @@ export const ShopItem: FC<Props> = ({
                                 w-full
                                 text-center
                                 justify-center
+                                items-center
                                 ${affordable ?
                                     bought || isAlreadyBought ? "bg-gradient-to-r from-orange-500 to-orange-700 hover:from-orange-600 hover:to-orange-800" :
                                         "bg-gradient-to-r from-amber-500 to-amber-700 hover:from-amber-600 hover:to-amber-800"
@@ -95,6 +108,7 @@ export const ShopItem: FC<Props> = ({
                             {
                                 bought || isAlreadyBought ? "Не доступно" : "Реклама"
                             }
+                            <Play width={40} height={40} />
                         </Button>
                     ) : (
                         <>

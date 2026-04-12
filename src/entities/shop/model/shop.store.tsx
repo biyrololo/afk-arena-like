@@ -11,6 +11,7 @@ import { HeroMiniCard } from "@/entities/character/ui/HeroMiniCard/HeroMiniCard"
 import { FANTASY_WARRIOR_CHARACTER } from "@/entities/character/lib/allCharacters";
 import { useGameStateStore } from "@/entities/game/model/game-state.store";
 import { SDK } from "@/entities/sdk/model/sdk";
+import { Analytics, GameGoal } from "@/shared/lib/analytics";
 
 export const isEnoughResourcesForShopItem = (price: IShopItem['price'], priceType: IShopItem['priceType'], balances: PlayerBalances) => {
     if (priceType === ShopPriceType.Ad) return true;
@@ -46,6 +47,12 @@ const createEquipmentItem = (
         price,
         priceType,
         onBuy: () => {
+            Analytics.send(GameGoal.ClickedGameBuy, {
+                price,
+                equipment_key: equipment.key,
+                equipment_rarity: equipment.rarity,
+                equipment_slot: equipment.slot
+            })
             usePlayerStore.getState().spend(priceType as keyof PlayerBalances, price);
             usePlayerCharactersStore.getState().addEquipment(
                 createEquipment(equipment)
@@ -77,6 +84,7 @@ const createBalanceItem = (
         priceType: priceType,
         onBuy: () => {
             if (priceType === ShopPriceType.Ad) {
+                Analytics.send(GameGoal.OpenRewardedAd);
                 useGameStateStore.getState().setPaused(true);
                 useGameStateStore.getState().setIsCurrentScreenPaused(true);
                 SDK.getInstance()
@@ -94,6 +102,7 @@ const createBalanceItem = (
                         },
                     })
             } else {
+                Analytics.send(GameGoal.ClickedGameBuy, { valueType, price })
                 usePlayerStore.getState().spend(priceType, price);
                 usePlayerStore.getState().addBalance(valueType, value);
             }
@@ -113,6 +122,12 @@ const createCharacterItem = (
         price: price,
         priceType: priceType,
         onBuy: () => {
+            Analytics.send(GameGoal.ClickedGameBuy, {
+                price,
+                character_key: character.key,
+                character_rarity: character.rarity,
+                character_name: character.name
+            })
             usePlayerStore.getState().spend(priceType as keyof PlayerBalances, price);
             usePlayerCharactersStore.getState().addCharacter(structuredClone(character));
         },
@@ -154,12 +169,12 @@ const getRandomItems = () => {
 }
 
 export const getShopItems = (): IShopItem[] => [
-    createBalanceItem(1, 'summonsSpecial', 200, ShopPriceType.Gems, Character.Rarity.EPIC),
-    createBalanceItem(30, 'gems', 0, ShopPriceType.Ad, Character.Rarity.LEGENDARY),
-    createBalanceItem(1, 'summons', 200, ShopPriceType.Gems, Character.Rarity.EPIC),
+    createBalanceItem(50, 'gems', 0, ShopPriceType.Ad, Character.Rarity.LEGENDARY),
+    createBalanceItem(1, 'summonsSpecial', 120, ShopPriceType.Gems, Character.Rarity.EPIC),
+    createBalanceItem(1, 'summons', 120, ShopPriceType.Gems, Character.Rarity.EPIC),
     createBalanceItem(10000, 'gold', 200, ShopPriceType.Gems, Character.Rarity.RARE),
     createBalanceItem(100_000, 'gold', 1000, ShopPriceType.Gems, Character.Rarity.LEGENDARY),
     ...getRandomItems(),
-    createBalanceItem(10, 'summonsSpecial', 200 * 9, ShopPriceType.Gems, Character.Rarity.EPIC),
-    createBalanceItem(10, 'summons', 200 * 9, ShopPriceType.Gems, Character.Rarity.EPIC),
+    createBalanceItem(10, 'summonsSpecial', 120 * 9, ShopPriceType.Gems, Character.Rarity.EPIC),
+    createBalanceItem(10, 'summons', 120 * 9, ShopPriceType.Gems, Character.Rarity.EPIC),
 ]

@@ -21,11 +21,11 @@ export const Balances: FC = () => {
 
     return (
         <section className="absolute top-4 right-4 flex gap-20 grid-cols-3 bg-amber-800 p-4 rounded-lg z-50">
-            <span className="text-white text-2xl font-bold flex items-center gap-2 min-w-[200px] justify-between">
+            <span className="text-white text-2xl font-bold flex items-center gap-2 min-w-[200px] justify-between tabular-nums">
                 <div onClick={goToShop} className="text-white text-4xl font-bold bg-amber-400 aspect-square size-10 rounded-md flex items-center justify-center cursor-pointer">+</div>
                 {animatedGold} <Icon icon="gold" />
             </span>
-            <span className="text-white text-2xl font-bold flex items-center gap-2 min-w-[200px] justify-between">
+            <span className="text-white text-2xl font-bold flex items-center gap-2 min-w-[200px] justify-between tabular-nums">
                 <div onClick={goToShop} className="text-white text-4xl font-bold bg-amber-400 aspect-square size-10 rounded-md flex items-center justify-center cursor-pointer">+</div>
                 {animatedGems} <Icon icon="gems" />
             </span>

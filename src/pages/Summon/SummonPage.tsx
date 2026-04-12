@@ -16,6 +16,10 @@ import { SOUNDS } from "@/assets/sound/sounds";
 import { SummonBalances } from "@/widgets/Balances/SummonBalances";
 import { Button } from "@/shared/ui/Button/Button";
 import { ContentModal } from "./ui/ContentModal/ContentModal";
+import { Analytics, GameGoal } from "@/shared/lib/analytics";
+import { ArrowLeft, Book, ChevronLeft, ChevronRight } from "lucide-react";
+import { BannersRow } from "./ui/BannersRow/BannersRow";
+import { SummonResultsGrid } from "./ui/SummonResultsGrid/SummonResultsGrid";
 
 export const SummonPage: FC = () => {
   const sounds = useSoundEffects(SOUNDS);
@@ -27,16 +31,31 @@ export const SummonPage: FC = () => {
   const [currentBanner, setCurrentBanner] = useState(0);
 
   const handleBack = () => {
-    navigate(-1);
+    navigate('/');
   };
 
   const [summonResult, setSummonResult] = useState<
     DropItem[] | null
   >(null);
 
+  const [allSummonResults, setAllSummonResults] = useState<DropItem[] | null>(null);
+
   const handleSummon = (amount: 1 | 10) => {
+    const FEATURED_ROTATION_START = new Date("2025-01-01").getTime();
+    const WEEK = 7 * 24 * 60 * 60 * 1000;
+    const now = Date.now();
+    const weekIndex = Math.floor((now - FEATURED_ROTATION_START) / WEEK);
+    Analytics.send(GameGoal.FirstGachaSpin, {
+      amount,
+      bannerId: AllBanners[currentBanner].id,
+      curentBannerRotation: weekIndex
+    });
     sounds.playSound('sci_fi_confirm', 0.6)
-    setSummonResult(summon(amount, AllBanners[currentBanner].id));
+    const result = summon(amount, AllBanners[currentBanner].id);
+    Analytics.send(GameGoal.GachaResultRarity, { result_rarities: JSON.stringify(result.map((item) => item.item.rarity)) });
+    setSummonResult(result);
+    if (amount > 1)
+      setAllSummonResults(result);
   };
 
   const nextSummon = () => {
@@ -65,16 +84,39 @@ export const SummonPage: FC = () => {
           backgroundPosition: "center",
         }}
       >
-        {summonResult ? (
+        {(summonResult || allSummonResults) ? (
           <>
-            <SummonResult result={summonResult[0]} />
+            {
+              summonResult ?
+                <SummonResult result={summonResult[0]} /> :
+                <SummonResultsGrid results={allSummonResults!} />
+            }
             <button
               tabIndex={-1}
-              className="absolute bottom-10 right-10 text-white text-6xl font-bold py-8 px-10 rounded bg-black/60 hover:bg-black/80 cursor-pointer"
-              onClick={nextSummon}
+              className="absolute bottom-10 right-10 text-white text-6xl font-bold py-8 px-10 rounded bg-purple-800/60 hover:bg-purple-800/80 cursor-pointer z-50"
+              onClick={() => {
+                if (summonResult) {
+                  nextSummon();
+                } else {
+                  setAllSummonResults(null);
+                }
+              }}
             >
               Дальше
             </button>
+            {
+              allSummonResults && summonResult && (
+                <button
+                  tabIndex={-1}
+                  className="absolute bottom-10 right-110 text-white text-6xl font-bold py-8 px-10 rounded bg-purple-800/60 hover:bg-purple-800/80 cursor-pointer z-50"
+                  onClick={() => {
+                    setSummonResult(null);
+                  }}
+                >
+                  Пропустить
+                </button>
+              )
+            }
           </>
         ) : (
           <>
@@ -82,7 +124,7 @@ export const SummonPage: FC = () => {
               tabIndex={-1}
               className="
                                   absolute left-4 top-4
-                                  px-6 py-3
+                                  px-5 py-6
                                   bg-gradient-to-r from-amber-700 to-amber-900
                                   text-white text-2xl font-bold
                                   rounded-xl
@@ -96,12 +138,12 @@ export const SummonPage: FC = () => {
                               "
               onClick={handleBack}
             >
-              <span className="text-3xl">←</span>
+              <ArrowLeft strokeWidth={3} width={30} height={30} />
               Назад
             </button>
             <button
               tabIndex={-1}
-              className="absolute top-1/2 left-10 text-white font-bold text-5xl bg-black/60 hover:bg-black/80 cursor-pointer py-10 px-10 rounded"
+              className="absolute top-1/2 left-10 text-white font-bold text-5xl bg-black/60 hover:bg-stone-400/60 duration-100 cursor-pointer py-10 px-5 rounded-2xl border-2 border-white/50"
               onClick={() =>
                 setCurrentBanner(
                   (prevBanner) =>
@@ -109,19 +151,24 @@ export const SummonPage: FC = () => {
                 )
               }
             >
-              {"<"}
+              <ChevronLeft className="text-white" width={80} height={80} />
             </button>
             <button
               tabIndex={-1}
-              className="absolute top-1/2 right-10 text-white font-bold text-5xl bg-black/60 hover:bg-black/80 cursor-pointer py-10 px-10 rounded"
+              className="absolute top-1/2 right-10 text-white font-bold text-5xl bg-black/60 hover:bg-stone-400/60 duration-100 cursor-pointer py-10 px-5 rounded-2xl border-2 border-white/50"
               onClick={() =>
                 setCurrentBanner(
                   (prevBanner) => (prevBanner + 1) % AllBanners.length,
                 )
               }
             >
-              {">"}
+              <ChevronRight className="text-white" width={80} height={80} />
             </button>
+            <BannersRow
+              banners={AllBanners}
+              activeBanner={AllBanners[currentBanner].id}
+              onBannerClick={b => setCurrentBanner(AllBanners.findIndex(i => i.id === b))}
+            />
             <AnimatePresence>
               <SummonBanner
                 {...AllBanners[currentBanner]}
@@ -129,7 +176,8 @@ export const SummonPage: FC = () => {
               />
             </AnimatePresence>
             <SummonBalances />
-            <Button onClick={() => setIsContentModalOpened(true)} className="absolute bottom-10 py-6 bg-red-500 hover:not-disabled:bg-red-700 text-white font-bold text-2xl rounded left-60">
+            <Button onClick={() => setIsContentModalOpened(true)} className="absolute bottom-10 py-6 bg-red-500 hover:not-disabled:bg-red-700 text-white font-bold text-2xl rounded left-60 flex gap-2 items-center">
+              <Book />
               Содержимое
             </Button>
             <Actions summon={handleSummon} valute={AllBanners[currentBanner]?.valute} bannerId={AllBanners[currentBanner]?.id} />

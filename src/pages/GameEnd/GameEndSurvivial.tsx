@@ -5,11 +5,15 @@ import { EquipmentCard } from "@/entities/character/ui/EquipmentCard/EquipmentCa
 import { useGameStateStore } from "@/entities/game/model/game-state.store";
 import { usePlayerStatsStore } from "@/entities/player/model/player-stats.store";
 import { usePlayerStore } from "@/entities/player/model/player.store";
+import { SDK } from "@/entities/sdk/model/sdk";
 import { useSoundEffects } from "@/shared/hooks/useSoundEffects";
 import usePlayerCharactersStore from "@/shared/store/PlayerCharactersStore";
 import type { PlayerCharacter, PlayerCharacterState, PlayerCharacterWithState } from "@/shared/types/PlayerCharacter";
+import { Button } from "@/shared/ui/Button/Button";
 import { Icon } from "@/shared/ui/Icon/Icon";
 import { ResponsiveUI } from "@/shared/ui/ResponsiveUI/ResponsiveUI";
+import classNames from "classnames";
+import { Play } from "lucide-react";
 import { useEffect, useState, type FC } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useShallow } from "zustand/shallow";
@@ -39,6 +43,8 @@ export const GameEndSurvivial: FC = () => {
   const navigate = useNavigate();
 
   const [reward, setReward] = useState<IStageReward | undefined>(undefined);
+  const [increased, setIncreased] = useState(false);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
 
   useEffect(() => {
     console.log("state", state);
@@ -67,6 +73,51 @@ export const GameEndSurvivial: FC = () => {
 
     usePlayerStatsStore.getState().updateMaxSurvivialDepth(1, stage);
   }, [state, setReward, setEquipment]);
+
+
+  const addBalancesRewards = () => {
+    if (!state) return;
+    if (!state.stage) return;
+    if (!state.win) return;
+    const { stage } = state;
+
+    const curStage = getSurvivalChapters().find((c) => c.stageNumber === stage);;
+
+    setBalances({
+      gold: balances.gold + (curStage?.rewards?.balances.gold || 0),
+      gems: balances.gems + (curStage?.rewards?.balances.gems || 0),
+      summons: balances.summons + (curStage?.rewards?.balances.summons || 0),
+      summonsSpecial: balances.summonsSpecial + (curStage?.rewards?.balances.summonsSpecial || 0),
+    })
+  }
+
+  const handleIncreaseRewards = async () => {
+    setIsVideoPlaying(true);
+    useGameStateStore.getState().setPaused(true);
+    useGameStateStore.getState().setIsCurrentScreenPaused(true);
+    SDK.getInstance()
+      .showRewardedVideo({
+        onClose: () => {
+          useGameStateStore.getState().setPaused(false);
+          useGameStateStore.getState().setIsCurrentScreenPaused(false);
+          SDK.getInstance().gameStart();
+          setIsVideoPlaying(false);
+        },
+        onRewarded: () => {
+          addBalancesRewards();
+          setIncreased(true);
+          useGameStateStore.getState().setPaused(false);
+          useGameStateStore.getState().setIsCurrentScreenPaused(false);
+          SDK.getInstance().gameStart();
+        },
+        onError: () => {
+          useGameStateStore.getState().setPaused(false);
+          useGameStateStore.getState().setIsCurrentScreenPaused(false);
+          SDK.getInstance().gameStart();
+          setIsVideoPlaying(false);
+        },
+      })
+  }
 
   const nextStage = state.stage
     ? getSurvivalChapters().find((c) => c.stageNumber === state.stage + 1)
@@ -113,6 +164,8 @@ export const GameEndSurvivial: FC = () => {
     useGameStateStore.getState().setAdAvailable(true);
   };
 
+  const multiplier = increased ? 2 : 1
+
   if (state.win) {
     return (
       <ResponsiveUI>
@@ -152,22 +205,68 @@ export const GameEndSurvivial: FC = () => {
             <p className="text-3xl text-green-300 mb-6 text-center max-w-2xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)]">
               Награды:
             </p>
-            <div className="flex flex-col gap-4 items-end">
-              {Boolean(reward?.balances.gold) && (
-                <div className="flex items-center gap-2 text-white text-3xl">
-                  {reward?.balances.gold} <Icon icon="gold" />
-                </div>
-              )}
-              {Boolean(reward?.balances.gems) && (
-                <div className="flex items-center gap-2 text-white text-3xl">
-                  {reward?.balances.gems} <Icon icon="gems" />
-                </div>
-              )}
-              {Boolean(reward?.balances.summons) && (
-                <div className="flex items-center gap-2 text-white text-3xl">
-                  {reward?.balances.summons} <Icon icon="summons" />
-                </div>
-              )}
+            <div className="flex items-center gap-4 z-50 justify-center w-full">
+              <div className={
+                classNames(
+                  "flex flex-col gap-4 items-end",
+                  increased ? '' : 'flex-1/2'
+                )
+              }>
+                {
+                  Boolean(reward?.balances.gold) && (
+                    <div className={classNames(
+                      "flex items-center gap-2  text-4xl",
+                      increased ? 'text-green-500' : 'text-white'
+                    )}>
+                      {reward?.balances.gold! * multiplier} <Icon icon="gold" size={60} />
+                    </div>
+                  )
+                }
+                {
+                  Boolean(reward?.balances.gems) && (
+                    <div className={classNames(
+                      "flex items-center gap-2  text-4xl",
+                      increased ? 'text-green-500' : 'text-white'
+                    )}>
+                      {reward?.balances.gems! * multiplier} <Icon icon="gems" size={60} />
+                    </div>
+                  )
+                }
+                {
+                  Boolean(reward?.balances.summons) && (
+                    <div className={classNames(
+                      "flex items-center gap-2  text-4xl",
+                      increased ? 'text-green-500' : 'text-white'
+                    )}>
+                      {reward?.balances.summons! * multiplier} <Icon icon="summons" size={60} />
+                    </div>
+                  )
+                }
+                {
+                  Boolean(reward?.balances.summonsSpecial) && (
+                    <div className={classNames(
+                      "flex items-center gap-2 text-4xl",
+                      increased ? 'text-green-500' : 'text-white'
+                    )}>
+                      {reward?.balances.summonsSpecial! * multiplier} <Icon icon="summonsSpecial" size={60} />
+                    </div>
+                  )
+                }
+              </div>
+              {
+                !increased && (
+                  <div className="flex-1/2">
+                    <Button
+                      className="rounded-xl"
+                      disabled={isVideoPlaying}
+                      onClick={handleIncreaseRewards}
+                    >
+                      Удвоить за рекламу
+                      <Play width={40} height={40} />
+                    </Button>
+                  </div>
+                )
+              }
             </div>
             {reward?.equipment && (
               <div className="flex justify-center gap-4 mt-6">
@@ -177,14 +276,6 @@ export const GameEndSurvivial: FC = () => {
               </div>
             )}
 
-            <div
-              className="px-12 mt-6 py-6 bg-gradient-to-r from-green-600 to-emerald-700 text-white text-4xl font-bold rounded-2xl cursor-pointer transform transition-all duration-300 hover:scale-110 hover:from-green-500 hover:to-emerald-600 active:scale-95 border-4 border-green-400 shadow-2xl hover:shadow-green-500/50"
-              onClick={goToMenu}
-            >
-              <span className="drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">
-                В МЕНЮ
-              </span>
-            </div>
             {Boolean(nextStage) && (
               <div
                 className="px-12 mt-6 py-6 bg-gradient-to-r from-green-600 to-emerald-700 text-white text-4xl font-bold rounded-2xl cursor-pointer transform transition-all duration-300 hover:scale-110 hover:from-green-500 hover:to-emerald-600 active:scale-95 border-4 border-green-400 shadow-2xl hover:shadow-green-500/50"
@@ -195,6 +286,14 @@ export const GameEndSurvivial: FC = () => {
                 </span>
               </div>
             )}
+            <div
+              className="px-12 mt-6 py-6 bg-gradient-to-r from-red-600 to-red-700 text-white text-4xl font-bold rounded-2xl cursor-pointer transform transition-all duration-300 hover:scale-110 hover:from-red-500 hover:to-red-600 active:scale-95 border-4 border-red-400 shadow-2xl hover:shadow-red-500/50"
+              onClick={goToMenu}
+            >
+              <span className="drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">
+                В МЕНЮ
+              </span>
+            </div>
           </div>
         </div>
       </ResponsiveUI>

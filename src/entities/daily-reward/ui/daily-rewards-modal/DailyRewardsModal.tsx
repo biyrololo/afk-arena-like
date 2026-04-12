@@ -4,6 +4,9 @@ import { useShallow } from "zustand/shallow";
 import { Modal } from "@/shared/ui/Modal";
 import { DailyReward } from "../DailyReward";
 import { Button } from "@/shared/ui/Button/Button";
+import cn from 'classnames'
+import { Gift } from "lucide-react";
+import bg from '@/assets/backgrounds/daily-rewards.webp';
 
 export const DailyRewardsModal: FC = () => {
     const [isOpenedModal, setIsOpenedModal, currentDay, lastClaimedAt, claimToday] = useDailyRewardsStore(
@@ -32,7 +35,10 @@ export const DailyRewardsModal: FC = () => {
 
     const handleClaim = () => {
         const curReward = rewards.find(r => r.day === currentDay);
-        if (!curReward || !isAvailable(curReward.day)) return;
+        if (!curReward || !isAvailable(curReward.day)) {
+            setIsOpenedModal(false);
+            return;
+        };
         curReward.onClaim();
         claimToday();
         setIsOpenedModal(false);
@@ -44,33 +50,47 @@ export const DailyRewardsModal: FC = () => {
             close={() => setIsOpenedModal(false)}
             title="Ежедневные награды"
             classNames={{
-                title: 'text-4xl',
-                container: 'px-8 gap-12 pb-8'
+                title: 'text-7xl drop-shadow-[0px_0px_3px_black] text-left',
+                container: 'px-16 gap-12 pb-8 pt-10'
             }}
-            maxWidth="95%"
+            maxWidth="98%"
             style={{
-                backgroundColor: '#10141f'
+                overflow: 'hidden',
+                position: 'relative',
+                backgroundColor: '#10141f',
+                backgroundImage: `url(${bg})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'right',
             }}
         >
-            <section
-                className="grid grid-cols-7 gap-8 w-full"
-            >
-                {
-                    rewards.map(reward => (
-                        <DailyReward
-                            key={reward.day}
-                            dailyReward={reward}
-                            available={isAvailable(reward.day)}
-                            claimed={claimed(reward.day)}
-                        />
-                    ))
-                }
-            </section>
+            <div className="grid grid-cols-6 w-full">
+                <section
+                    className="grid grid-cols-4 gap-8 col-start-1 col-end-5"
+                >
+                    {
+                        rewards.map(reward => (
+                            <DailyReward
+                                key={reward.day}
+                                dailyReward={reward}
+                                available={isAvailable(reward.day)}
+                                claimed={claimed(reward.day)}
+                                onClick={isAvailable(reward.day) ? handleClaim : undefined}
+                                className={reward.day % 7 === 0 ? 'col-start-3 col-end-5' : ''}
+                            />
+                        ))
+                    }
+                </section>
+                <div className=""></div>
+            </div>
             <Button
-                className="w-full justify-center mt-10 transition-all !bg-amber-600 hover:not-disabled:!bg-amber-500 text-4xl"
+                className={cn(
+                    "w-full justify-center mt-10 transition-all !bg-amber-600 hover:not-disabled:!bg-amber-500 text-4xl flex items-center gap-2",
+                    "p-10 text-7xl shadow-2xl shadow-black rounded-xl"
+                )}
                 onClick={handleClaim}
             >
                 Получить награду
+                <Gift width={60} height={60} />
             </Button>
         </Modal>
     )

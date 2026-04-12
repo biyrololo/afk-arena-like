@@ -23,7 +23,8 @@ export function applyAttackDamage(
   height: number,
   damage: number,
   damageType: CharacterNS.DamageType,
-  targetsCount = 5
+  targetsCount: number = 5,
+  impulse: number = 0,
 ) {
   if (attacker.getHP() <= 0) return;
   const dir = attacker.getDirection() ? 1 : -1;
@@ -116,10 +117,16 @@ export function applyAttackDamage(
       damageType,
       attacker.getFaction(),
     );
+
+    if (impulse > 0 && enemy.isAlive() && enemy.getRole() !== CharacterNS.Role.TANK) {
+      // Определяем направление (от атакующего к врагу)
+      const pushDir = enemy.x > attacker.x ? 1 : -1;
+      enemy.applyImpulse(pushDir * impulse, 200); // 200ms на перемещение
+    }
   });
 
   if (hit && !(attacker.characterState === "special")) {
-    attacker.gainEnergy(stats.energyRegen);
+    attacker.gainEnergy(stats.energyRegen * 100);
   }
 }
 
@@ -854,6 +861,71 @@ export default class Character extends Phaser.GameObjects.Container {
     if (this.currentHP <= 0) {
       this.die();
     }
+  }
+
+  /**
+ * Отталкивает персонажа на заданное расстояние с учетом границ экрана
+ * @param distance Дистанция в пикселях (положительная — вправо, отрицательная — влево)
+ * @param duration Длительность перемещения в мс
+ */
+  public applyImpulse(distance: number, duration: number = 200): void {
+    if (this.isDead) return;
+
+    // if (this.movingTarget) {
+    //   this.stopMoving();
+    // }
+
+    // Получаем текущий хитбокс для расчетов
+    const hb = this.getHitbox();
+
+    // Определяем границы экрана
+    const screenMinX = 0;
+    const screenMaxX = 1920;
+    // (Для Y границ, если добавите вертикальное отталкивание)
+    const screenMinY = 0;
+    const screenMaxY = 1080;
+
+    // Рассчитываем целевую позицию X (с учетом того, что x персонажа — это центр или точка привязки)
+    let targetX = this.x + distance;
+
+    /**
+     * Логика ограничения по хитбоксу:
+     * Нам нужно, чтобы (левый край хитбокса + смещение) был >= 0
+     * и (правый край хитбокса + смещение) был <= 1920
+     */
+    const hbLeftRelative = hb.x - this.x;
+    const hbRightRelative = (hb.x + hb.width) - this.x;
+
+    // Проверка левой границы
+    if (targetX + hbLeftRelative < screenMinX) {
+      targetX = screenMinX - hbLeftRelative;
+    }
+
+    // Проверка правой границы
+    if (targetX + hbRightRelative > screenMaxX) {
+      targetX = screenMaxX - hbRightRelative;
+    }
+
+    // Аналогично для Y (если в будущем импульс будет по двум осям)
+    let targetY = this.y;
+    const hbTopRelative = hb.y - this.y;
+    const hbBottomRelative = (hb.y + hb.height) - this.y;
+
+    if (targetY + hbTopRelative < screenMinY) {
+      targetY = screenMinY - hbTopRelative;
+    }
+    if (targetY + hbBottomRelative > screenMaxY) {
+      targetY = screenMaxY - hbBottomRelative;
+    }
+
+    // Запускаем анимацию к безопасной точке
+    this.scene.tweens.add({
+      targets: this,
+      x: targetX,
+      y: targetY,
+      duration: duration,
+      ease: 'Cubic.easeOut'
+    });
   }
 
   /**

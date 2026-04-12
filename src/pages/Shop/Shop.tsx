@@ -22,26 +22,42 @@ import { SDK } from "@/entities/sdk/model/sdk";
 import { ProductShopItem } from "@/entities/shop/ui/ShopItem/ProductShopItem";
 import { consumePurchase } from "@/entities/sdk/model/sdkConsumePurchases";
 import { useGameStateStore } from "@/entities/game/model/game-state.store";
+import { Analytics, GameGoal } from "@/shared/lib/analytics";
+import { usePlayerStatsStore } from "@/entities/player/model/player-stats.store";
 
-const PER_PAGE = 6;
+const PER_PAGE = 8;
 
 export default function ShopPage() {
   const sounds = useSoundEffects(SOUNDS);
   const [products, setProducts] = useState<SDKProduct[]>([]);
+  const boughtProducts = usePlayerStatsStore(state => state.boughtProducts);
 
   useEffect(() => {
+    console.log("Fetching products in Shop.tsx...", boughtProducts);
     SDK
       .getInstance()
       .getCatalog()
       .then((products) => {
+        console.log("Products in Shop.tsx:", products);
         if (products) {
-          setProducts(products);
+          setProducts(products.filter(p => p.id && !boughtProducts.includes(p.id)));
+          console.log("Filtered products in Shop.tsx:", products.filter(p => p.id && !boughtProducts.includes(p.id)));
         }
       })
       .catch((error) => {
         console.error("Error fetching catalog in Shop.tsx:", error);
       });
   }, [])
+
+  useEffect(() => {
+    setProducts(products => products.filter(p => p.id && !boughtProducts.includes(p.id)));
+  }, [boughtProducts])
+
+  const visitPage = usePlayerStatsStore(state => state.visitPage);
+
+  useEffect(() => {
+    visitPage('shop');
+  }, [visitPage])
 
   const music = useBackgroundMusic(MUSIC.menu, { loop: true, volume: 0.2 });
   useEffect(() => {
@@ -63,7 +79,19 @@ export default function ShopPage() {
   const shopItems = getShopItems();
 
   const allShopItems = useMemo(() => {
-    return [...products, ...shopItems];
+    return [...products, ...shopItems].sort((a: SDKProduct | IShopItem, b: SDKProduct | IShopItem) => {
+      if ('item' in a && 'item' in b) {
+        if (a.priceType === ShopPriceType.Ad) return -1;
+        if (b.priceType === ShopPriceType.Ad) return 1;
+      }
+      if ('item' in a) {
+        if (a.priceType === ShopPriceType.Ad) return -1;
+      }
+      if ('item' in b) {
+        if (b.priceType === ShopPriceType.Ad) return 1;
+      }
+      return 0;
+    });
   }, [shopItems, products]);
 
   const paginatedShopItems = useMemo(() => {
@@ -94,7 +122,7 @@ export default function ShopPage() {
 
 
   const handleBack = () => {
-    navigate("/");
+    navigate(params.get('from') || '/');
   };
 
   const handleBuy = (item: IShopItem) => {
@@ -109,6 +137,7 @@ export default function ShopPage() {
       useGameStateStore.getState().setPaused(true);
       useGameStateStore.getState().setIsCurrentScreenPaused(true);
       const res = await SDK.getInstance().purchase(product.id);
+      Analytics.send(GameGoal.ClickedMoneyBuy, { productTitle: product.title });
       if (res) {
         await consumePurchase(res.productID, res.purchaseToken);
       }
@@ -177,7 +206,7 @@ export default function ShopPage() {
           </button>
 
           {/* Header */}
-          <div className="w-full max-w-7xl mx-auto flex flex-col gap-6">
+          <div className="w-full max-w-[90%] mx-auto flex flex-col gap-6">
             <div className="text-center">
               <h1 className="text-6xl mt-20 font-bold text-yellow-300 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] mb-2">
                 МАГАЗИН
@@ -185,7 +214,7 @@ export default function ShopPage() {
             </div>
 
             {/* Items Grid */}
-            <div className="grid grid-cols-3 gap-6 px-4">
+            <div className="grid grid-cols-4 gap-6 px-4">
               {paginatedShopItems.map((item, index) => {
                 if ('imageURI' in item) {
                   return (

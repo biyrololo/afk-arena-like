@@ -15,6 +15,7 @@ import CharacterViewScene from "@/scenes/CharacterViewScene";
 import { useBackgroundMusic } from "@/shared/hooks/useBackgroundMusic";
 import { useSmoothCounter } from "@/shared/hooks/useSmoothCounter";
 import { useSoundEffects } from "@/shared/hooks/useSoundEffects";
+import { Analytics, GameGoal } from "@/shared/lib/analytics";
 import usePlayerCharactersStore from "@/shared/store/PlayerCharactersStore";
 import { Character } from "@/shared/types/character";
 import {
@@ -30,6 +31,7 @@ import { ResponsiveUI } from "@/shared/ui/ResponsiveUI/ResponsiveUI";
 import { EventBus } from "@/utils/eventBus";
 import { Balances } from "@/widgets/Balances/Balances";
 import { ClassesModal } from "@/widgets/ClassesModal/ClassesModal";
+import { ArrowLeft, BatteryCharging, ChevronsUp, CircleGauge, Clover, Crosshair, DiamondPercent, Heart, Shield, Sword, Swords, Zap } from "lucide-react";
 import { useEffect, useMemo, useState, type FC } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useShallow } from "zustand/react/shallow";
@@ -118,9 +120,14 @@ export const MyCharacterPage: FC = () => {
 
   const equipment = getCharacterEquipment(current?.id || "");
 
+  const iconSize = 30;
 
   const handleLevelUp = () => {
     if (!current) return;
+    Analytics.send(GameGoal.FirstHeroUpgrade, {
+      u_character_key: current.key,
+      u_character_level: current.progression.level,
+    });
     sounds.playSound('match_synth_1', 1)
     handlePlayAnimation("special");
     levelUp(current.id);
@@ -270,7 +277,8 @@ export const MyCharacterPage: FC = () => {
                         `}
             >
               <div className="grid grid-cols-2 gap-2 w-full px-2 pt-4 pb-2 border-b-2 border-amber-900">
-                <span className="text-3xl text-white">МОЩЬ</span>
+                <span className="text-3xl text-white flex items-center gap-2">
+                  <Zap width={iconSize} height={iconSize} /> МОЩЬ</span>
                 <span className="text-3xl text-white text-right flex justify-end">
                   {isHover &&
                     totalStats &&
@@ -296,7 +304,10 @@ export const MyCharacterPage: FC = () => {
                 </span>
               </div>
               <div className="grid grid-cols-2 gap-2 w-full px-2 pt-4 pb-2 border-b-2 border-amber-900">
-                <span className="text-3xl text-white">ОЗ</span>
+                <span className="text-3xl text-white flex items-center gap-2">
+                  <Heart width={iconSize} height={iconSize} />
+                  ОЗ
+                </span>
                 <span className="text-3xl text-white text-right flex justify-end">
                   {isHover &&
                     totalNewStats &&
@@ -311,7 +322,9 @@ export const MyCharacterPage: FC = () => {
                 </span>
               </div>
               <div className="grid grid-cols-2 gap-2 w-full px-2 pt-4 pb-2 border-b-2 border-amber-900">
-                <span className="text-3xl text-white">АТК</span>
+                <span className="text-3xl text-white flex items-center gap-2">
+                  <Sword width={iconSize} height={iconSize} />
+                  АТК</span>
                 <span className="text-3xl text-white text-right flex justify-end">
                   {isHover &&
                     totalNewStats &&
@@ -325,7 +338,9 @@ export const MyCharacterPage: FC = () => {
                 </span>
               </div>
               <div className="grid grid-cols-2 gap-2 w-full px-2 pt-4 pb-2 border-b-2 border-amber-900">
-                <span className="text-3xl text-white">Скорость</span>
+                <span className="text-3xl text-white flex items-center gap-2">
+                  <CircleGauge width={iconSize} height={iconSize} />
+                  Скорость</span>
                 <span className="text-3xl text-white text-right flex justify-end">
                   {isHover &&
                     totalNewStats &&
@@ -339,7 +354,9 @@ export const MyCharacterPage: FC = () => {
                 </span>
               </div>
               <div className="grid grid-cols-2 gap-2 w-full px-2 pt-4 pb-2">
-                <span className="text-3xl text-white">Защита</span>
+                <span className="text-3xl text-white flex items-center gap-2">
+                  <Shield width={iconSize} height={iconSize} />
+                  Защита</span>
                 <span className="text-3xl text-white text-right flex justify-end">
                   {isHover &&
                     totalNewStats &&
@@ -368,7 +385,9 @@ export const MyCharacterPage: FC = () => {
                         `}
             >
               <div className="grid grid-cols-2 gap-2 w-full px-2 pt-4 pb-2 border-b-2 border-amber-900">
-                <span className="text-3xl text-white">Крит шанс</span>
+                <span className="text-3xl text-white flex items-center gap-2">
+                  <DiamondPercent width={iconSize} height={iconSize} />
+                  Крит шанс</span>
                 <span className="text-3xl text-white text-right flex justify-end">
                   {isHover &&
                     totalNewStats &&
@@ -389,7 +408,9 @@ export const MyCharacterPage: FC = () => {
                 </span>
               </div>
               <div className="grid grid-cols-2 gap-2 w-full px-2 pt-4 pb-2 border-b-2 border-amber-900">
-                <span className="text-3xl text-white">Крит урон</span>
+                <span className="text-3xl text-white flex items-center gap-2">
+                  <Swords width={iconSize} height={iconSize} />
+                  Крит урон</span>
                 <span className="text-3xl text-white text-right flex justify-end">
                   {isHover &&
                     totalNewStats &&
@@ -410,7 +431,8 @@ export const MyCharacterPage: FC = () => {
                 </span>
               </div>
               <div className="grid grid-cols-2 gap-2 w-full px-2 pt-4 pb-2 border-b-2 border-amber-900">
-                <span className="text-2xl text-white">
+                <span className="text-2xl text-white flex items-center gap-2">
+                  <BatteryCharging width={iconSize} height={iconSize} />
                   Восстановление энергии
                 </span>
                 <span className="text-3xl text-white text-right flex justify-end">
@@ -429,7 +451,9 @@ export const MyCharacterPage: FC = () => {
                 </span>
               </div>
               <div className="grid grid-cols-2 gap-2 w-full px-2 pt-4 pb-2 border-b-2 border-amber-900">
-                <span className="text-3xl text-white">Уклонение</span>
+                <span className="text-3xl text-white flex items-center gap-2">
+                  <Clover width={iconSize} height={iconSize} />
+                  Уклонение</span>
                 <span className="text-3xl text-white text-right flex justify-end">
                   {isHover &&
                     totalNewStats &&
@@ -446,7 +470,9 @@ export const MyCharacterPage: FC = () => {
                 </span>
               </div>
               <div className="grid grid-cols-2 gap-2 w-full px-2 pt-4 pb-2">
-                <span className="text-3xl text-white">Точность</span>
+                <span className="text-3xl text-white flex items-center gap-2">
+                  <Crosshair width={iconSize} height={iconSize} />
+                  Точность</span>
                 <span className="text-3xl text-white text-right flex justify-end">
                   {isHover &&
                     totalNewStats &&
@@ -467,10 +493,10 @@ export const MyCharacterPage: FC = () => {
               </div>
             </div>
             <span
-              className="mt-auto text-2xl text-white p-4 bg-gray-900/80 rounded-xl cursor-pointer"
+              className="mt-auto text-4xl text-white p-4 bg-zinc-900/80 rounded-xl cursor-pointer flex gap-2 justify-center uppercase items-center border-2 border-red-800 hover:bg-zinc-800/80 duration-100"
               onClick={goBack}
             >
-              ← Назад
+              <ArrowLeft strokeWidth={3} width={40} height={40} /> Назад
             </span>
           </div>
           <div className="absolute left-[40%] right-0 bottom-0 h-1/3 bg-gray-900/30 flex flex-col items-center justify-center p-8 gap-2">
@@ -600,7 +626,12 @@ export const MyCharacterPage: FC = () => {
                 </div>
 
                 {/* Button text with glow */}
-                <div className="relative z-10 drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)] tracking-wider flex gap-10">
+                <div className="relative z-10 drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)] tracking-wider flex gap-10 items-center">
+                  {
+                    isHover && (
+                      <ChevronsUp width={50} height={50} />
+                    )
+                  }
                   УЛУЧШИТЬ
                   <div className="flex justify-center gap-8 relative">
                     {Object.entries(resources.balances)
