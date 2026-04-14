@@ -156,13 +156,13 @@ export function generateViking(scene: GameScene, team: 'ally' | 'enemy', props: 
         const enemies = team === 'ally' ? scene.getEnemies() : scene.getAllies();
         switch (attackName) {
             case 'attack1':
-                applyAttackDamage(scene, entity, enemies, 100, 50, 180, 200, baseDamage, CharacterModel.DamageType.PHYSICAL, 2);
+                applyAttackDamage(scene, entity, enemies, 100, 50, 180, 200, baseDamage, CharacterModel.DamageType.PHYSICAL, 2, 20);
                 break;
             case 'attack2':
-                applyAttackDamage(scene, entity, enemies, 100, 50, 180, 200, baseDamage, CharacterModel.DamageType.PHYSICAL, 2);
+                applyAttackDamage(scene, entity, enemies, 100, 50, 180, 200, baseDamage, CharacterModel.DamageType.PHYSICAL, 2, 20);
                 break;
             case 'attack3':
-                applyAttackDamage(scene, entity, enemies, 100, 50, 220, 200, baseDamage, CharacterModel.DamageType.PHYSICAL, 2);
+                applyAttackDamage(scene, entity, enemies, 100, 50, 220, 200, baseDamage, CharacterModel.DamageType.PHYSICAL, 2, 20);
                 break;
             case 'special':
                 applyAttackDamage(scene, entity, enemies, 0, 100, 500, 200, baseDamage * 3, CharacterModel.DamageType.PHYSICAL, 5, 70);
