@@ -139,6 +139,11 @@ export default class Character extends Phaser.GameObjects.Container {
   private hpBar!: Phaser.GameObjects.Graphics;
   private hpText!: Phaser.GameObjects.Text;
 
+  // Внутри класса Character
+  private ghostHP: number; // Должно быть равно текущему HP при старте
+  private ghostHpBar!: Phaser.GameObjects.Graphics;
+  private ghostTween?: Phaser.Tweens.Tween;
+
   // Параметры
   private textureKey: string;
   private frameWidth: number;
@@ -277,6 +282,7 @@ export default class Character extends Phaser.GameObjects.Container {
     // HP система
     this.maxHP = 300;
     this.currentHP = 300;
+    this.ghostHP = 300;
     this.isDead = false;
 
     this.sprite.on("animationcomplete", this.onAnimationComplete, this);
@@ -537,6 +543,13 @@ export default class Character extends Phaser.GameObjects.Container {
     this.hpBarBg.fillStyle(this.hpBarBgColor, 1);
     this.hpBarBg.fillRect(-barWidth / 2, offsetY, barWidth, barHeight);
 
+    if (!this.ghostHpBar) {
+      this.ghostHpBar = this.scene.add.graphics();
+    }
+    this.ghostHpBar.fillStyle(0xffeb3b, 1);
+    this.ghostHpBar.fillRect(-barWidth / 2, offsetY, barWidth, barHeight);
+
+
     // Активная полоска HP
     if (!this.hpBar) {
       this.hpBar = this.scene.add.graphics();
@@ -546,6 +559,7 @@ export default class Character extends Phaser.GameObjects.Container {
 
     // Добавляем в контейнер
     this.add(this.hpBarBg);
+    this.add(this.ghostHpBar);
     this.add(this.hpBar);
 
     // Текст HP
@@ -569,10 +583,15 @@ export default class Character extends Phaser.GameObjects.Container {
   private updateHPBar(): void {
     this.onUpdateHP?.();
     const hpPercent: number = Math.max(this.currentHP / this.maxHP, 0);
+    const ghostPercent = Math.max(0, this.ghostHP / this.maxHP);
     const offsetY: number = this.uiOffsetY;
 
     // Обновляем ширину полоски
     const barWidth: number = 100;
+
+    this.ghostHpBar.clear();
+    this.ghostHpBar.fillStyle(0xffeb3b, 1); // Ярко-желтый
+    this.ghostHpBar.fillRect(-barWidth / 2, offsetY, barWidth * ghostPercent, 10);
 
     // Обновляем цвет полоски в зависимости от HP и перерисовываем полностью
     this.hpBar.clear();
@@ -617,6 +636,7 @@ export default class Character extends Phaser.GameObjects.Container {
     this.hpBarBg.setVisible(false);
     this.hpBar.setVisible(false);
     this.hpText.setVisible(false);
+    this.ghostHpBar.setVisible(false);
 
     return this;
   }
@@ -751,6 +771,21 @@ export default class Character extends Phaser.GameObjects.Container {
 
     this.updateHPBar();
 
+    // Если уже идет анимация уменьшения желтой полоски — останавливаем её
+    if (this.ghostTween) this.ghostTween.stop();
+
+    // Запускаем задержку, прежде чем желтая полоска "поползет" за красной
+    this.ghostTween = this.scene.tweens.add({
+      targets: this,
+      ghostHP: this.currentHP, // Цель — текущее реальное HP
+      duration: 600,           // Длительность "догона"
+      delay: 400,              // Пауза, чтобы игрок увидел желтый сегмент
+      ease: 'Cubic.easeOut',
+      onUpdate: () => {
+        this.updateHPBar();
+      }
+    });
+
     // === Эффект появления текста урона ===
     const offsetX = Phaser.Math.Between(-90, 90); // случайное смещение по X
     const offsetY = Phaser.Math.Between(-100, 100); // случайное смещение по Y
@@ -762,8 +797,8 @@ export default class Character extends Phaser.GameObjects.Container {
           this.y + offsetY - 100 + this.displayHeight / 6, // чуть выше персонажа
           `Уклонение`,
           {
-            font: "80px Pixel",
-            color: "#48f542",
+            font: "60px Pixel",
+            color: "#828282",
             fontStyle: "bold",
             stroke: "#333333",
             strokeThickness: 5,
@@ -783,6 +818,25 @@ export default class Character extends Phaser.GameObjects.Container {
           dodgeText.destroy();
         },
       });
+    } else {
+      const { centerX, centerY } = this.getHitbox();
+      // Рисуем простую геометрическую вспышку без текстур (самый быстрый вариант)
+      const hitCircle = this.scene.add.circle(
+        centerX,
+        centerY,
+        critDmg > 1 ? 60 : 30,
+        0xffffff,
+        critDmg > 1 ? 0.4 : 0.2
+      );
+      hitCircle.setDepth(900);
+
+      this.scene.tweens.add({
+        targets: hitCircle,
+        scale: 2,
+        alpha: 0,
+        duration: 200,
+        onComplete: () => hitCircle.destroy()
+      });
     }
 
     const damageText = this.scene.add
@@ -792,15 +846,15 @@ export default class Character extends Phaser.GameObjects.Container {
         `${damage}`,
         critDmg > 1 && !isDodged
           ? {
-            font: "200px Pixel",
+            font: "150px Pixel",
             color: getDamageColor(damageType),
             fontStyle: "bold",
             stroke: "#333333",
             strokeThickness: 7,
           }
           : {
-            font: "80px Pixel",
-            color: isDodged ? "#48f542" : getDamageColor(damageType),
+            font: "60px Pixel",
+            color: isDodged ? "#828282" : getDamageColor(damageType),
             fontStyle: "bold",
             stroke: "#333333",
             strokeThickness: 5,
@@ -972,6 +1026,7 @@ export default class Character extends Phaser.GameObjects.Container {
   public setMaxHP(hp: number): void {
     this.maxHP = hp;
     this.currentHP = hp;
+    this.ghostHP = hp;
     this.updateHPBar();
   }
 
@@ -979,6 +1034,7 @@ export default class Character extends Phaser.GameObjects.Container {
     this.currentHP = hp;
     this.currentHP = Math.max(0, this.currentHP);
     this.currentHP = Math.min(this.maxHP, this.currentHP);
+    this.ghostHP = this.currentHP;
     this.updateHPBar();
   }
 

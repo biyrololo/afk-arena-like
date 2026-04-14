@@ -75,7 +75,7 @@ export default function GameUI() {
             text-white absolute bottom-0 h-[250px] bg-zinc-700/80 w-full
             flex
             items-center
-            gap-10
+            gap-20
             p-10
         `}
     >

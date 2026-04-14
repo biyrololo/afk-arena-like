@@ -533,15 +533,32 @@ export default class GameScene extends Phaser.Scene {
 
   // GameScene.ts
   private playUltimateEffect(character: Character) {
+    // 1. Подсветка и камера
     this.highlightCaster(character);
+    this.cameras.main.shake(100, 0.01); // Тряска в начале
+
+    const prevDepth = character.depth;
+    character.setDepth(this.bots.length + 1);
+
+    // 2. Затемнение всего, кроме кастера (Overlay)
+    const overlay = this.add.rectangle(0, 0, 1920, 1080, 0x000000, 0.6)
+      .setOrigin(0).setDepth(character.depth - 1);
+
+    // 3. Замедление
     this.time.timeScale = 0.3;
     this.tweens.timeScale = 0.3;
     this.anims.globalTimeScale = 0.3;
 
-    this.time.delayedCall(400, () => {
+    // 4. Возврат в нормальный режим
+    this.time.delayedCall(500, () => {
       this.time.timeScale = 1;
       this.tweens.timeScale = 1;
       this.anims.globalTimeScale = 1;
+      overlay.destroy();
+
+      // Вспышка в момент самого удара
+      this.cameras.main.flash(200, 255, 255, 255);
+      character.setDepth(prevDepth);
     });
   }
 
@@ -553,7 +570,8 @@ export default class GameScene extends Phaser.Scene {
           b.getCharacter().getHitbox().bottom,
       )
       .forEach((b, i) => {
-        b.getCharacter().setDepth(i);
+        if (b.getCharacter().characterState !== 'special')
+          b.getCharacter().setDepth(i);
       });
     this.bots.forEach((b) => {
       b.update(time, delta);
