@@ -1,0 +1,1 @@
+export const EQUIPMENT_LIMIT = 1500;

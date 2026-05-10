@@ -14,6 +14,8 @@ import { Loader } from "@/widgets/Loader/Loader";
 import { Wrapper } from "@/widgets/Wrapper/Wrapper";
 import GameStartSurvivial from "@/pages/GameStart/GameStartSurvivial";
 import { GameEndSurvivial } from "@/pages/GameEnd/GameEndSurvivial";
+import GameStartTower from "@/pages/GameStart/GameStartTower";
+import { GameEndTower } from "@/pages/GameEnd/GameEndTower";
 
 export default function App() {
   return (
@@ -41,6 +43,10 @@ export default function App() {
                   Component={GameStartSurvivial}
                 />
                 <Route path="end" Component={GameEndSurvivial} />
+              </Route>
+              <Route path="tower">
+                <Route path="start" Component={GameStartTower} />
+                <Route path="end" Component={GameEndTower} />
               </Route>
             </Route>
             <Route path="shop" Component={ShopPage} />

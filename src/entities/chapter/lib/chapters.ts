@@ -3,10 +3,11 @@ import { type IChapter } from "./chapter.model";
 
 import { CHAPTER_1_STAGES } from "./stages/chapter-1-stages";
 import { CHAPTER_2_STAGES } from "./stages/chapter-2-stages";
-import { CHAPTER_3_STAGES } from "./stages/chapter-3-stages";
+import { CHAPTER_3_STAGES, CHAPTER_4_STAGES } from "./stages/chapter-3-stages";
 import { SURVIVAL_1_CHAPTERS } from "./stages/survival-1-stages";
 import { SURVIVAL_2_CHAPTERS } from "./stages/survival-2-stages";
 import { usePlayerStore } from "@/entities/player/model/player.store";
+import { SURVIVAL_3_CHAPTERS } from "./stages/survival-3-stages";
 
 export const CHAPTERS: IChapter[] = [
   {
@@ -24,12 +25,18 @@ export const CHAPTERS: IChapter[] = [
     chapterNumber: 3,
     stages: CHAPTER_3_STAGES,
   },
+  {
+    name: "Глава 4 - Столица",
+    chapterNumber: 4,
+    stages: CHAPTER_4_STAGES,
+  },
 ]
 
 const SURVIVAL_CHAPTERS = [
   SURVIVAL_1_CHAPTERS,
   SURVIVAL_2_CHAPTERS,
-  SURVIVAL_2_CHAPTERS,
+  SURVIVAL_3_CHAPTERS,
+  SURVIVAL_3_CHAPTERS,
 ]
 
 export const getSurvivalChapters = () => {
@@ -37,7 +44,7 @@ export const getSurvivalChapters = () => {
   return SURVIVAL_CHAPTERS[chapterNumber - 1];
 }
 
-// testChapter(CHAPTERS[0])
+// testChapter(CHAPTERS[2])
 
 // testChapter({
 //   name: "Тестовая глава",

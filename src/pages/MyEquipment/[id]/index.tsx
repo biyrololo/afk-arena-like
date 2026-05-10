@@ -19,6 +19,7 @@ import { useSoundEffects } from "@/shared/hooks/useSoundEffects";
 import { SOUNDS } from "@/assets/sound/sounds";
 import tavern from "@/assets/backgrounds/tavern.webp";
 import type { PlayerBalances } from "@/entities/player/model/player.model";
+import { ChevronsUp, Trash } from "lucide-react";
 
 export const MyEquipmentItemPage: FC = () => {
     const sounds = useSoundEffects(SOUNDS);
@@ -34,9 +35,9 @@ export const MyEquipmentItemPage: FC = () => {
 
     const currentEquipment = equipment.find(e => e.id === id);
 
-    const resources = EQUIPMENT_UPGRADE_COSTS[(currentEquipment?.level || 0) + 1];
-
     const balances = usePlayerStore(useShallow((state) => state.balances));
+
+    const resources = EQUIPMENT_UPGRADE_COSTS[(currentEquipment?.level || 0) + 1];
 
     const canUpgrade = isEnoughResources(resources, balances);
 
@@ -71,7 +72,7 @@ export const MyEquipmentItemPage: FC = () => {
 
     const sellPrice: PlayerBalances = {
         gems: GEMS_FOR_SELL_BY_RARITY[currentEquipment.rarity],
-        gold: Math.floor(calculateEquipmentPower(currentEquipment) * 3 * (100 + GEMS_FOR_SELL_BY_RARITY[currentEquipment.rarity]) / 100),
+        gold: Math.floor(calculateEquipmentPower(currentEquipment) * 20 * (100 + GEMS_FOR_SELL_BY_RARITY[currentEquipment.rarity]) / 100),
         summons: 0,
         summonsSpecial: 0
     }
@@ -108,7 +109,7 @@ export const MyEquipmentItemPage: FC = () => {
                     <span className="text-3xl">←</span>
                     Назад
                 </button>
-                <div className="w-[1800px] mx-auto mt-24 flex flex-col gap-12 items-center">
+                <div className="w-[1800px] mx-auto mt-12 flex flex-col gap-12 items-center">
                     <div className={cn(`
                         bg-gradient-to-br from-gray-900 to-gray-800 
                         border-4 border-amber-900/50
@@ -130,7 +131,7 @@ export const MyEquipmentItemPage: FC = () => {
                         </h2>
 
                         <div className="mb-8 bg-gray-800/50 rounded-xl p-6 border border-amber-900/20">
-                            <div className="flex flex-col items-center gap-4">
+                            <div className="flex flex-col items-center gap-6">
                                 {
                                     char && (
                                         <div className="text-2xl cursor-pointer text-white mb-4 text-center flex items-center gap-4"
@@ -142,11 +143,12 @@ export const MyEquipmentItemPage: FC = () => {
                                     )
                                 }
                                 <EquipmentFullCard className="w-full" equipment={currentEquipment} withStats isWithUpgradeStats={canUpgrade} />
-                                <div className="flex gap-4 justify-between w-full">
+                                <div className="grid grid-cols-2 gap-6 justify-between w-full">
                                     <Button
-                                        className="bg-red-700 hover:bg-red-600! text-xl px-6 py-3"
+                                        className="bg-red-700 hover:bg-red-600! text-xl px-6 py-3 justify-center"
                                         onClick={handleSellClick}
                                     >
+                                        <Trash width={30} height={30} />
                                         ПРОДАТЬ
                                         {
                                             Object.entries(sellPrice).filter(([_, amount]) => amount > 0)
@@ -160,11 +162,12 @@ export const MyEquipmentItemPage: FC = () => {
                                     </Button>
                                     <Button
                                         onClick={() => handleUpgradeClick()}
-                                        className="bg-purple-700 hover:bg-purple-600! text-xl px-6 py-3"
+                                        className="bg-purple-700 hover:bg-purple-600! text-xl px-6 py-3 items-center justify-center"
                                         disabled={!canUpgrade || !currentEquipment}
                                     >
+                                        <ChevronsUp width={50} height={50} />
                                         {
-                                            currentEquipment ? (
+                                            currentEquipment && resources ? (
                                                 <>
                                                     УЛУЧШИТЬ
                                                     {

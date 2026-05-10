@@ -56,6 +56,12 @@ import ice_abyss_2_bg from "@/assets/backgrounds/ice_abyss_2_bg.webp";
 import ice_boss_1_bg from "@/assets/backgrounds/ice_boss_1_bg.webp";
 import ice_boss_2_bg from "@/assets/backgrounds/ice_boss_2_bg.webp";
 import ice_castle_bg from "@/assets/backgrounds/ice_castle_bg.webp";
+import ancient_floor_bg from "@/assets/backgrounds/ancient_floor_bg.webp";
+import crystal_cave_bg from "@/assets/backgrounds/crystal_cave_bg.webp";
+import mistic_library_bg from "@/assets/backgrounds/mistic_library_bg.webp";
+import lava_castle_bg from "@/assets/backgrounds/lava_castle_bg.webp";
+import forest_bg from "@/assets/backgrounds/forest_bg.webp";
+import ice_castle_2_bg from "@/assets/backgrounds/ice_castle_2_bg.webp";
 
 export default class GameScene extends Phaser.Scene {
   private background!: Phaser.GameObjects.Image;
@@ -239,6 +245,13 @@ export default class GameScene extends Phaser.Scene {
     this.load.image("ice_boss_1_bg", ice_boss_1_bg);
     this.load.image("ice_boss_2_bg", ice_boss_2_bg);
     this.load.image("ice_castle_bg", ice_castle_bg);
+    this.load.image("ancient_floor_bg", ancient_floor_bg);
+    this.load.image("crystal_cave_bg", crystal_cave_bg);
+    this.load.image("mistic_library_bg", mistic_library_bg);
+    this.load.image("lava_castle_bg", lava_castle_bg);
+    this.load.image("forest_bg", forest_bg);
+    this.load.image("ice_castle_2_bg", ice_castle_2_bg);
+
 
     this.load.on("progress", (value: number) => {
       EventBus.emit("load:progress", value);
@@ -447,12 +460,12 @@ export default class GameScene extends Phaser.Scene {
       };
     });
 
-    this.allies.forEach((ally) => {
-      this.bots.push(new BotController(this, ally, this.enemies, ally.getCooldownAttack()));
+    this.allies.forEach((ally, idx) => {
+      this.bots.push(new BotController(this, ally, this.enemies, idx, ally.getCooldownAttack()));
     });
 
-    this.enemies.forEach((enemy) => {
-      this.bots.push(new BotController(this, enemy, this.allies, enemy.getCooldownAttack()));
+    this.enemies.forEach((enemy, idx) => {
+      this.bots.push(new BotController(this, enemy, this.allies, idx, enemy.getCooldownAttack()));
     });
 
     // this.bots.push(

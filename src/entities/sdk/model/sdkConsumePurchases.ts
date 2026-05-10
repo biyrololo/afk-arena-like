@@ -2,7 +2,7 @@ import { usePlayerStore } from "@/entities/player/model/player.store";
 import { SDK } from "./sdk"
 import usePlayerCharactersStore from "@/shared/store/PlayerCharactersStore";
 import { createEquipment } from "@/entities/character/lib/allEquipment";
-import { Weapons } from "@/entities/character/lib/equipmentList";
+import { Accessories, AllEquipment, Weapons } from "@/entities/character/lib/equipmentList";
 import { usePlayerStatsStore } from "@/entities/player/model/player-stats.store";
 import { METAL_BLADEKEEPER_CHARACTER } from "@/entities/character/lib/allCharacters";
 import { cloneCharacter } from "@/shared/types/character";
@@ -65,11 +65,33 @@ export const consumePurchase = (productID: string, purchaseToken: string) => {
             }
             break;
         }
+        case "equipment_pack": {
+
+            usePlayerCharactersStore.getState().addEquipment(
+                createEquipment(Weapons.WEAPONS.true_evil)
+            )
+            usePlayerCharactersStore.getState().addEquipment(
+                createEquipment(AllEquipment.EQUIPMENT.steel_gold.helmet)
+            )
+            usePlayerCharactersStore.getState().addEquipment(
+                createEquipment(AllEquipment.EQUIPMENT.steel_gold.chest)
+            )
+            usePlayerCharactersStore.getState().addEquipment(
+                createEquipment(AllEquipment.EQUIPMENT.steel_gold.boots)
+            )
+            usePlayerCharactersStore.getState().addEquipment(
+                createEquipment(Accessories.ACCESSORIES.true_hero_shield)
+            )
+            consumable = true;
+            break;
+        }
         default:
             console.warn(`Unknown purchase productID: ${productID}`);
             break;
     }
     if (consumable) {
+        // Immediately save after purchase (critical action)
+        SDK.getInstance().syncImmediately();
         return SDK.getInstance()
             .consumePurchase(purchaseToken)
     }

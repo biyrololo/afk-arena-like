@@ -4,11 +4,13 @@ import { devtools, subscribeWithSelector } from "zustand/middleware";
 
 import { CHAPTER_1_SCENES } from "./scenes/chapter-1-scenes";
 import { CHAPTER_2_SCENES } from "./scenes/chapter-2-scenes";
+import { CHAPTER_3_SCENES } from "./scenes/chapter-3-scenes";
 
 const PLOT: IPlot = {
     scenes: [
         ...CHAPTER_1_SCENES,
-        ...CHAPTER_2_SCENES
+        ...CHAPTER_2_SCENES,
+        ...CHAPTER_3_SCENES
     ],
 };
 

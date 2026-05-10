@@ -72,6 +72,9 @@ export const GameEndSurvivial: FC = () => {
     }
 
     usePlayerStatsStore.getState().updateMaxSurvivialDepth(1, stage);
+
+    // Immediately save after completing survival stage (critical action)
+    SDK.getInstance().syncImmediately();
   }, [state, setReward, setEquipment]);
 
 

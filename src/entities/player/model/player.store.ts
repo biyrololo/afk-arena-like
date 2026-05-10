@@ -12,6 +12,8 @@ interface PlayerStore {
     assetsLoaded: boolean;
     lastSquad: SquadList;
     usedPromocodes: string[];
+    towerFloor: number;
+
     setLastSquad: (lastSquad: SquadList) => void;
     setBalances: (balances: PlayerBalances) => void;
     setChapterNumber: (chapterNumber: number) => void;
@@ -21,6 +23,7 @@ interface PlayerStore {
     addBalance: (key: keyof PlayerBalances, amount: number) => void;
     setUsedPromocodes: (usedPromocodes: string[]) => void;
     addUsedPromocode: (usedPromocode: string) => void;
+    setTowerFloor: (towerFloor: number) => void;
 }
 
 export const usePlayerStore = create<PlayerStore>()(
@@ -35,11 +38,12 @@ export const usePlayerStore = create<PlayerStore>()(
                 },
                 chapterNumber: 1,
                 stageNumber: 1,
+                towerFloor: 1,
                 assetsLoaded: false,
                 lastSquad: [null, null, null, null],
                 usedPromocodes: [],
 
-                setLastSquad: (lastSquad: [(string | null), (string | null), (string | null), (string | null)]) => set(() => ({ lastSquad })),
+                setLastSquad: (lastSquad: SquadList) => set(() => ({ lastSquad })),
                 setAssetsLoaded: (assetsLoaded: boolean) => set(() => ({ assetsLoaded })),
                 setChapterNumber: (chapterNumber: number) => set(() => ({ chapterNumber })),
                 setStageNumber: (stageNumber: number) => set(() => ({ stageNumber })),
@@ -53,6 +57,7 @@ export const usePlayerStore = create<PlayerStore>()(
                 addBalance: (key: keyof PlayerBalances, amount: number) => set((state) => ({ balances: { ...state.balances, [key]: state.balances[key] + amount } })),
                 setUsedPromocodes: (usedPromocodes: string[]) => set(() => ({ usedPromocodes })),
                 addUsedPromocode: (usedPromocode: string) => set((state) => ({ usedPromocodes: [...state.usedPromocodes, usedPromocode] })),
+                setTowerFloor: (towerFloor: number) => set(() => ({ towerFloor })),
             })
         ),
         {

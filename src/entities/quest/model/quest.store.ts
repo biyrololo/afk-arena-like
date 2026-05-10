@@ -99,6 +99,32 @@ export const QUESTS: IQuest[] = [
         }
     },
     {
+        id: 'full-chapter-3',
+        title: "Кристальый лидер: Пройти 3 главу",
+        reward: 'summonsSpecial',
+        count: 100,
+        rewardRarity: Character.Rarity.EPIC,
+        getProgressText: () => {
+            const { chapterNumber } = usePlayerStore.getState();
+            if (chapterNumber > 3) {
+                return `3 / 3`
+            }
+            if (chapterNumber === 3) return `2 / 3`
+            if (chapterNumber === 2) return `1 / 3`
+            return `0 / 3`
+        },
+        getProgress: () => {
+            const { chapterNumber } = usePlayerStore.getState();
+            if (chapterNumber > 3) return 1;
+            if (chapterNumber === 3) return 0.66;
+            if (chapterNumber === 2) return 0.33;
+            return 0;
+        },
+        onClaim: () => {
+            usePlayerStore.getState().addBalance('summonsSpecial', 100);
+        }
+    },
+    {
         id: 'fire-warrior-slayer',
         title: "Укротитель огня: Победить воина огня",
         reward: 'gems',

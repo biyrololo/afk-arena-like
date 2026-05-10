@@ -24,6 +24,7 @@ export function generateFirewarrior(scene: GameScene, team: 'ally' | 'enemy', pr
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
+        props.character.variant,
         props.frameWidth || 144, props.frameHeight || 80, props.displayWidth ?? 144 * (props.scale || 5), props.displayHeight ?? 80 * (props.scale || 5),
         props.uiOffsetY || -140, 60);
 
@@ -123,6 +124,7 @@ export function generateViking(scene: GameScene, team: 'ally' | 'enemy', props: 
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
+        props.character.variant,
         props.frameWidth || 115, props.frameHeight || 84, props.displayWidth ?? 115 * (props.scale || 5), props.displayHeight ?? 84 * (props.scale || 5),
         props.uiOffsetY || -80, 0);
 
@@ -221,6 +223,7 @@ export function generateSpearwoman(scene: GameScene, team: 'ally' | 'enemy', pro
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
+        props.character.variant,
         props.frameWidth || 128, props.frameHeight || 115, props.displayWidth ?? 128 * (props.scale || 5), props.displayHeight ?? 115 * (props.scale || 5),
         props.uiOffsetY || -80, 50);
 
@@ -320,6 +323,7 @@ export function generateWarrior(scene: GameScene, team: 'ally' | 'enemy', props:
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
+        props.character.variant,
         props.frameWidth || 69, props.frameHeight || 44, props.displayWidth ?? 69 * (props.scale || 5), props.displayHeight ?? 44 * (props.scale || 5),
         props.uiOffsetY || -80, 50);
 
@@ -397,6 +401,7 @@ export function generateCrystalKing(scene: GameScene, team: 'ally' | 'enemy', pr
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
+        props.character.variant,
         props.frameWidth || 288, props.frameHeight || 128, props.displayWidth ?? 288 * (props.scale || 5), props.displayHeight ?? 128 * (props.scale || 5),
         props.uiOffsetY || 80);
 
@@ -505,6 +510,7 @@ export function generateFireKing(scene: GameScene, team: 'ally' | 'enemy', props
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
+        props.character.variant,
         props.frameWidth || 288, props.frameHeight || 128, props.displayWidth ?? 288 * (props.scale || 5), props.displayHeight ?? 128 * (props.scale || 5),
         props.uiOffsetY || 60);
 
@@ -582,6 +588,7 @@ export function generateFrostGuardian(scene: GameScene, team: 'ally' | 'enemy', 
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
+        props.character.variant,
         props.frameWidth || 192, props.frameHeight || 128, props.displayWidth ?? 192 * (props.scale || 5), props.displayHeight ?? 128 * (props.scale || 5), props.uiOffsetY || -140);
     entity.setDirection(false);
 
@@ -653,6 +660,7 @@ export function generateDemonSlime(scene: GameScene, team: 'ally' | 'enemy', pro
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
+        props.character.variant,
         props.frameWidth || 288, props.frameHeight || 160, props.displayWidth ?? 288 * (props.scale || 5), props.displayHeight ?? 160 * (props.scale || 5), props.uiOffsetY || -20);
     entity.setDirection(false);
 
@@ -724,6 +732,7 @@ export function generateElementalWind(scene: GameScene, team: 'ally' | 'enemy', 
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
+        props.character.variant,
         props.frameWidth || 288, props.frameHeight || 128, props.displayWidth ?? 288 * (props.scale || 5), props.displayHeight ?? 128 * (props.scale || 5), props.uiOffsetY || 120);
 
     entity.setMaxHP(props.character.baseStats.maxHp);
@@ -823,6 +832,7 @@ export function generateGroundMonk(scene: GameScene, team: 'ally' | 'enemy', pro
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
+        props.character.variant,
         props.frameWidth || 288, props.frameHeight || 128, props.displayWidth ?? 288 * (props.scale || 5), props.displayHeight ?? 128 * (props.scale || 5), props.uiOffsetY || 80);
 
     entity.setMaxHP(props.character.baseStats.maxHp);
@@ -921,6 +931,7 @@ export function generateWaterPriestess(scene: GameScene, team: 'ally' | 'enemy',
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
+        props.character.variant,
         props.frameWidth || 288, props.frameHeight || 128, props.displayWidth ?? 288 * (props.scale || 5), props.displayHeight ?? 128 * (props.scale || 5), props.uiOffsetY || 110);
 
     entity.setMaxHP(props.character.baseStats.maxHp);
@@ -1012,6 +1023,7 @@ export function generateBlueSlime(scene: GameScene, team: 'ally' | 'enemy', prop
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
+        props.character.variant,
         props.frameWidth || 80, props.frameHeight || 80, props.displayWidth ?? 80 * (props.scale || 5), props.displayHeight ?? 80 * (props.scale || 5), props.uiOffsetY || -70);
 
     entity.setMaxHP(props.character.baseStats.maxHp);
@@ -1091,6 +1103,7 @@ export function generateGreenSlime(scene: GameScene, team: 'ally' | 'enemy', pro
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
+        props.character.variant,
         props.frameWidth || 80, props.frameHeight || 80, props.displayWidth ?? 80 * (props.scale || 5), props.displayHeight ?? 80 * (props.scale || 5), props.uiOffsetY || -70);
 
     entity.setMaxHP(props.character.baseStats.maxHp);
@@ -1170,6 +1183,7 @@ export function generatePurpleSlime(scene: GameScene, team: 'ally' | 'enemy', pr
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
+        props.character.variant,
         props.frameWidth || 80, props.frameHeight || 80, props.displayWidth ?? 80 * (props.scale || 5), props.displayHeight ?? 80 * (props.scale || 5), props.uiOffsetY || -70);
 
     entity.setMaxHP(props.character.baseStats.maxHp);
@@ -1249,6 +1263,7 @@ export function generateFantasyWarrior(scene: GameScene, team: 'ally' | 'enemy',
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
+        props.character.variant,
         props.frameWidth || 162, props.frameHeight || 162, props.displayWidth ?? 162 * (props.scale || 5), props.displayHeight ?? 162 * (props.scale || 5), props.uiOffsetY || -150);
 
     entity.setMaxHP(props.character.baseStats.maxHp);
@@ -1339,6 +1354,7 @@ export function generateKitsune(scene: GameScene, team: 'ally' | 'enemy', props:
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
+        props.character.variant,
         props.frameWidth || 128, props.frameHeight || 128, props.displayWidth ?? 64 * (props.scale || 5), props.displayHeight ?? 64 * (props.scale || 5), props.uiOffsetY || -70);
 
     entity.setMaxHP(props.character.baseStats.maxHp);
@@ -1419,6 +1435,7 @@ export function generateMinotaur(scene: GameScene, team: 'ally' | 'enemy', props
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
+        props.character.variant,
         props.frameWidth || 128, props.frameHeight || 128, props.displayWidth ?? 128 * (props.scale || 5) * 3 / 5, props.displayHeight ?? 128 * (props.scale || 5) * 3 / 5, props.uiOffsetY || -90);
 
     entity.setMaxHP(props.character.baseStats.maxHp);
@@ -1498,6 +1515,7 @@ export function generateBringerOfDeath(scene: GameScene, team: 'ally' | 'enemy',
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
+        props.character.variant,
         props.frameWidth || 140, props.frameHeight || 93, props.displayWidth ?? 140 * (props.scale || 5), props.displayHeight ?? 93 * (props.scale || 5), props.uiOffsetY || -70, -35 * (props.scale || 5));
 
     entity.setDirection(false);
@@ -1580,6 +1598,7 @@ export function generateNightBorne(scene: GameScene, team: 'ally' | 'enemy', pro
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
+        props.character.variant,
         props.frameWidth || 80, props.frameHeight || 80, props.displayWidth ?? 80 * (props.scale || 5), props.displayHeight ?? 80 * (props.scale || 5), props.uiOffsetY || -40);
 
     entity.setMaxHP(props.character.baseStats.maxHp);
@@ -1659,6 +1678,7 @@ export function generateKnight(scene: GameScene, team: 'ally' | 'enemy', props: 
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
+        props.character.variant,
         props.frameWidth || 135, props.frameHeight || 135, props.displayWidth ?? 135 * (props.scale || 5), props.displayHeight ?? 135 * (props.scale || 5), props.uiOffsetY || -120);
 
     entity.setMaxHP(props.character.baseStats.maxHp);
@@ -1746,6 +1766,7 @@ export function generateSteelKnight(scene: GameScene, team: 'ally' | 'enemy', pr
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
+        props.character.variant,
         props.frameWidth || 180, props.frameHeight || 180, props.displayWidth ?? 180 * (props.scale || 5), props.displayHeight ?? 180 * (props.scale || 5), props.uiOffsetY || -140);
 
     entity.setMaxHP(props.character.baseStats.maxHp);
@@ -1825,6 +1846,7 @@ export function generateHeroKnight(scene: GameScene, team: 'ally' | 'enemy', pro
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
+        props.character.variant,
         props.frameWidth || 140, props.frameHeight || 140, props.displayWidth ?? 140 * (props.scale || 5), props.displayHeight ?? 140 * (props.scale || 5), props.uiOffsetY || -160);
 
     entity.setMaxHP(props.character.baseStats.maxHp);
@@ -1903,6 +1925,7 @@ export function generateMartialHero(scene: GameScene, team: 'ally' | 'enemy', pr
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
+        props.character.variant,
         props.frameWidth || 200, props.frameHeight || 200, props.displayWidth ?? 200 * (props.scale || 5), props.displayHeight ?? 200 * (props.scale || 5), props.uiOffsetY || -160);
 
     entity.setMaxHP(props.character.baseStats.maxHp);
@@ -1982,6 +2005,7 @@ export function generateOldGolem(scene: GameScene, team: 'ally' | 'enemy', props
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
+        props.character.variant,
         props.frameWidth || 160, props.frameHeight || 160, props.displayWidth ?? 160 * (props.scale || 5), props.displayHeight ?? 160 * (props.scale || 5), props.uiOffsetY || -230);
 
     entity.setDirection(false);
@@ -2064,6 +2088,7 @@ export function generateOldGuardian(scene: GameScene, team: 'ally' | 'enemy', pr
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
+        props.character.variant,
         props.frameWidth || 120, props.frameHeight || 120, props.displayWidth ?? 120 * (props.scale || 5), props.displayHeight ?? 120 * (props.scale || 5), props.uiOffsetY || -150);
 
     entity.setMaxHP(props.character.baseStats.maxHp);
@@ -2154,6 +2179,7 @@ export function generateMetalBladekeeper(scene: GameScene, team: 'ally' | 'enemy
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
+        props.character.variant,
         props.frameWidth || 288, props.frameHeight || 128, props.displayWidth ?? 288 * (props.scale || 5), props.displayHeight ?? 128 * (props.scale || 5), props.uiOffsetY || 80);
 
     entity.setMaxHP(props.character.baseStats.maxHp);
@@ -2245,6 +2271,7 @@ export function generateWomanWarrior(scene: GameScene, team: 'ally' | 'enemy', p
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
+        props.character.variant,
         props.frameWidth || 142, props.frameHeight || 141, props.displayWidth ?? 142 * (props.scale || 5), props.displayHeight ?? 141 * (props.scale || 5), props.uiOffsetY || 0, -100);
 
     entity.setMaxHP(props.character.baseStats.maxHp);
@@ -2323,6 +2350,7 @@ export function generateTreeMan(scene: GameScene, team: 'ally' | 'enemy', props:
         props.character.advancedStats,
         props.character.role,
         props.character.faction,
+        props.character.variant,
         props.frameWidth || 128, props.frameHeight || 128, props.displayWidth ?? 128 * (props.scale || 5), props.displayHeight ?? 128 * (props.scale || 5), props.uiOffsetY || -160, 40);
 
     entity.setMaxHP(props.character.baseStats.maxHp);

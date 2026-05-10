@@ -95,6 +95,10 @@ export namespace Character {
 
     export type CharacterEquipment = Partial<Record<EquipmentSlot, Equipment>>;
 
+    export type CharacterVariant = {
+        baseColor?: number
+    }
+
     export interface Character {
         id: string;
         key: string;
@@ -114,6 +118,11 @@ export namespace Character {
         progression: CharacterProgression;
 
         skills: Skill[];
+
+        variant?: {
+            current: string;
+            variants: Record<string, CharacterVariant>;
+        }
     }
 
 }

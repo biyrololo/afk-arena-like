@@ -201,6 +201,21 @@ export const SummonResult: FC<{
                                 Дубликат!
                             </motion.p>
                         )}
+
+                        {!!result.overflowBalances && (
+                            <motion.p
+                                className="text-white text-center font-bold text-5xl mt-4"
+                                initial={{ opacity: 0, scale: 0.7 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{
+                                    delay: 0.8,
+                                    duration: 0.45,
+                                    type: "spring",
+                                }}
+                            >
+                                Инвентарь переполнен!
+                            </motion.p>
+                        )}
                     </motion.div>
 
                     {/* Duplicate reward reveal */}
@@ -252,6 +267,52 @@ export const SummonResult: FC<{
                                         500 <Icon icon="gems" size={100} />
                                     </motion.div>
                                 )}
+                            </motion.div>
+                        </motion.div>
+                    )}
+
+                    {!!result.overflowBalances && (
+                        <motion.div
+                            className="absolute inset-0 backdrop-blur-xl bg-black/40 flex items-center justify-center z-30"
+                            initial={{ opacity: 1 }}
+                            animate={{ opacity: 0 }}
+                            transition={{
+                                duration: 3.5,
+                                ease: "easeOut",
+                            }}
+                        >
+                            <motion.div
+                                initial={{ scale: 0.4, rotate: -15 }}
+                                animate={{
+                                    scale: [0.4, 1.2, 1],
+                                    rotate: [0, 6, 0],
+                                }}
+                                transition={{
+                                    duration: 0.8,
+                                    type: "spring",
+                                }}
+                            >
+                                <motion.div
+                                    className="flex gap-4 flex-col text-white text-8xl"
+                                    animate={{
+                                        scale: [1, 1.05, 1],
+                                    }}
+                                    transition={{
+                                        duration: 1,
+                                        repeat: Infinity,
+                                    }}
+                                >
+                                    {result.overflowBalances && result.overflowBalances.gems > 0 && (
+                                        <div className="flex gap-4 items-center justify-center">
+                                            {result.overflowBalances.gems} <Icon icon="gems" size={100} />
+                                        </div>
+                                    )}
+                                    {result.overflowBalances && result.overflowBalances.gold > 0 && (
+                                        <div className="flex gap-4 items-center justify-center">
+                                            {result.overflowBalances.gold} <Icon icon="gold" size={100} />
+                                        </div>
+                                    )}
+                                </motion.div>
                             </motion.div>
                         </motion.div>
                     )}

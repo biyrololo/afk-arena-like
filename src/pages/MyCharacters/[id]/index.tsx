@@ -102,11 +102,13 @@ export const MyCharacterPage: FC = () => {
     handlePlayAnimation("attack1");
   };
 
-  const isMaxLevel =
-    current && current.progression.level >= RESOURES_FOR_LEVEL.length - 2;
 
   const resources = RESOURES_FOR_LEVEL[(current?.progression.level || 0) + 1];
-  const newStats = current ? calculateLevelUpStats(current) : null;
+
+  const isMaxLevel =
+    current && current.progression.level >= RESOURES_FOR_LEVEL.length - 2 && resources;
+
+  const newStats = current && !isMaxLevel ? calculateLevelUpStats(current) : null;
 
   const totalStats = current ? calculateStatsWithEquipment(current) : null;
 
@@ -150,136 +152,149 @@ export const MyCharacterPage: FC = () => {
           <Balances />
           <div
             className={`
-                    absolute w-2/5 left-0 top-0 bottom-0 bg-gray-900/30
+                    absolute w-[40%] left-0 top-0 bottom-0 bg-gray-900/50
                     flex flex-col
                     p-2
+                    px-[3%]
                     `}
+
+            style={{
+              backdropFilter: 'blur(2px)'
+            }}
           >
             <p
               className={`
-                            capitalize text-4xl drop-shadow-[0_1.2px_2.4px_rgba(0,0,0,0.2)]
+                            capitalize text-6xl drop-shadow-[0_1.2px_2.4px_rgba(0,0,0,0.8)]
                             p-4
-                            rounded-2xl
                             w-full
-                            bg-gray-900/80
-                            border-amber-900 border-4
+                            mb-2
                             flex
                             items-center
                             justify-center
                             flex-col
+                            text-white
+                            text-center
                             `}
-              style={{ color: getRarityColor(totalStats.rarity) }}
             >
               {totalStats.name}
               {
                 totalStats.description && (
-                  <p className="text-2xl text-center">{totalStats.description}</p>
+                  <p className="text-xl text-center drop-shadow-[0_1.2px_2.4px_rgba(0,0,0,0.2)]" style={{ color: getRarityColor(totalStats.rarity) }}>{totalStats.description}</p>
                 )
               }
             </p>
-            <div
-              className={`
-                            mt-1
-                            w-full
-                            bg-gray-900/80
-                            border-amber-900 border-4
-                            flex
-                            flex-col
-                            items-center
-                            justify-center
-                            rounded-xl
-                            px-4
-                            py-1
-                            cursor-pointer
-                        `}
-              onClick={() => setIsClassesModalOpened(true)}
-            >
-              <div
-                className="text-white text-2xl flex items-center gap-4"
-                style={{ color: getRarityColor(totalStats.rarity) }}
-              >
-                {getRarityName(totalStats.rarity)}
-                {
-                  current && (
-                    <div className="flex gap-1 items-center">
-                      {
-                        Array.from({ length: current.progression.ascension })
-                          .map((_, i) => (
-                            <Icon icon="star" key={i} size={30} />
-                          ))
-                      }
-                    </div>
-                  )
-
-                }
-              </div>
-              <div
-                className="text-white text-2xl flex items-center gap-4"
-                style={{ color: getRarityColor(totalStats.rarity) }}
-              >
-                {
-                  current && (
-                    <>
-                      <div className="rounded-full overflow-hidden size-[40px] relative">
-                        <Icon icon={`faction_${current.faction}`} className="absolute !w-[60px] !h-[60px] max-w-none top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
-                      </div>
-                      <div className="rounded-full overflow-hidden size-[40px] relative">
-                        <Icon icon={`role_${current.role}`} />
-                      </div>
-                    </>
-                  )
-                }
-              </div>
+            <div className="bg-[#2d2b43] w-full h-2 relative mb-2">
+              <div className="h-full bg-green-400 absolute left-0 top-0" style={{ width: `${(totalStats.progression.level / 199) * 100}%` }} />
             </div>
-            <div className="px-10 mt-4">
-              <p
+            <div className="flex gap-4 w-full">
+              <div
                 className={`
-                                capitalize text-4xl drop-shadow-[0_1.2px_2.4px_rgba(0,0,0,0.2)]
+                              mt-1
+                              w-full
+                              border-[#2d2b43]
+                              flex
+                              items-center
+                              justify-between
+                              pr-10
+                              rounded-xl
+                              px-4
+                              cursor-pointer
+                          `}
+                onClick={() => setIsClassesModalOpened(true)}
+              >
+                <div
+                  className="text-white text-2xl flex items-center gap-4 drop-shadow-[0_1.2px_2.4px_rgba(0,0,0,0.8)]"
+                  style={{ color: getRarityColor(totalStats.rarity) }}
+                >
+                  {getRarityName(totalStats.rarity)}
+                  {
+                    current && (
+                      <div className="flex gap-1 items-center">
+                        {
+                          Array.from({ length: current.progression.ascension })
+                            .map((_, i) => (
+                              <Icon icon="star" key={i} size={30} />
+                            ))
+                        }
+                      </div>
+                    )
+
+                  }
+                </div>
+                <div
+                  className="text-white text-2xl flex items-center gap-4"
+                  style={{ color: getRarityColor(totalStats.rarity) }}
+                >
+                  {
+                    current && (
+                      <>
+                        <div className="rounded-full overflow-hidden size-[40px] relative">
+                          <Icon icon={`faction_${current.faction}`} className="absolute !w-[60px] !h-[60px] max-w-none top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+                        </div>
+                        <div className="rounded-full overflow-hidden size-[40px] relative">
+                          <Icon icon={`role_${current.role}`} />
+                        </div>
+                      </>
+                    )
+                  }
+                </div>
+              </div>
+              <div>
+                <p
+                  className={`
+                                capitalize text-2xl drop-shadow-[0_1.2px_2.4px_rgba(0,0,0,0.2)]
                                 p-2
-                                rounded-2xl
+                                rounded-xl
                                 flex
                                 w-full
-                                bg-gray-900/80
-                                border-amber-900 border-4
+                                flex-col
+                                justify-center
+                                bg-[#090c20]
+                                border-[#2d2b43] border-2
                                 text-white
-                                px-20
+                                items-center
+                                min-w-[150px]
+                                min-h-[90px]
                                 `}
-              >
-                <span
-                  className="transition-all"
-                  style={{
-                    color: animatedPower !== totalStats?.power.toString() ? "var(--color-green-600)" : undefined,
-                    transform: animatedPower !== totalStats?.power.toString() ? 'scale(1.15)' : undefined,
-                  }}
                 >
-                  Ур. {totalStats.progression.level}
-                </span>
-                {isHover && newStats && animatedPower === totalStats?.power.toString() && (
-                  <span className="inline-block ml-auto text-green-600">
-                    {">"} Ур. {newStats.progression.level}
+                  <span
+                    className="transition-all"
+                    style={{
+                      color: animatedPower !== totalStats?.power.toString() ? "var(--color-green-600)" : undefined,
+                      transform: animatedPower !== totalStats?.power.toString() ? 'scale(1.15)' : undefined,
+                      textWrap: 'nowrap'
+                    }}
+                  >
+                    Ур. {totalStats.progression.level}
                   </span>
-                )}
-              </p>
+                  {isHover && newStats && animatedPower === totalStats?.power.toString() && (
+                    <span className="inline-block text-green-600" style={{ textWrap: 'nowrap' }}>
+                      {">"} Ур. {newStats.progression.level}
+                    </span>
+                  )}
+                </p>
+              </div>
             </div>
+
 
             <div
               className={`
                             mt-4
                             w-full
-                            bg-gray-900/80
-                            border-amber-900 border-4
+                            border-[#2d2b43] border-4
                             flex
                             flex-col
                             items-center
                             justify-center
                             rounded-xl
                             px-4
+                            backdrop-blur-2xl
                         `}
             >
-              <div className="grid grid-cols-2 gap-2 w-full px-2 pt-4 pb-2 border-b-2 border-amber-900">
-                <span className="text-3xl text-white flex items-center gap-2">
-                  <Zap width={iconSize} height={iconSize} /> МОЩЬ</span>
-                <span className="text-3xl text-white text-right flex justify-end">
+              <div className="grid grid-cols-2 gap-2 w-full px-2 pt-3 pb-3">
+                <span className="text-2xl text-white flex items-center gap-2">
+                  <Zap width={iconSize} height={iconSize} color="#f7be38" /> МОЩЬ</span>
+                <span className="text-2xl text-white text-right flex justify-end">
                   {isHover &&
                     totalStats &&
                     totalNewStats &&
@@ -303,12 +318,12 @@ export const MyCharacterPage: FC = () => {
                   </span>
                 </span>
               </div>
-              <div className="grid grid-cols-2 gap-2 w-full px-2 pt-4 pb-2 border-b-2 border-amber-900">
-                <span className="text-3xl text-white flex items-center gap-2">
-                  <Heart width={iconSize} height={iconSize} />
+              <div className="grid grid-cols-2 gap-2 w-full px-2 pt-3 pb-3">
+                <span className="text-2xl text-white flex items-center gap-2">
+                  <Heart width={iconSize} height={iconSize} color="#c27a61" />
                   ОЗ
                 </span>
-                <span className="text-3xl text-white text-right flex justify-end">
+                <span className="text-2xl text-white text-right flex justify-end">
                   {isHover &&
                     totalNewStats &&
                     totalStats &&
@@ -321,11 +336,11 @@ export const MyCharacterPage: FC = () => {
                   {totalStats.baseStats.maxHp}
                 </span>
               </div>
-              <div className="grid grid-cols-2 gap-2 w-full px-2 pt-4 pb-2 border-b-2 border-amber-900">
-                <span className="text-3xl text-white flex items-center gap-2">
-                  <Sword width={iconSize} height={iconSize} />
+              <div className="grid grid-cols-2 gap-2 w-full px-2 pt-3 pb-3">
+                <span className="text-2xl text-white flex items-center gap-2">
+                  <Sword width={iconSize} height={iconSize} color="#c27a61" />
                   АТК</span>
-                <span className="text-3xl text-white text-right flex justify-end">
+                <span className="text-2xl text-white text-right flex justify-end">
                   {isHover &&
                     totalNewStats &&
                     totalStats.baseStats.attack !==
@@ -337,11 +352,11 @@ export const MyCharacterPage: FC = () => {
                   {totalStats.baseStats.attack}
                 </span>
               </div>
-              <div className="grid grid-cols-2 gap-2 w-full px-2 pt-4 pb-2 border-b-2 border-amber-900">
-                <span className="text-3xl text-white flex items-center gap-2">
-                  <CircleGauge width={iconSize} height={iconSize} />
+              <div className="grid grid-cols-2 gap-2 w-full px-2 pt-3 pb-3">
+                <span className="text-2xl text-white flex items-center gap-2">
+                  <CircleGauge width={iconSize} height={iconSize} color="#c27a61" />
                   Скорость</span>
-                <span className="text-3xl text-white text-right flex justify-end">
+                <span className="text-2xl text-white text-right flex justify-end">
                   {isHover &&
                     totalNewStats &&
                     totalStats.baseStats.speed !==
@@ -353,11 +368,11 @@ export const MyCharacterPage: FC = () => {
                   {totalStats.baseStats.speed}
                 </span>
               </div>
-              <div className="grid grid-cols-2 gap-2 w-full px-2 pt-4 pb-2">
-                <span className="text-3xl text-white flex items-center gap-2">
-                  <Shield width={iconSize} height={iconSize} />
+              <div className="grid grid-cols-2 gap-2 w-full px-2 pt-3 pb-3">
+                <span className="text-2xl text-white flex items-center gap-2">
+                  <Shield width={iconSize} height={iconSize} color="#c27a61" />
                   Защита</span>
-                <span className="text-3xl text-white text-right flex justify-end">
+                <span className="text-2xl text-white text-right flex justify-end">
                   {isHover &&
                     totalNewStats &&
                     totalStats.baseStats.defense !==
@@ -374,21 +389,21 @@ export const MyCharacterPage: FC = () => {
               className={`
                             mt-4
                             w-full
-                            bg-gray-900/80
-                            border-amber-900 border-4
+                            border-[#2d2b43] border-4
                             flex
                             flex-col
                             items-center
                             justify-center
                             rounded-xl
                             px-4
+                            backdrop-blur-2xl
                         `}
             >
-              <div className="grid grid-cols-2 gap-2 w-full px-2 pt-4 pb-2 border-b-2 border-amber-900">
-                <span className="text-3xl text-white flex items-center gap-2">
-                  <DiamondPercent width={iconSize} height={iconSize} />
+              <div className="grid grid-cols-2 gap-2 w-full px-2 pt-3 pb-3">
+                <span className="text-2xl text-white flex items-center gap-2">
+                  <DiamondPercent width={iconSize} height={iconSize} color="#88c4f2" />
                   Крит шанс</span>
-                <span className="text-3xl text-white text-right flex justify-end">
+                <span className="text-2xl text-white text-right flex justify-end">
                   {isHover &&
                     totalNewStats &&
                     totalStats.advancedStats?.critChance !==
@@ -407,11 +422,11 @@ export const MyCharacterPage: FC = () => {
                   %
                 </span>
               </div>
-              <div className="grid grid-cols-2 gap-2 w-full px-2 pt-4 pb-2 border-b-2 border-amber-900">
-                <span className="text-3xl text-white flex items-center gap-2">
-                  <Swords width={iconSize} height={iconSize} />
+              <div className="grid grid-cols-2 gap-2 w-full px-2 pt-3 pb-3">
+                <span className="text-2xl text-white flex items-center gap-2">
+                  <Swords width={iconSize} height={iconSize} color="#88c4f2" />
                   Крит урон</span>
-                <span className="text-3xl text-white text-right flex justify-end">
+                <span className="text-2xl text-white text-right flex justify-end">
                   {isHover &&
                     totalNewStats &&
                     totalStats.advancedStats?.critDamage !==
@@ -430,12 +445,12 @@ export const MyCharacterPage: FC = () => {
                   %
                 </span>
               </div>
-              <div className="grid grid-cols-2 gap-2 w-full px-2 pt-4 pb-2 border-b-2 border-amber-900">
-                <span className="text-2xl text-white flex items-center gap-2">
-                  <BatteryCharging width={iconSize} height={iconSize} />
+              <div className="grid grid-cols-2 gap-2 w-full px-2 pt-3 pb-3">
+                <span className="text-xl text-white flex items-center gap-2">
+                  <BatteryCharging width={iconSize} height={iconSize} className="shrink-0" color="#88c4f2" />
                   Восстановление энергии
                 </span>
-                <span className="text-3xl text-white text-right flex justify-end">
+                <span className="text-2xl text-white text-right flex justify-end">
                   {isHover &&
                     totalNewStats &&
                     totalStats.advancedStats?.energyRegen !==
@@ -450,11 +465,11 @@ export const MyCharacterPage: FC = () => {
                   {Math.floor(totalStats.advancedStats?.energyRegen || 1)}
                 </span>
               </div>
-              <div className="grid grid-cols-2 gap-2 w-full px-2 pt-4 pb-2 border-b-2 border-amber-900">
-                <span className="text-3xl text-white flex items-center gap-2">
-                  <Clover width={iconSize} height={iconSize} />
+              <div className="grid grid-cols-2 gap-2 w-full px-2 pt-3 pb-3">
+                <span className="text-2xl text-white flex items-center gap-2">
+                  <Clover width={iconSize} height={iconSize} color="#88c4f2" />
                   Уклонение</span>
-                <span className="text-3xl text-white text-right flex justify-end">
+                <span className="text-2xl text-white text-right flex justify-end">
                   {isHover &&
                     totalNewStats &&
                     totalStats.advancedStats?.dodge !==
@@ -470,10 +485,10 @@ export const MyCharacterPage: FC = () => {
                 </span>
               </div>
               <div className="grid grid-cols-2 gap-2 w-full px-2 pt-4 pb-2">
-                <span className="text-3xl text-white flex items-center gap-2">
-                  <Crosshair width={iconSize} height={iconSize} />
+                <span className="text-2xl text-white flex items-center gap-2">
+                  <Crosshair width={iconSize} height={iconSize} color="#88c4f2" />
                   Точность</span>
-                <span className="text-3xl text-white text-right flex justify-end">
+                <span className="text-2xl text-white text-right flex justify-end">
                   {isHover &&
                     totalNewStats &&
                     totalStats.advancedStats?.accuracy !==
@@ -499,9 +514,9 @@ export const MyCharacterPage: FC = () => {
               <ArrowLeft strokeWidth={3} width={40} height={40} /> Назад
             </span>
           </div>
-          <div className="absolute left-[40%] right-0 bottom-0 h-1/3 bg-gray-900/30 flex flex-col items-center justify-center p-8 gap-2">
+          <div className="absolute left-[40%] right-0 bottom-0 h-1/3 bg-gray-900/50 flex flex-col items-center justify-center p-8 gap-2">
             <div className="text-4xl text-white font-bold">Снаряжение</div>
-            <div className="grid grid-cols-5 gap-4 mb-4">
+            <div className="grid grid-cols-5 gap-8 mb-4">
               <EquipmentCard
                 fallback="true_hero_sword_weapon"
                 equipment={equipment.weapon}
@@ -628,26 +643,34 @@ export const MyCharacterPage: FC = () => {
                 {/* Button text with glow */}
                 <div className="relative z-10 drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)] tracking-wider flex gap-10 items-center">
                   {
-                    isHover && (
-                      <ChevronsUp width={50} height={50} />
+                    resources ? (
+                      <>
+                        {
+                          isHover && (
+                            <ChevronsUp width={50} height={50} />
+                          )
+                        }
+                        УЛУЧШИТЬ
+                        <div className="flex justify-center gap-8 relative">
+                          {Object.entries(resources.balances)
+                            .filter(([_, amount]) => amount > 0)
+                            .map(([resource, amount]) => {
+                              return (
+                                <div
+                                  key={resource}
+                                  className="flex items-center gap-2"
+                                >
+                                  {amount}
+                                  <Icon icon={resource as any} />
+                                </div>
+                              );
+                            })}
+                        </div>
+                      </>
+                    ) : (
+                      'МАКСИМАЛЬНЫЙ УРОВЕНЬ'
                     )
                   }
-                  УЛУЧШИТЬ
-                  <div className="flex justify-center gap-8 relative">
-                    {Object.entries(resources.balances)
-                      .filter(([_, amount]) => amount > 0)
-                      .map(([resource, amount]) => {
-                        return (
-                          <div
-                            key={resource}
-                            className="flex items-center gap-2"
-                          >
-                            {amount}
-                            <Icon icon={resource as any} />
-                          </div>
-                        );
-                      })}
-                  </div>
                 </div>
 
                 {/* Shine effect */}

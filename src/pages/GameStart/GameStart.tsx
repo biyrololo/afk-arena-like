@@ -52,7 +52,7 @@ export default function GameStart() {
         return characters.find((character) => character.id === id) ?? null;
       }),
     );
-  }, [lastSquad, setSelectedCharacters]);
+  }, [lastSquad, setSelectedCharacters, characters]);
 
   const enemiesPower = useMemo(() => {
     const stage = findStage(chapterNumber, stageNumber);
@@ -101,7 +101,7 @@ export default function GameStart() {
     }
 
     setLastSquad(
-      selectedCharacters.map((character) => character?.id ?? null) as SquadList,
+      selectedCharacters.map((character) => character?.id || null) as SquadList,
     );
     setSelectedCharacters([null, null, null, null]);
     navitate("/game", {

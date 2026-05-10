@@ -161,7 +161,7 @@ export const EquipmentSelectModal: FC<IEquipmentSelectModalProps> = ({
                   disabled={!canUpgrade || !currentEquipment}
                 >
                   {
-                    currentEquipment ? (
+                    currentEquipment && resources ? (
                       <>
                         УЛУЧШИТЬ
                         {currentEquipment && (

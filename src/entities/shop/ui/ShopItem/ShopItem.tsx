@@ -22,7 +22,10 @@ export const ShopItem: FC<Props> = ({
     const controls = useAnimation();
     const [bought, setBought] = useState(false);
 
-    const isAlreadyBought = item.alreadyBought?.() || false;
+
+    const isAlreadyBought = item.alreadyBought?.();
+
+    const disabled = item.overflow?.() || isAlreadyBought;
 
     const handleBuy = async () => {
         buy();
@@ -127,7 +130,7 @@ export const ShopItem: FC<Props> = ({
                                     if (!isAlreadyBought)
                                         handleBuy()
                                 }}
-                                disabled={!affordable}
+                                disabled={!affordable || disabled}
                                 className={`
                                 px-4 py-2 text-xl font-bold
                                 ${affordable ?
@@ -140,7 +143,7 @@ export const ShopItem: FC<Props> = ({
                             `}
                             >
                                 {
-                                    bought || isAlreadyBought ? "Куплено" : "Купить"
+                                    bought || isAlreadyBought ? "Куплено" : item.overflow?.() ? "Нет места" : "Купить"
                                 }
                             </Button>
                         </>

@@ -1,7 +1,12 @@
 import { Character, cloneCharacter } from "../types/character";
 import type { PlayerCharacter } from "../types/PlayerCharacter";
 import { create } from "zustand";
-import { FIRE_KING_CHARACTER } from "@/entities/character/lib/allCharacters";
+import { DEMON_SLIME, FIRE_KING_CHARACTER, SPEARWOMAN_CHARACTER } from "@/entities/character/lib/allCharacters";
+import { createEquipment } from "@/entities/character/lib/allEquipment";
+import { Accessories, AllEquipment, Weapons } from "@/entities/character/lib/equipmentList";
+import { calculateCharacterPower } from "../types/develop";
+import * as CHARACTERS from "@/entities/character/lib/allCharacters";
+import { mockCharacters } from "./mockCharacters";
 
 interface PlayerCharactersStore {
   characters: PlayerCharacter[];
@@ -15,7 +20,7 @@ interface PlayerCharactersStore {
 const usePlayerCharactersStore = create<PlayerCharactersStore>((set) => ({
   characters: [
     cloneCharacter(FIRE_KING_CHARACTER),
-    // ...Object.values(CHARACTERS).filter(c => 'power' in c).map(c => {
+    // ...mockCharacters.filter(c => 'power' in c).map(c => {
     //   const copy = structuredClone(c);
     //   copy.power = calculateCharacterPower(copy);
     //   return copy;
@@ -24,7 +29,28 @@ const usePlayerCharactersStore = create<PlayerCharactersStore>((set) => ({
   equipment: [
     // ...Object.values(Weapons.WEAPONS).map(weapon => createEquipment(weapon)),
     // ...Object.values(Accessories.ACCESSORIES).map(accessory => createEquipment(accessory)),
-    // ...Object.values(AllEquipment.EQUIPMENT).map(eq => Object.values(eq).map(a => createEquipment(a)).flat()).flat()
+    // ...Object.values(AllEquipment.EQUIPMENT).map(eq => Object.values(eq).map(a => createEquipment(a)).flat()).flat(),
+    // ...Object.values(Weapons.WEAPONS).map(weapon => createEquipment(weapon)),
+    // ...Object.values(Accessories.ACCESSORIES).map(accessory => createEquipment(accessory)),
+    // ...Object.values(AllEquipment.EQUIPMENT).map(eq => Object.values(eq).map(a => createEquipment(a)).flat()).flat(),
+    // ...Object.values(Weapons.WEAPONS).map(weapon => createEquipment(weapon)),
+    // ...Object.values(Accessories.ACCESSORIES).map(accessory => createEquipment(accessory)),
+    // ...Object.values(AllEquipment.EQUIPMENT).map(eq => Object.values(eq).map(a => createEquipment(a)).flat()).flat(),
+    // ...Object.values(Weapons.WEAPONS).map(weapon => createEquipment(weapon)),
+    // ...Object.values(Accessories.ACCESSORIES).map(accessory => createEquipment(accessory)),
+    // ...Object.values(AllEquipment.EQUIPMENT).map(eq => Object.values(eq).map(a => createEquipment(a)).flat()).flat(),
+    // ...Object.values(Weapons.WEAPONS).map(weapon => createEquipment(weapon)),
+    // ...Object.values(Accessories.ACCESSORIES).map(accessory => createEquipment(accessory)),
+    // ...Object.values(AllEquipment.EQUIPMENT).map(eq => Object.values(eq).map(a => createEquipment(a)).flat()).flat(),
+    // ...Object.values(Weapons.WEAPONS).map(weapon => createEquipment(weapon)),
+    // ...Object.values(Accessories.ACCESSORIES).map(accessory => createEquipment(accessory)),
+    // ...Object.values(AllEquipment.EQUIPMENT).map(eq => Object.values(eq).map(a => createEquipment(a)).flat()).flat(),
+    // ...Object.values(Weapons.WEAPONS).map(weapon => createEquipment(weapon)),
+    // ...Object.values(Accessories.ACCESSORIES).map(accessory => createEquipment(accessory)),
+    // ...Object.values(AllEquipment.EQUIPMENT).map(eq => Object.values(eq).map(a => createEquipment(a)).flat()).flat(),
+    // ...Object.values(Weapons.WEAPONS).map(weapon => createEquipment(weapon)),
+    // ...Object.values(Accessories.ACCESSORIES).map(accessory => createEquipment(accessory)),
+    // ...Object.values(AllEquipment.EQUIPMENT).map(eq => Object.values(eq).map(a => createEquipment(a)).flat()).flat(),
   ],
   setCharacters: (characters: PlayerCharacter[]) => set({ characters }),
   setEquipment: (equipment: Character.Equipment[]) => set({ equipment }),

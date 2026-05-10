@@ -1,12 +1,13 @@
 import { Icons } from "@/shared/icons";
 import usePlayerCharactersStore from "@/shared/store/PlayerCharactersStore";
 import { Character } from "@/shared/types/character";
-import { v4 } from "uuid";
 import type { CreateEquipmentProps } from "./equipmentList";
+
+import { nanoid } from "nanoid";
 
 export const createEquipment = (props: CreateEquipmentProps): Character.Equipment => {
     const newEquipment: Character.Equipment = {
-        id: v4(),
+        id: nanoid(),
         ...props,
         equippedCharacterId: undefined
     }

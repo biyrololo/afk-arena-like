@@ -5,8 +5,9 @@ import sword from "@/assets/menu/sword.png";
 import heroes from "@/assets/menu/heroes.png";
 import equipment from "@/assets/menu/equipment.png";
 import shop from "@/assets/menu/shop.png";
-import survival from "@/assets/menu/survival.png";
+import survival from "@/assets/menu/survival.webp";
 import quests from '@/assets/menu/quests.webp'
+import tower from '@/assets/menu/tower.webp'
 
 import classes from "./MenuUI.module.css";
 import { Balances } from "../Balances/Balances";
@@ -49,7 +50,7 @@ export default function MenuUI() {
   const swordAspectRatio = 249 / 322;
   const heroesAspectRatio = 400 / 322;
   const equipmentAspectRatio = 400 / 422;
-  const survivalAspectRatio = 300 / 242;
+  const survivalAspectRatio = 1;
 
   const shopAspectRatio = 100 / 131;
   const questsAspectRatio = 1;
@@ -58,8 +59,8 @@ export default function MenuUI() {
 
   const isSomeQuestDidntClaimed = QUESTS.some(quest => quest.getProgress() === 1 && !completedQuests.includes(quest.id))
 
-  const [chapterNumber, stageNumber] = usePlayerStore(
-    useShallow((state) => [state.chapterNumber, state.stageNumber]),
+  const [chapterNumber, stageNumber, towerFloor] = usePlayerStore(
+    useShallow((state) => [state.chapterNumber, state.stageNumber, state.towerFloor]),
   );
 
   const isOpenedModal = useDailyRewardsStore(useShallow(state => state.isOpenedModal));
@@ -109,7 +110,7 @@ export default function MenuUI() {
           navigate("/summon")
         }}
       >
-        <span className="text-white bg-amber-950 border-4 border-amber-600 py-2 px-6 rounded-full text-5xl mt-40">
+        <span className="text-white bg-[#334e8c] border-4 border-[#6be9f8] py-2 px-6 rounded-full text-5xl mt-50">
           Призыв
         </span>
       </div>
@@ -142,7 +143,7 @@ export default function MenuUI() {
           backgroundSize: "contain",
           width: 600,
           height: 600 / heroesAspectRatio,
-          left: 150,
+          left: 180,
           bottom: 430,
         }}
         onClick={() => {
@@ -216,7 +217,7 @@ export default function MenuUI() {
             </div>
           )
         }
-        <span className="text-white bg-amber-950 border-4 border-amber-600 py-2 px-6 rounded-full text-3xl mt-48">
+        <span className="text-white bg-[#0c4c38] border-4 border-[#22c762] py-2 px-6 rounded-full text-3xl mt-48">
           Магазин
         </span>
       </div>
@@ -235,8 +236,28 @@ export default function MenuUI() {
           navigate("/game/survival/start/1");
         }}
       >
-        <span className="text-white bg-amber-950 border-4 border-amber-600 py-2 px-6 rounded-full text-5xl mt-48">
+        <span className="text-white bg-amber-950 border-4 border-amber-600 py-2 px-6 rounded-full text-5xl mt-60">
           Выживание
+        </span>
+      </div>
+      <div
+        className="absolute flex flex-col items-center justify-center cursor-pointer hover:scale-110 transition-all duration-100"
+        style={{
+          backgroundImage: `url(${tower})`,
+          backgroundSize: "contain",
+          width: 400,
+          height: 400,
+          left: 720,
+          top: 40,
+        }}
+        onClick={() => {
+          Analytics.send(GameGoal.ClickStartBattleSurvival)
+          navigate("/game/tower/start");
+        }}
+      >
+        <span className="text-white bg-[#2c1523] border-4 border-[#b10b2a] py-2 px-6 rounded-full text-3xl mt-70">{`Этаж ${towerFloor}`}</span>
+        <span className="text-white bg-[#2c1523] border-4 border-[#b10b2a] py-2 px-18 rounded-full text-5xl mt-4">
+          Башня
         </span>
       </div>
       <TogleMusicButton />

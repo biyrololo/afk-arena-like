@@ -12,6 +12,7 @@ import { FANTASY_WARRIOR_CHARACTER } from "@/entities/character/lib/allCharacter
 import { useGameStateStore } from "@/entities/game/model/game-state.store";
 import { SDK } from "@/entities/sdk/model/sdk";
 import { Analytics, GameGoal } from "@/shared/lib/analytics";
+import { EQUIPMENT_LIMIT } from "@/shared/lib/constants";
 
 export const isEnoughResourcesForShopItem = (price: IShopItem['price'], priceType: IShopItem['priceType'], balances: PlayerBalances) => {
     if (priceType === ShopPriceType.Ad) return true;
@@ -59,6 +60,7 @@ const createEquipmentItem = (
             );
         },
         rarity: rarity || Character.Rarity.COMMON,
+        overflow: () => usePlayerCharactersStore.getState().equipment.length >= EQUIPMENT_LIMIT
 
     }
 }

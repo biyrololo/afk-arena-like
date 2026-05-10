@@ -235,6 +235,7 @@ export default class Character extends Phaser.GameObjects.Container {
     advancedStats: CharacterNS.AdvancedStats,
     role: CharacterNS.Role,
     faction: CharacterNS.Faction,
+    private variantState: CharacterNS.Character['variant'],
     frameWidth: number,
     frameHeight: number,
     displayWidth?: number,
@@ -296,6 +297,12 @@ export default class Character extends Phaser.GameObjects.Container {
     );
 
     this.createHPBar();
+
+    if (this.variantState && this.variantState.variants[this.variantState.current].baseColor) {
+      const variantColor = this.variantState.variants[this.variantState.current].baseColor;
+      this.sprite.setTint(variantColor);
+    }
+
     // this.setDebugMode(true);
   }
 
@@ -877,7 +884,11 @@ export default class Character extends Phaser.GameObjects.Container {
 
     // Определяем начальный и конечный цвета
     const startColor = Phaser.Display.Color.IntegerToColor(0xff0000); // Красный
-    const endColor = Phaser.Display.Color.IntegerToColor(this.baseColor || 0xffffff);
+    let variantColor: number | undefined = undefined;
+    if (this.variantState && this.variantState.variants[this.variantState.current].baseColor) {
+      variantColor = this.variantState.variants[this.variantState.current].baseColor;
+    }
+    const endColor = Phaser.Display.Color.IntegerToColor(this.baseColor || variantColor || 0xffffff);
 
     this.scene.tweens.addCounter({
       from: 0,
@@ -906,7 +917,10 @@ export default class Character extends Phaser.GameObjects.Container {
       onComplete: () => {
         if (this.baseColor) {
           this.sprite.setTint(this.baseColor);
-        } else {
+        } else if (this.variantState && this.variantState.variants[this.variantState.current].baseColor) {
+          this.sprite.setTint(this.variantState.variants[this.variantState.current].baseColor);
+        }
+        else {
           this.sprite.clearTint();
         }
       }
@@ -1192,6 +1206,10 @@ export default class Character extends Phaser.GameObjects.Container {
 
   public setBaseColor(color?: number): void {
     this.baseColor = color;
-    this.sprite.setTint(color);
+    let variantColor: number | undefined = undefined;
+    if (this.variantState && this.variantState.variants[this.variantState.current].baseColor) {
+      variantColor = this.variantState.variants[this.variantState.current].baseColor;
+    }
+    this.sprite.setTint(color || variantColor || 0xffffff);
   }
 }

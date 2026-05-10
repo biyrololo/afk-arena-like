@@ -15,6 +15,7 @@ import {
 import { useBackgroundMusic } from "@/shared/hooks/useBackgroundMusic";
 import { MUSIC } from "@/assets/music/music";
 import { TogleMusicButton } from "@/widgets/TogleMusicButton/TogleMusicButton";
+import { generateTowerStage } from "@/entities/chapter/lib/stages/tower-stages";
 
 export default function Game() {
   const location = useLocation();
@@ -63,6 +64,8 @@ export default function Game() {
           currentStage = getSurvivalChapters().find(
             (c) => c.stageNumber === +stage,
           );
+        } else if (stageType === StageTypeEnum.TOWER) {
+          currentStage = generateTowerStage(stage);
         } else if (chapter) {
           currentStage = findStage(chapter, stage);
         }
@@ -86,6 +89,13 @@ export default function Game() {
       console.log(data);
       if (stageType === StageTypeEnum.SURVIVAL) {
         navigate("/game/survival/end", {
+          state: {
+            ...data,
+            characters
+          },
+        });
+      } else if (stageType === StageTypeEnum.TOWER) {
+        navigate("/game/tower/end", {
           state: {
             ...data,
             characters

@@ -1038,3 +1038,11 @@ export namespace Accessories {
 
     } as const;
 }
+
+const all = [...Object.values(Weapons.WEAPONS),
+...Object.values(Accessories.ACCESSORIES),
+...Object.values(AllEquipment.EQUIPMENT).map(eq => Object.values(eq).flat()).flat(),]
+
+export const findEquipmentBaseByKey = (key: string) => {
+    return all.find(e => e.key === key);
+}

@@ -222,7 +222,7 @@ export default class CharacterViewScene extends Phaser.Scene {
         }
 
         const c = generateCharacter(this as any, 'ally', char.key as any, {
-            x: 1920 * 2 / 3,
+            x: 1920 * 0.6,
             y: 1080 * 1 / 2,
             scale: 10,
             character: {
@@ -241,7 +241,7 @@ export default class CharacterViewScene extends Phaser.Scene {
             c.getY() + (centerY - hbh)
         )
         c.setX(
-            c.getX() + (1400 - c.getHitbox().centerX)
+            c.getX() + (1300 - c.getHitbox().centerX)
         )
     }
 

@@ -27,3 +27,5 @@ story-blueprint.md
 character-bible.md
 
 src/entities/shop/model/promocodes.store.ts
+
+.env

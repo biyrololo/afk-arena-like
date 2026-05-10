@@ -10,6 +10,7 @@ export interface IStageReward {
 export enum StageTypeEnum {
   SURVIVAL = "survival",
   COMBAT = "combat",
+  TOWER = "tower",
 }
 
 export interface IStage {

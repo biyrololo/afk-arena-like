@@ -7,6 +7,9 @@ import loading from '@/assets/backgrounds/loading.webp'
 import shop from '@/assets/backgrounds/shop.webp'
 import summon from '@/assets/backgrounds/summon.webp'
 import tavern from '@/assets/backgrounds/tavern.webp'
+import lava_castle_bg from '@/assets/backgrounds/lava_castle_bg.webp'
+import tower_win from '@/assets/backgrounds/tower_win.webp'
+import tower_lose from '@/assets/backgrounds/tower_lose.webp'
 
 export const Backgrounds = {
     menu,
@@ -18,4 +21,7 @@ export const Backgrounds = {
     shop,
     summon,
     tavern,
+    lava_castle_bg,
+    tower_win,
+    tower_lose,
 }

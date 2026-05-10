@@ -29,6 +29,8 @@ export class SDK {
     onLoad: ((sdk: SDK) => void)[] = [];
     player: Player | null = null;
 
+    lastSavedData: string | null = null;
+
     static getInstance(): SDK {
         if (!this.instance) {
             this.instance = new SDK();
@@ -199,8 +201,13 @@ export class SDK {
             console.error('Player not initialized while setting data');
             return;
         }
+        const currentData = JSON.stringify(data);
+        if (currentData === this.lastSavedData) {
+            console.warn('Data is the same, not saving');
+            return;
+        }
         console.warn('Set player data', data);
-        return this.player.setData(data);
+        return this.player.setData(data, true);
     }
 
     getData(keys: undefined | string[] = undefined) {
@@ -259,26 +266,68 @@ export class SDK {
             });
     }
 
-    async syncWithRemote() {
+    async syncWithRemote(maxRetries = 3) {
         if (!this.ysdk) return null;
-        try {
-            const data = await this.getData();
-            if (data) {
-                loadData(data)
+
+        for (let attempt = 1; attempt <= maxRetries; attempt++) {
+            try {
+                console.log(`[SDK] Syncing with remote (attempt ${attempt}/${maxRetries})...`);
+                const data = await this.getData();
+                if (data) {
+                    loadData(data)
+                }
+                const stats = await this.getStats();
+                if (stats) {
+                    loadStats(stats)
+                }
+                this.lastSavedData = JSON.stringify(dumpData());
+                console.log('[SDK] Successfully synced with remote');
+                return; // Success, exit retry loop
+            } catch (error) {
+                console.error(`[SDK] Error while syncing with remote (attempt ${attempt}/${maxRetries}):`, error);
+
+                if (attempt === maxRetries) {
+                    console.error('[SDK] All sync attempts failed');
+                } else {
+                    // Wait before retry (exponential backoff: 1s, 2s, 4s)
+                    const waitTime = Math.pow(2, attempt - 1) * 1000;
+                    console.log(`[SDK] Waiting ${waitTime}ms before retry...`);
+                    await new Promise(resolve => setTimeout(resolve, waitTime));
+                }
             }
-            const stats = await this.getStats();
-            if (stats) {
-                loadStats(stats)
-            }
-        } catch (error) {
-            console.error('Error while syncing with remote:', error);
         }
     }
 
-    syncWithLocal() {
+    async syncWithLocal(maxRetries = 3) {
         if (!this.ysdk) return null;
-        this.setData(dumpData())
-        this.setStats(dumpStats())
+
+        for (let attempt = 1; attempt <= maxRetries; attempt++) {
+            try {
+                console.log(`[SDK] Saving to Yandex Cloud (attempt ${attempt}/${maxRetries})...`);
+
+                const data = dumpData();
+
+                await Promise.all([
+                    this.setData(data),
+                    this.setStats(dumpStats())
+                ]);
+
+                console.log('[SDK] Successfully saved to Yandex Cloud');
+                this.lastSavedData = JSON.stringify(data);
+                return; // Success, exit retry loop
+            } catch (error) {
+                console.error(`[SDK] Error while saving to Yandex Cloud (attempt ${attempt}/${maxRetries}):`, error);
+
+                if (attempt === maxRetries) {
+                    console.error('[SDK] All save attempts failed');
+                } else {
+                    // Wait before retry (exponential backoff: 1s, 2s, 4s)
+                    const waitTime = Math.pow(2, attempt - 1) * 1000;
+                    console.log(`[SDK] Waiting ${waitTime}ms before retry...`);
+                    await new Promise(resolve => setTimeout(resolve, waitTime));
+                }
+            }
+        }
     }
 
     async getPurchases() {
@@ -300,5 +349,12 @@ export class SDK {
     hideBannerAdv() {
         console.warn('Hide banner adv');
         return this.ysdk?.adv.hideBannerAdv();
+    }
+
+    // Immediate save for critical actions (spending currency, getting heroes, etc.)
+    // Call this directly from code after important state changes
+    syncImmediately() {
+        console.log('[SDK] Immediate sync triggered');
+        return this.syncWithLocal(3);
     }
 }

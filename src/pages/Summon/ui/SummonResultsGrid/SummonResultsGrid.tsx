@@ -5,6 +5,7 @@ import { type DropItem, DropType } from "@/entities/summon/lib/summon";
 import { motion } from "framer-motion";
 import type { FC } from "react";
 import { Character } from "@/shared/types/character";
+import { Icon } from "@/shared/ui/Icon/Icon";
 
 type Props = {
     results: DropItem[];
@@ -94,12 +95,35 @@ export const SummonResultsGrid: FC<Props> = ({ results }) => {
                                         }}
                                     />
                                 ) : (
-                                    <EquipmentCard
-                                        withoutAnimation
-                                        size={200}
-                                        iconSize={100}
-                                        equipment={result.item}
-                                    />
+                                    <>
+                                        <EquipmentCard
+                                            withoutAnimation
+                                            size={200}
+                                            iconSize={100}
+                                            equipment={result.item}
+                                        />
+                                        {
+                                            !!result.overflowBalances && (
+                                                <>
+                                                    <p className="text-white absolute top-2 text-center">
+                                                        Инвентарь переполнен
+                                                    </p>
+                                                    <div className="flex gap-4 justify-center text-white text-sm absolute bottom-2 left-0 right-0">
+                                                        {
+                                                            result.overflowBalances.gems > 0 && (
+                                                                <p className="text-white flex items-center">
+                                                                    {result.overflowBalances.gems} <Icon icon="gems" size={30} />
+                                                                </p>
+                                                            )
+                                                        }
+                                                        <p className="text-white flex items-center">
+                                                            {result.overflowBalances.gold} <Icon icon="gold" size={30} />
+                                                        </p>
+                                                    </div>
+                                                </>
+                                            )
+                                        }
+                                    </>
                                 )}
                             </div>
 

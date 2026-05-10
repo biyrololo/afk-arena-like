@@ -4,6 +4,9 @@ import { Avatars } from "@/shared/avatars";
 import { usePlayerStore } from '@/entities/player/model/player.store';
 import usePlayerCharactersStore from '@/shared/store/PlayerCharactersStore';
 import { cloneCharacter } from '@/shared/types/character';
+import out_of_ice_cave from '@/assets/scenes/out_of_ice_cave.webp'
+import frost_guardian_appear from '@/assets/scenes/frost_guardian_appear.webp'
+import frost_guardian_lose from '@/assets/scenes/frost_guardian_lose.webp'
 
 const checkProgress = (chapter: number, stage: number) => {
     const { chapterNumber, stageNumber } = usePlayerStore.getState()
@@ -86,7 +89,8 @@ export const CHAPTER_2_SCENES: IPlotScene[] = [
                 authorPosition: 'right',
                 text: "ЦЕЛЬ ЗАХВАЧЕНА. ИНИЦИАЦИЯ ЗАМОРОЗКИ... ОШИБКА!",
                 avatar: Avatars.frostGuardian,
-                isAvailable: () => checkProgress(2, 10)
+                isAvailable: () => checkProgress(2, 10),
+                backgroundImage: frost_guardian_appear,
             },
             {
                 id: "c2vi2",
@@ -95,6 +99,7 @@ export const CHAPTER_2_SCENES: IPlotScene[] = [
                 authorPosition: 'right',
                 text: "Эй, железная консерва! Попробуй заморозить мой топор!",
                 avatar: Avatars.viking,
+                backgroundImage: frost_guardian_appear,
             },
             {
                 id: "c2vi3",
@@ -103,6 +108,7 @@ export const CHAPTER_2_SCENES: IPlotScene[] = [
                 authorPosition: 'right',
                 text: "ОБНАРУЖЕНА НОВАЯ УГРОЗА. ОТСТУПЛЕНИЕ ДЛЯ ПЕРЕГРУЗКИ.",
                 avatar: Avatars.frostGuardian,
+                backgroundImage: frost_guardian_lose,
             },
             {
                 id: "c2vi4",
@@ -110,6 +116,7 @@ export const CHAPTER_2_SCENES: IPlotScene[] = [
                 color: "green",
                 text: "Он сбежал! Эй ты, северянин, он был почти уничтожен!",
                 avatar: Avatars.fireKing,
+                backgroundImage: frost_guardian_lose,
             },
             {
                 id: "c2vi5",
@@ -118,6 +125,7 @@ export const CHAPTER_2_SCENES: IPlotScene[] = [
                 authorPosition: 'right',
                 text: "Он бы раздавил тебя, малявка. Сначала победи меня, а потом ной о своей добыче!",
                 avatar: Avatars.viking,
+                backgroundImage: frost_guardian_lose,
             },
         ],
     },
@@ -263,7 +271,8 @@ export const CHAPTER_2_SCENES: IPlotScene[] = [
                 authorPosition: 'right',
                 text: "СИСТЕМА ВОССТАНОВЛЕНА. ЭНЕРГИЯ БЕЗДНЫ: 100%. ЗАПУСК ПРОТОКОЛА УНИЧТОЖЕНИЯ",
                 avatar: Avatars.frostGuardian,
-                isAvailable: () => checkProgress(2, 40)
+                isAvailable: () => checkProgress(2, 40),
+                backgroundImage: frost_guardian_lose,
             },
             {
                 id: "c2fgf2",
@@ -271,6 +280,7 @@ export const CHAPTER_2_SCENES: IPlotScene[] = [
                 color: "green",
                 text: "В этот раз ты не сбежишь. Мы растопим твое ледяное сердце!",
                 avatar: Avatars.fireKing,
+                backgroundImage: frost_guardian_lose,
             },
             {
                 id: "c2fgf3",
@@ -278,6 +288,7 @@ export const CHAPTER_2_SCENES: IPlotScene[] = [
                 color: "green",
                 text: "За Север! За победу! В атаку!",
                 avatar: Avatars.viking,
+                backgroundImage: frost_guardian_lose,
             },
         ],
     },
@@ -292,7 +303,8 @@ export const CHAPTER_2_SCENES: IPlotScene[] = [
                 color: "green",
                 text: "Все кончено. Страж пал, но Бездна успела заразить эти земли слишком глубоко.",
                 avatar: Avatars.fireKing,
-                isAvailable: () => checkProgress(3, 1)
+                isAvailable: () => checkProgress(3, 1),
+                backgroundImage: frost_guardian_lose,
             },
             {
                 id: "c2end2",
@@ -300,6 +312,7 @@ export const CHAPTER_2_SCENES: IPlotScene[] = [
                 color: "green",
                 text: "Видите эти кристаллы, прорастающие сквозь лед? Они зовут нас на восток.",
                 avatar: Avatars.warrior,
+                backgroundImage: out_of_ice_cave,
             },
             {
                 id: "c2end3",
@@ -307,6 +320,7 @@ export const CHAPTER_2_SCENES: IPlotScene[] = [
                 color: "green",
                 text: "Долина Кристаллов... опасное место. Но с таким костром, как ты, Игнис, я не пропаду!",
                 avatar: Avatars.viking,
+                backgroundImage: out_of_ice_cave,
             },
             {
                 id: "c2end4",
@@ -314,6 +328,7 @@ export const CHAPTER_2_SCENES: IPlotScene[] = [
                 color: "green",
                 text: "Держим путь в Долину. Нужно найти Акари до того, как Бездна поглотит её.",
                 avatar: Avatars.fireKing,
+                backgroundImage: out_of_ice_cave,
             },
         ],
     },

@@ -14,4 +14,5 @@ export interface IShopItem {
     onBuy: () => void;
     rarity: Character.Rarity;
     alreadyBought?: () => boolean;
+    overflow?: () => boolean;
 }

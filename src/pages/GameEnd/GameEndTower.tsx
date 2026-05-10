@@ -1,0 +1,321 @@
+import { SOUNDS } from "@/assets/sound/sounds";
+import { type IStageReward } from "@/entities/chapter/lib/chapter.model";
+import { generateTowerStage } from "@/entities/chapter/lib/stages/tower-stages";
+import { EquipmentCard } from "@/entities/character/ui/EquipmentCard/EquipmentCard";
+import { useGameStateStore } from "@/entities/game/model/game-state.store";
+import { usePlayerStore } from "@/entities/player/model/player.store";
+import { SDK } from "@/entities/sdk/model/sdk";
+import { useSoundEffects } from "@/shared/hooks/useSoundEffects";
+import usePlayerCharactersStore from "@/shared/store/PlayerCharactersStore";
+import { Button } from "@/shared/ui/Button/Button";
+import { Icon } from "@/shared/ui/Icon/Icon";
+import { ResponsiveUI } from "@/shared/ui/ResponsiveUI/ResponsiveUI";
+import classNames from "classnames";
+import { Play } from "lucide-react";
+import { useEffect, useState, type FC } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useShallow } from "zustand/shallow";
+
+import { Backgrounds } from "@/shared/backgrounds";
+
+export const GameEndTower: FC = () => {
+  const { state } = useLocation();
+  const sounds = useSoundEffects(SOUNDS);
+  useEffect(() => {
+    if (!state) return;
+    if (state.win) {
+      setTimeout(() => {
+        sounds.playSound('vibraphone_level_complete');
+      }, 10);
+    } else {
+      setTimeout(() => {
+        sounds.playSound('vibraphone_defeated');
+      }, 10);
+    }
+  }, [state])
+
+  const { setEquipment } = usePlayerCharactersStore();
+
+  const [balances, setBalances, setTowerFloor] = usePlayerStore(
+    useShallow((state) => [state.balances, state.setBalances, state.setTowerFloor]),
+  );
+
+  const navigate = useNavigate();
+
+  const [reward, setReward] = useState<IStageReward | undefined>(undefined);
+  const [increased, setIncreased] = useState(false);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+
+  useEffect(() => {
+    console.log("state", state);
+    if (!state) return;
+    if (!state.stage) return;
+    if (!state.win) return;
+    const { stage } = state;
+
+    const curStage = generateTowerStage(stage);
+    console.log("curStage", curStage);
+    setReward(curStage?.rewards);
+
+    setBalances({
+      gold: balances.gold + (curStage?.rewards?.balances.gold || 0),
+      gems: balances.gems + (curStage?.rewards?.balances.gems || 0),
+      summons: balances.summons + (curStage?.rewards?.balances.summons || 0),
+      summonsSpecial: balances.summonsSpecial + (curStage?.rewards?.balances.summonsSpecial || 0),
+    });
+
+    if (curStage?.rewards?.equipment) {
+      setEquipment([
+        ...usePlayerCharactersStore.getState().equipment,
+        ...curStage?.rewards.equipment,
+      ]);
+    }
+
+    setTowerFloor(stage + 1);
+
+    // Immediately save after completing tower floor (critical action)
+    SDK.getInstance().syncImmediately();
+
+    // usePlayerStatsStore.getState().updateMaxSurvivialDepth(1, stage);
+  }, [state, setReward, setEquipment]);
+
+
+  const addBalancesRewards = () => {
+    if (!state) return;
+    if (!state.stage) return;
+    if (!state.win) return;
+    const { stage } = state;
+
+    const curStage = generateTowerStage(stage);
+
+    setBalances({
+      gold: balances.gold + (curStage?.rewards?.balances.gold || 0),
+      gems: balances.gems + (curStage?.rewards?.balances.gems || 0),
+      summons: balances.summons + (curStage?.rewards?.balances.summons || 0),
+      summonsSpecial: balances.summonsSpecial + (curStage?.rewards?.balances.summonsSpecial || 0),
+    })
+  }
+
+  const handleIncreaseRewards = async () => {
+    setIsVideoPlaying(true);
+    useGameStateStore.getState().setPaused(true);
+    useGameStateStore.getState().setIsCurrentScreenPaused(true);
+    SDK.getInstance()
+      .showRewardedVideo({
+        onClose: () => {
+          useGameStateStore.getState().setPaused(false);
+          useGameStateStore.getState().setIsCurrentScreenPaused(false);
+          SDK.getInstance().gameStart();
+          setIsVideoPlaying(false);
+        },
+        onRewarded: () => {
+          addBalancesRewards();
+          setIncreased(true);
+          useGameStateStore.getState().setPaused(false);
+          useGameStateStore.getState().setIsCurrentScreenPaused(false);
+          SDK.getInstance().gameStart();
+        },
+        onError: () => {
+          useGameStateStore.getState().setPaused(false);
+          useGameStateStore.getState().setIsCurrentScreenPaused(false);
+          SDK.getInstance().gameStart();
+          setIsVideoPlaying(false);
+        },
+      })
+  }
+
+  const goToNextStage = () => {
+    navigate('/game/tower/start')
+  };
+
+  if (!state || !("win" in state)) {
+    navigate("/");
+    return null;
+  }
+
+  const goToMenu = () => {
+    navigate("/");
+    useGameStateStore.getState().setAdAvailable(true);
+  };
+
+  const multiplier = increased ? 2 : 1
+
+  if (state.win) {
+    return (
+      <ResponsiveUI>
+        <div className="w-full h-full bg-cover
+          bg-center"
+          style={{ backgroundImage: `url(${Backgrounds.tower_win})` }}
+        >
+          <div className="w-full h-full flex flex-col items-center justify-center  p-8 relative overflow-hidden backdrop-blur-sm">
+            <div className="absolute inset-0 pointer-events-none">
+              {[...Array(20)].map((_, i) => (
+                <div
+                  key={i}
+                  className="absolute w-2 h-2 bg-yellow-400 rounded-full animate-ping"
+                  style={{
+                    left: `${Math.random() * 100}%`,
+                    top: `${Math.random() * 100}%`,
+                    animationDelay: `${Math.random() * 2}s`,
+                    animationDuration: "3s",
+                  }}
+                />
+              ))}
+            </div>
+
+            {/* Victory crown icon */}
+            <div className="text-9xl mb-4 text-yellow-400 animate-bounce drop-shadow-[0_0_20px_rgba(255,220,0,0.8)]">
+              👑
+            </div>
+
+            <h1 className="text-7xl font-bold text-yellow-300 mb-6 text-center drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)] animate-pulse">
+              ПОБЕДА!
+            </h1>
+
+            <p className="text-3xl text-green-300 mb-12 text-center max-w-2xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)]">
+              Вы одержали великолепную победу!{" "}"Вы можете перейти к следующему уровню!"
+            </p>
+            <p className="text-3xl text-green-300 mb-6 text-center max-w-2xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)]">
+              Награды:
+            </p>
+            <div className="flex items-center gap-4 z-50 justify-center w-full">
+              <div className={
+                classNames(
+                  "flex flex-col gap-4 items-end",
+                  increased ? '' : 'flex-1/2'
+                )
+              }>
+                {
+                  Boolean(reward?.balances.gold) && (
+                    <div className={classNames(
+                      "flex items-center gap-2  text-4xl",
+                      increased ? 'text-green-500' : 'text-white'
+                    )}>
+                      {reward?.balances.gold! * multiplier} <Icon icon="gold" size={60} />
+                    </div>
+                  )
+                }
+                {
+                  Boolean(reward?.balances.gems) && (
+                    <div className={classNames(
+                      "flex items-center gap-2  text-4xl",
+                      increased ? 'text-green-500' : 'text-white'
+                    )}>
+                      {reward?.balances.gems! * multiplier} <Icon icon="gems" size={60} />
+                    </div>
+                  )
+                }
+                {
+                  Boolean(reward?.balances.summons) && (
+                    <div className={classNames(
+                      "flex items-center gap-2  text-4xl",
+                      increased ? 'text-green-500' : 'text-white'
+                    )}>
+                      {reward?.balances.summons! * multiplier} <Icon icon="summons" size={60} />
+                    </div>
+                  )
+                }
+                {
+                  Boolean(reward?.balances.summonsSpecial) && (
+                    <div className={classNames(
+                      "flex items-center gap-2 text-4xl",
+                      increased ? 'text-green-500' : 'text-white'
+                    )}>
+                      {reward?.balances.summonsSpecial! * multiplier} <Icon icon="summonsSpecial" size={60} />
+                    </div>
+                  )
+                }
+              </div>
+              {
+                !increased && (
+                  <div className="flex-1/2">
+                    <Button
+                      className="rounded-xl"
+                      disabled={isVideoPlaying}
+                      onClick={handleIncreaseRewards}
+                    >
+                      Удвоить за рекламу
+                      <Play width={40} height={40} />
+                    </Button>
+                  </div>
+                )
+              }
+            </div>
+            {reward?.equipment && (
+              <div className="flex justify-center gap-4 mt-6">
+                {reward.equipment.map((eq) => (
+                  <EquipmentCard key={eq.id} equipment={eq} />
+                ))}
+              </div>
+            )}
+            <div
+              className="px-12 mt-6 py-6 bg-gradient-to-r from-green-600 to-emerald-700 text-white text-4xl font-bold rounded-2xl cursor-pointer transform transition-all duration-300 hover:scale-110 hover:from-green-500 hover:to-emerald-600 active:scale-95 border-4 border-green-400 shadow-2xl hover:shadow-green-500/50"
+              onClick={goToNextStage}
+            >
+              <span className="drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">
+                ДАЛЬШЕ (ЭТАЖ {state.stage + 1})
+              </span>
+            </div>
+            <div
+              className="px-12 mt-6 py-6 bg-gradient-to-r from-red-600 to-red-700 text-white text-4xl font-bold rounded-2xl cursor-pointer transform transition-all duration-300 hover:scale-110 hover:from-red-500 hover:to-red-600 active:scale-95 border-4 border-red-400 shadow-2xl hover:shadow-red-500/50"
+              onClick={goToMenu}
+            >
+              <span className="drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">
+                В МЕНЮ
+              </span>
+            </div>
+          </div>
+        </div>
+      </ResponsiveUI>
+    );
+  }
+
+  return (
+    <ResponsiveUI>
+      <div className="w-full h-full bg-cover bg-center"
+        style={{ backgroundImage: `url(${Backgrounds.tower_lose})` }}
+      >
+        <div className="w-full h-full flex flex-col items-center justify-center  p-8 relative overflow-hidden backdrop-blur-sm">
+          {/* Defeat smoke particles */}
+          <div className="absolute inset-0 pointer-events-none">
+            {[...Array(15)].map((_, i) => (
+              <div
+                key={i}
+                className="absolute w-3 h-3 bg-gray-500 rounded-full opacity-60"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                  animation: `float ${3 + Math.random() * 2}s infinite ease-in-out`,
+                  animationDelay: `${Math.random() * 2}s`,
+                }}
+              />
+            ))}
+          </div>
+
+          {/* Broken sword icon */}
+          <div className="text-9xl mb-8 text-red-400 drop-shadow-[0_0_20px_rgba(255,0,0,0.6)] opacity-80">
+            ⚔️
+          </div>
+
+          <h1 className="text-7xl font-bold text-red-300 mb-6 text-center drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)]">
+            ПОРАЖЕНИЕ
+          </h1>
+
+          <p className="text-3xl text-orange-300 mb-12 text-center max-w-2xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)]">
+            Битва была жестокой, но не окончательной. Каждое поражение - это урок
+            на пути к величию.
+          </p>
+
+          <div
+            className="px-12 py-6 bg-gradient-to-r from-red-700 to-orange-800 text-white text-4xl font-bold rounded-2xl cursor-pointer transform transition-all duration-300 hover:scale-110 hover:from-red-600 hover:to-orange-700 active:scale-95 border-4 border-red-500 shadow-2xl hover:shadow-red-500/50"
+            onClick={goToMenu}
+          >
+            <span className="drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">
+              В МЕНЮ
+            </span>
+          </div>
+        </div>
+      </div>
+    </ResponsiveUI>
+  );
+};

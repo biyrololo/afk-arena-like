@@ -4,6 +4,8 @@ import { EquipmentCard } from "./EquipmentCard";
 import {
   calculateEquipmentPower,
   calculateEquipmentUpgradeStats,
+  EQUIPMENT_MAX_LEVEL,
+  EQUIPMENT_UPGRADE_COSTS,
 } from "@/shared/types/develop";
 import { Avatars } from "@/shared/avatars";
 import { useNavigate } from "react-router-dom";
@@ -45,10 +47,9 @@ export const EquipmentFullCard = ({
 
   const isAnimatingPower = animatedPower !== power.toString();
 
-  const newStats = equipment && !isAnimatingPower ? calculateEquipmentUpgradeStats(equipment) : null;
+  const newStats = equipment && !isAnimatingPower && !!EQUIPMENT_UPGRADE_COSTS[equipment.level + 1] ? calculateEquipmentUpgradeStats(equipment) : null;
 
   const newPower = newStats && !isAnimatingPower ? calculateEquipmentPower(newStats) : null;
-
 
   return (
     <div
@@ -91,9 +92,12 @@ export const EquipmentFullCard = ({
         )}
         {equipment && withStats && (
           <div
-            className="grid grid-cols-2 border-t-2 border-amber-200/20 h-full pt-4"
+            className="grid grid-cols-2 h-full pt-6 relative"
             style={{ flex: "0 0 100%" }}
           >
+            <div className="absolute top-0 left-0 right-0 h-1 bg-amber-200/20">
+              <div className="h-full bg-green-500" style={{ width: `${equipment.level / EQUIPMENT_MAX_LEVEL * 100}%` }} />
+            </div>
             <div
               className="text-white text-3xl text-left mb-2"
               style={{

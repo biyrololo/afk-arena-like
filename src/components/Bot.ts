@@ -11,19 +11,32 @@ export class BotController {
     private currentAttack: CharacterAttackType = 'attack1';
     private attackCooldown = 1000;
     private lastAttackTime = 0;
+    private isFirstTargetPick = true;
+    private botIndex: number = 0;
 
     // private startedAt = 0;
     // private startTimer = 0;
 
     private shouldSpecialAttack = false;
 
+    private randomOffset = { x: 0, y: 0 };
+
     constructor(scene: Phaser.Scene, character: Character, enemies: Character[],
+        botIndex: number,
         attackCooldown = 1000,
     ) {
         this.scene = scene;
         this.character = character;
         this.enemies = enemies;
         this.attackCooldown = attackCooldown;
+
+        this.botIndex = botIndex;
+
+        this.randomOffset = {
+            x: Phaser.Math.Between(-20, 20),
+            y: 0
+        };
+
         // this.startedAt = Date.now();
 
         // const role = this.character.getRole();
@@ -78,10 +91,13 @@ export class BotController {
         // const required = this.character.attacksDistances[this.currentAttack];
         const required = this.character.getAttackDistance(this.currentAttack);
 
-        const distToTargetEdge = hp.centerX > thp.centerX ? hp.left - thp.right : hp.centerX < thp.centerX ? thp.left - hp.right : 0;
-        const distToTargetEdgeY = hp.bottom - thp.bottom;
+        const targetCenterX = thp.centerX + this.randomOffset.x;
+        const targetBottomY = thp.bottom + this.randomOffset.y;
 
-        const isOnLeft = hp.centerX < thp.centerX;
+        const distToTargetEdge = hp.centerX > targetCenterX ? hp.left - thp.right : hp.centerX < targetCenterX ? thp.left - hp.right : 0;
+        const distToTargetEdgeY = hp.bottom - targetBottomY;
+
+        const isOnLeft = hp.centerX < targetCenterX;
 
         let targetX = undefined, targetY = undefined;
 
@@ -104,7 +120,7 @@ export class BotController {
                 this.state = 'moving';
                 // console.log('dist x lower')
                 const offset = required.minX ?? (required.x + 20);
-                // this.character.moveTowards(isOnLeft ? thp.left - offset - 20 - hp.width : thp.right + offset + 20 + hp.width, thp.bottom - required.y - offsetY);
+                // this.character.moveTowards(isOnLeft ? thp.left - offset - 20 - hp.width : thp.right + offset + 20 + hp.width, targetBottomY - required.y - offsetY);
                 targetX = isOnLeft ? thp.left - offset - 20 - hp.width : thp.right + offset + 20 + hp.width;
             }
             if (distToTargetEdgeY < (required.minY ?? -10)) {
@@ -129,7 +145,7 @@ export class BotController {
             this.character.stopMoving();
             // атакуем
             if (this.state !== 'attacking') {
-                const isOnLeft = hp.centerX <= thp.centerX;
+                const isOnLeft = hp.centerX <= targetCenterX;
                 if (this.character.getDirection() !== isOnLeft) this.character.setFlipX(!isOnLeft);
                 if (this.currentAttack === 'special') {
                     this.scene.events.emit('ultimateStarted', this.character)
@@ -168,6 +184,19 @@ export class BotController {
 
         this.currentTarget = null;
 
+        if (this.isFirstTargetPick) {
+            const aliveEnemies = this.enemies.filter(e => !e.getIsDead() && e.getHP() > 0);
+            if (aliveEnemies.length === 0) {
+                this.currentTarget = null;
+                return;
+            };
+            // Используем остаток от деления, если врагов меньше, чем наших героев
+            const targetIndex = this.botIndex % aliveEnemies.length;
+            this.currentTarget = aliveEnemies[targetIndex];
+            this.isFirstTargetPick = false;
+            return; // Выходим, так как цель назначена
+        }
+
         const sortedEnemies = this.enemies
             .filter(e => !e.getIsDead() && e.getHP() > 0)
             .sort((a, b) => Phaser.Math.Distance.Between(this.character.x, this.character.y, a.x, a.y)
@@ -175,22 +204,25 @@ export class BotController {
 
         const myRole = this.character.getRole();
 
-        const getFirstByRole = (role: CharacterNS.Role) => {
-            return sortedEnemies.find(e => e.getRole() === role);
+        const getNByRole = (role: CharacterNS.Role, n = -1) => {
+            if (n == -1) n = Math.random() >= 0.5 ? 1 : 0;
+            const enemies = sortedEnemies.filter(e => e.getRole() === role);
+            return enemies[n] || enemies[0];
         }
 
         switch (myRole) {
             case CharacterNS.Role.TANK: {
                 // Приоритет - вражеский танк
-                this.currentTarget = getFirstByRole(CharacterNS.Role.TANK) || sortedEnemies[0] || null;
+                this.currentTarget = getNByRole(CharacterNS.Role.TANK) || sortedEnemies[0] || null;
                 break;
             }
 
             case CharacterNS.Role.WARRIOR: {
                 // Приоритет - вражеский танк
-                this.currentTarget = getFirstByRole(CharacterNS.Role.TANK)
-                    || getFirstByRole(CharacterNS.Role.ASSASSIN)
-                    || sortedEnemies[0] || null;
+                const idx = Math.random() >= 0.5 ? 1 : 0;
+                this.currentTarget = getNByRole(CharacterNS.Role.TANK)
+                    || getNByRole(CharacterNS.Role.ASSASSIN)
+                    || sortedEnemies[idx] || sortedEnemies[0] || null;
                 break;
             }
 

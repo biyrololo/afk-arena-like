@@ -239,6 +239,14 @@ export const FIRE_KING_CHARACTER: Character.Character = {
     cooldownAttack: 2000
   },
   skills: [],
+  // variant: {
+  //   current: 'ice',
+  //   variants: {
+  //     'ice': {
+  //       baseColor: 0x00fff7
+  //     }
+  //   }
+  // }
 };
 
 export const CRYSTAL_KING: Character.Character = {
@@ -947,8 +955,8 @@ export const TREE_MAN_CHARACTER: Character.Character = {
   name: "Древнекоренное Существо",
   description: 'Древнекоренное Существо',
   rarity: Character.Rarity.EPIC,
-  role: Character.Role.WARRIOR,
-  faction: Character.Faction.ORDEN,
+  role: Character.Role.TANK,
+  faction: Character.Faction.NATURE,
   damageType: Character.DamageType.PHYSICAL,
   power: 100,
 

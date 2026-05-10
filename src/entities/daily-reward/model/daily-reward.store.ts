@@ -4,6 +4,7 @@ import { usePlayerStore } from "@/entities/player/model/player.store";
 import { create } from "zustand";
 import { devtools, subscribeWithSelector } from "zustand/middleware";
 import type { PlayerBalances } from "@/entities/player/model/player.model";
+import { SDK } from "@/entities/sdk/model/sdk";
 
 
 export const getDailyRewards = (): IDailyReward[] => {
@@ -24,7 +25,7 @@ export const getDailyRewards = (): IDailyReward[] => {
 
         if (day === 1) {
             type = 'summonsSpecial';
-            count = 10 + (cycleIndex * 2);
+            count = 30 + (cycleIndex * 2);
             rarity = Character.Rarity.LEGENDARY;
         } else
             // --- ЛОГИКА ГЛАВНЫХ ПРИЗОВ (Дни 7, 14, 21) ---
@@ -36,27 +37,27 @@ export const getDailyRewards = (): IDailyReward[] => {
             else if (day === 7) {
                 type = 'summonsSpecial';
                 // В цикле "Призыв титанов" (1) даем больше свитков на промежуточных этапах
-                count = 30 + (cycleIndex * 2);
+                count = 100 + (cycleIndex * 2);
                 rarity = Character.Rarity.LEGENDARY;
             }
             else if (day % 7 === 0) {
                 type = 'summons';
                 // В цикле "Призыв титанов" (1) даем больше свитков на промежуточных этапах
-                count = 40 + (cycleIndex * 2);
+                count = 150 + (cycleIndex * 2);
                 rarity = Character.Rarity.EPIC;
             }
             // --- ЛОГИКА БУДНЕЙ ---
             else if (day % 5 === 0) {
                 type = 'summons';
                 // В цикле "Призыв титанов" (1) даем больше свитков на промежуточных этапах
-                count = 10 + (cycleIndex * 2);
+                count = 50 + (cycleIndex * 2);
                 rarity = Character.Rarity.EPIC;
             }
             // --- ЛОГИКА БУДНЕЙ ---
             else if (day % 2 === 0) {
                 // Четные дни: Гемы
                 type = 'gems';
-                const baseGems = 160;
+                const baseGems = 400;
                 // В алмазном цикле (0) насыпаем +50% гемов
                 const bonus = currentCycleType === 0 ? 80 : 0;
                 count = baseGems + bonus + (Math.floor(index / 2) * 10) + (cycleIndex * 10);
@@ -65,7 +66,7 @@ export const getDailyRewards = (): IDailyReward[] => {
             else {
                 // Нечетные дни: Золото
                 type = 'gold';
-                const baseGold = 1000;
+                const baseGold = 2000;
                 // В золотом цикле (2) удваиваем награду
                 const multiplier = currentCycleType === 2 ? 2.5 : 1;
                 count = Math.floor((baseGold + (index * 2000)) * multiplier) + (cycleIndex * 3000);
@@ -113,6 +114,9 @@ export const useDailyRewardsStore = create<IDailyRewardsStore>()(
                 const date = new Date();
                 date.setHours(23, 59, 59, 999);
                 set({ lastClaimedAt: date.toISOString(), currentDay: day + 1 }, false, "claimToday");
+
+                // Immediately save after claiming daily reward (critical action)
+                SDK.getInstance().syncImmediately();
             },
             setLastClaimedAt: (date: string) => {
                 if (new Date().getTime() > new Date(date).getTime()) {

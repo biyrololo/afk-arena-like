@@ -97,6 +97,9 @@ export const GameEnd: FC = () => {
             setStageNumber(-1);
         }
 
+        // Immediately save after completing a stage (critical action)
+        SDK.getInstance().syncImmediately();
+
     }, [state, setReward, setChapterNumber, setStageNumber, setEquipment])
 
     const addBalancesRewards = () => {

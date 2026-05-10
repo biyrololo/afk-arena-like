@@ -11,6 +11,8 @@ import scene3 from '@/assets/scenes/scene-3.webp'
 import scene4 from '@/assets/scenes/scene-4.webp'
 import scene5 from '@/assets/scenes/scene-5.webp'
 import scene6 from '@/assets/scenes/scene-6.webp'
+import firewarrior_appear from '@/assets/scenes/firewarrior_appear.webp'
+import chatper_1_final from '@/assets/scenes/chatper_1_final.webp';
 
 const checkProgress = (chapter: number, stage: number) => {
   const { chapterNumber, stageNumber } = usePlayerStore.getState()
@@ -276,7 +278,8 @@ export const CHAPTER_1_SCENES: IPlotScene[] = [
         authorPosition: "right",
         text: "Я знал, что найду тебя здесь.",
         avatar: Avatars.firewarrior,
-        isAvailable: () => checkProgress(1, 20)
+        isAvailable: () => checkProgress(1, 20),
+        backgroundImage: firewarrior_appear,
       },
       {
         id: "c1fw2",
@@ -284,6 +287,7 @@ export const CHAPTER_1_SCENES: IPlotScene[] = [
         color: "green",
         text: "Кто это ещё?",
         avatar: Avatars.warrior,
+        backgroundImage: firewarrior_appear,
       },
       {
         id: "c1fw3",
@@ -291,6 +295,7 @@ export const CHAPTER_1_SCENES: IPlotScene[] = [
         color: "green",
         text: "Старый союзник… или уже нет.",
         avatar: Avatars.fireKing,
+        backgroundImage: firewarrior_appear,
       },
       {
         id: "c1fw4",
@@ -299,6 +304,7 @@ export const CHAPTER_1_SCENES: IPlotScene[] = [
         authorPosition: "right",
         text: "Твои способности увеличиваются при усилении бездны",
         avatar: Avatars.firewarrior,
+        backgroundImage: firewarrior_appear,
       },
       {
         id: "c1fw5",
@@ -307,6 +313,7 @@ export const CHAPTER_1_SCENES: IPlotScene[] = [
         authorPosition: "right",
         text: "Значит, и ты ей поражён. Вы должны быть уничтожены",
         avatar: Avatars.firewarrior,
+        backgroundImage: firewarrior_appear,
       },
     ],
   },
@@ -379,7 +386,8 @@ export const CHAPTER_1_SCENES: IPlotScene[] = [
         color: "green",
         text: "Это же был один из древних стражей",
         avatar: Avatars.warrior,
-        isAvailable: () => checkProgress(2, 1)
+        isAvailable: () => checkProgress(2, 1),
+        backgroundImage: chatper_1_final,
       },
       {
         id: "c1end2",
@@ -387,6 +395,7 @@ export const CHAPTER_1_SCENES: IPlotScene[] = [
         color: "green",
         text: "Они уже долгое время были в отключке",
         avatar: Avatars.fireKing,
+        backgroundImage: chatper_1_final,
       },
       {
         id: "c1end3",
@@ -394,6 +403,7 @@ export const CHAPTER_1_SCENES: IPlotScene[] = [
         color: "green",
         text: "Бездна снова запустила их и поставила на стражу своих рубежей",
         avatar: Avatars.fireKing,
+        backgroundImage: chatper_1_final,
       },
       {
         id: "c1end4",
@@ -402,6 +412,7 @@ export const CHAPTER_1_SCENES: IPlotScene[] = [
         authorPosition: "right",
         text: "Если древние стражи пробудились… значит вблизи бездны уже всё уничтожено",
         avatar: Avatars.warrior,
+        backgroundImage: chatper_1_final,
       },
       {
         id: "c1end5",
@@ -409,6 +420,7 @@ export const CHAPTER_1_SCENES: IPlotScene[] = [
         color: "green",
         text: "Как бы то ни было, теперь путь на Север открыт!",
         avatar: Avatars.fireKing,
+        backgroundImage: chatper_1_final,
       },
       {
         id: "c1end6",
@@ -416,6 +428,7 @@ export const CHAPTER_1_SCENES: IPlotScene[] = [
         color: "green",
         text: "Мы стали ещё ближе к Центру",
         avatar: Avatars.fireKing,
+        backgroundImage: chatper_1_final,
       },
     ],
   },

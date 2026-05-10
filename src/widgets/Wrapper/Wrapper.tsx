@@ -18,8 +18,9 @@ import crystal from "@/assets/menu/crystal.png";
 import sword from "@/assets/menu/sword.png";
 import heroes from "@/assets/menu/heroes.png";
 import equipment from "@/assets/menu/equipment.png";
+import tower from "@/assets/menu/tower.webp";
 import shop from "@/assets/menu/shop.png";
-import survival from "@/assets/menu/survival.png";
+import survival from "@/assets/menu/survival.webp";
 import quests from '@/assets/menu/quests.webp'
 import summon from "@/assets/backgrounds/summon.webp";
 import characters from '@/assets/backgrounds/characters.webp';
@@ -42,18 +43,35 @@ import scene3 from '@/assets/scenes/scene-3.webp';
 import scene4 from '@/assets/scenes/scene-4.webp';
 import scene5 from '@/assets/scenes/scene-5.webp';
 import scene6 from '@/assets/scenes/scene-6.webp';
+import kitsune_appear from '@/assets/scenes/kitsune_appear.webp'
+import kitsune_before_battle from '@/assets/scenes/kitsune_before_battle.webp'
+import kitsune_escape from '@/assets/scenes/kitsune_escape.webp'
+import spearwoman_appear from '@/assets/scenes/spearwoman_appear.webp'
+import spearwoman_heal from '@/assets/scenes/spearwoman_heal.webp'
+import crystalKing_rage from '@/assets/scenes/crystalKing_rage.webp'
+import chapter_3_final from '@/assets/scenes/chapter_3_final.webp'
+import womanwarrior_appear from '@/assets/scenes/womanwarrior_appear.webp'
+import womanwarrior_lose from '@/assets/scenes/womanwarrior_lose.webp'
+import firewarrior_appear from '@/assets/scenes/firewarrior_appear.webp'
+import out_of_ice_cave from '@/assets/scenes/out_of_ice_cave.webp'
+import frost_guardian_appear from '@/assets/scenes/frost_guardian_appear.webp'
+import frost_guardian_lose from '@/assets/scenes/frost_guardian_lose.webp'
+import chapter_1_final from '@/assets/scenes/chatper_1_final.webp'
+
 import { fixEquipment } from "@/shared/types/develop";
 
 const assetUrls = {
   rest: [
     loading_bg, menu, scene1, scene2, scene3, scene4, scene5, scene6,
     crystal, sword, heroes, equipment, shop, survival, quests, banner1, banner2, featuredImage1, featuredImage2, featuredImage3, featuredImage4,
-    summon, characters, tavern, shopBg, gameStart,
+    summon, characters, tavern, shopBg, gameStart, tower,
+    kitsune_appear, kitsune_before_battle, kitsune_escape, spearwoman_appear, spearwoman_heal, crystalKing_rage, chapter_3_final, womanwarrior_appear, womanwarrior_lose, firewarrior_appear, out_of_ice_cave, frost_guardian_appear, frost_guardian_lose, chapter_1_final,
   ],
   avatars: Object.values(Avatars),
   icons: Object.values(Icons),
   backgrounds: Object.values(Backgrounds),
 };
+
 
 export const Wrapper: FC = () => {
   const [isLoaded, setIsLoaded] = useState(false);

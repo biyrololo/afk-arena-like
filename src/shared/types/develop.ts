@@ -58,7 +58,7 @@ export const RESOURES_FOR_LEVEL: { balances: PlayerBalances }[] = [
   }),
 
   // --- УРОВНИ 61-100 (Лейт-гейм / Энд-гейм) ---
-  ...Array.from({ length: 40 }, (_, i) => {
+  ...Array.from({ length: 140 }, (_, i) => {
     const lvl = i + 61;
     const isGemStep = lvl % 10 === 0;
     // Резкое удорожание золота
@@ -84,7 +84,7 @@ export const EQUIPMENT_UPGRADE_COSTS: { balances: PlayerBalances }[] = [
   { balances: { gold: 2500, gems: 60, summons: 0, summonsSpecial: 0 } }, // 9 → 10 (Оружие требует заточки)
 
   // --- УРОВНИ 11-100 (Генерация прогрессии) ---
-  ...Array.from({ length: 90 }, (_, i) => {
+  ...Array.from({ length: 190 }, (_, i) => {
     const lvl = i + 11;
     const isGemStep = lvl % 10 === 0;
 
@@ -106,6 +106,8 @@ export const EQUIPMENT_UPGRADE_COSTS: { balances: PlayerBalances }[] = [
     };
   })
 ];
+
+export const EQUIPMENT_MAX_LEVEL = 200;
 
 function updateStatsWithAscension(character: Character.Character) {
   const { ascension } = character.progression;
@@ -166,7 +168,8 @@ export function calculateCharacterPower(
 
   const power = baseScore * advancedMultiplier * progressionMultiplier;
 
-  return Math.floor(power);
+  // return Math.floor(power);
+  return Math.floor(power / Math.pow(1.02, character.progression.level));
 }
 
 export function calculateEquipmentPower(
@@ -206,7 +209,7 @@ export function calculateEquipmentPower(
   const power =
     (baseScore + advancedScore) * rarityMultipliers[rarity] * levelMultiplier;
 
-  return Math.floor(power);
+  return Math.floor(power / Math.pow(1.02, equipment.level));
 }
 
 export const levelUp = (id: string) => {
@@ -304,6 +307,8 @@ export const isEnoughResources = (
     | (typeof EQUIPMENT_UPGRADE_COSTS)[number],
   resources: PlayerBalances,
 ) => {
+  if (!need) return false;
+  if (!resources) return false;
   return (
     resources.gems >= need.balances.gems &&
     resources.gold >= need.balances.gold &&
@@ -316,8 +321,8 @@ export const GEMS_FOR_SELL_BY_RARITY: Record<Character.Rarity, number> = {
   [Character.Rarity.COMMON]: 0,
   [Character.Rarity.UNCOMMON]: 10,
   [Character.Rarity.RARE]: 20,
-  [Character.Rarity.EPIC]: 50,
-  [Character.Rarity.LEGENDARY]: 100,
+  [Character.Rarity.EPIC]: 30,
+  [Character.Rarity.LEGENDARY]: 70,
 }
 
 export const sellEquipment = (equipmentId: string) => {
@@ -330,7 +335,7 @@ export const sellEquipment = (equipmentId: string) => {
 
   const { addBalance } = usePlayerStore.getState();
 
-  const gold = Math.floor(power * 3 * (100 + GEMS_FOR_SELL_BY_RARITY[equipmentQuery.rarity]) / 100);
+  const gold = Math.floor(power * 20 * (100 + GEMS_FOR_SELL_BY_RARITY[equipmentQuery.rarity]) / 100);
 
   addBalance('gold', gold);
   addBalance('gems', GEMS_FOR_SELL_BY_RARITY[equipmentQuery.rarity]);
@@ -380,7 +385,7 @@ export const upgradeEquipment = (equipmentId: string) => {
     equipment.stats.maxHp = increaseWithFloor(equipment.stats.maxHp, 1.05);
   }
 
-  if (equipment.level % 5 === 0) {
+  if ((equipment.level + 1) % 5 === 0) {
     if (equipment.stats.speed) {
       equipment.stats.speed += 2;
     }

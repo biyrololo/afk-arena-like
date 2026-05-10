@@ -4,8 +4,10 @@ import { usePlayerStore } from "@/entities/player/model/player.store";
 import { mockCharacters } from "@/shared/store/mockCharacters";
 import usePlayerCharactersStore from "@/shared/store/PlayerCharactersStore"
 import { Character } from "@/shared/types/character";
-import { calculateCharacterPower, calculateEquipmentPower } from "@/shared/types/develop";
-import { v4 } from "uuid";
+import { calculateCharacterPower, calculateEquipmentPower, GEMS_FOR_SELL_BY_RARITY } from "@/shared/types/develop";
+import { SDK } from "@/entities/sdk/model/sdk";
+import { EQUIPMENT_LIMIT } from "@/shared/lib/constants";
+import { nanoid } from "nanoid";
 
 export enum DropType {
     CHARACTER = 'character',
@@ -21,6 +23,10 @@ export type DropItem = {
     type: DropType.EQUIPMENT;
     item: Character.Equipment;
     weight: number;
+    overflowBalances?: {
+        gems: number;
+        gold: number
+    };
 }
 
 const MULTIPLIERS = {
@@ -45,7 +51,7 @@ const ALL_DROP: DropItem[] = [
     ...mockCharacters.map(c => ({
         type: DropType.CHARACTER as DropType.CHARACTER,
         item: c,
-        weight: calculateCharacterPower(c) * MULTIPLIERS[c.rarity] / 2
+        weight: calculateCharacterPower(c) * MULTIPLIERS[c.rarity] / 10
     })),
     ...allEquipment.map((e: Character.Equipment) => ({
         type: DropType.EQUIPMENT as DropType.EQUIPMENT,
@@ -65,7 +71,7 @@ const COOL_DROPS: DropItem[] = [
         .map(c => ({
             type: DropType.CHARACTER as DropType.CHARACTER,
             item: c,
-            weight: calculateCharacterPower(c) * 1.2 * MULTIPLIERS[c.rarity] / 2
+            weight: calculateCharacterPower(c) * 1.2 * MULTIPLIERS[c.rarity] / 3
         })),
     ...allEquipment
         .filter((e: Character.Equipment) => [Character.Rarity.EPIC, Character.Rarity.LEGENDARY].includes(e.rarity))
@@ -87,7 +93,7 @@ const GET_FEATURED_DROPS = (keys: string[]): DropItem[] => {
                 .map(c => ({
                     type: DropType.CHARACTER as DropType.CHARACTER,
                     item: c,
-                    weight: calculateCharacterPower(c) * (keys.includes(c.key) ? 0.5 : 1) * MULTIPLIERS[c.rarity] / 2
+                    weight: calculateCharacterPower(c) * (keys.includes(c.key) ? 0.1 : 1) * MULTIPLIERS[c.rarity] / 5
                 })),
             ...Object.values(AllEquipment.EQUIPMENT)
                 .map(e => Object.values(e))
@@ -99,7 +105,7 @@ const GET_FEATURED_DROPS = (keys: string[]): DropItem[] => {
                         ...e,
                         equippedCharacterId: undefined
                     },
-                    weight: calculateEquipmentPower(e) * MULTIPLIERS[e.rarity] * (keys.includes(e.key) ? 0.5 : 1)
+                    weight: calculateEquipmentPower(e) * MULTIPLIERS[e.rarity] * (keys.includes(e.key) ? 0.3 : 1)
                 }))
         ]
     )
@@ -121,7 +127,7 @@ const GET_FEATURED_EQUIPMENT = (keys: string[]): DropItem[] => {
                 ...e,
                 equippedCharacterId: undefined
             },
-            weight: calculateEquipmentPower(e) * MULTIPLIERS[e.rarity] * (keys.includes(e.key) ? 0.5 : 1)
+            weight: calculateEquipmentPower(e) * MULTIPLIERS[e.rarity] * (keys.includes(e.key) ? 0.05 : 1)
         }))
     )
 }
@@ -321,10 +327,10 @@ export const summon = (amount: 1 | 10, id: string) => {
         const r = summonOnce(drops)
         if (r.type === DropType.CHARACTER) {
             r.item.power = calculateCharacterPower(r.item)
-            r.item.id = v4();
+            r.item.id = nanoid();
         } else if (r.type === DropType.EQUIPMENT) {
             r.item.equippedCharacterId = undefined;
-            r.item.id = v4();
+            r.item.id = nanoid();
         }
         result.push(r)
     }
@@ -339,10 +345,10 @@ export const summon = (amount: 1 | 10, id: string) => {
             );
             if (r.type === DropType.EQUIPMENT) {
                 r.item.equippedCharacterId = undefined;
-                r.item.id = v4();
+                r.item.id = nanoid();
             } else {
                 r.item.power = calculateCharacterPower(r.item);
-                r.item.id = v4();
+                r.item.id = nanoid();
             }
             result[result.length - 1] = r;
         }
@@ -352,7 +358,10 @@ export const summon = (amount: 1 | 10, id: string) => {
         .getState()
         .characters;
 
+    const currentEquipmentLength = usePlayerCharactersStore.getState().equipment.length;
+
     let totalGemsBonus = 0;
+    let totalGoldBonus = 0;
 
     result.forEach((r, index) => {
         if (r.type === DropType.CHARACTER) {
@@ -379,6 +388,13 @@ export const summon = (amount: 1 | 10, id: string) => {
                     totalGemsBonus += 500;
                 }
             }
+        } else if (currentEquipmentLength + index + 1 > EQUIPMENT_LIMIT) {
+            r.overflowBalances = {
+                gems: GEMS_FOR_SELL_BY_RARITY[r.item.rarity],
+                gold: 20 * Math.floor(calculateEquipmentPower(r.item) * 3 * (100 + GEMS_FOR_SELL_BY_RARITY[r.item.rarity]) / 100)
+            };
+            totalGemsBonus += r.overflowBalances.gems;
+            totalGoldBonus += r.overflowBalances.gold;
         }
     })
 
@@ -402,7 +418,8 @@ export const summon = (amount: 1 | 10, id: string) => {
 
     usePlayerStore.getState().setBalances({
         ...balances,
-        gems: balances.gems + totalGemsBonus
+        gems: balances.gems + totalGemsBonus,
+        gold: balances.gold + totalGoldBonus,
     })
 
     usePlayerCharactersStore
@@ -410,8 +427,11 @@ export const summon = (amount: 1 | 10, id: string) => {
         .setEquipment(
             usePlayerCharactersStore
                 .getState()
-                .equipment.concat(result.filter(r => r.type === DropType.EQUIPMENT).map(r => r.item))
+                .equipment.concat(result.filter(r => (r.type === DropType.EQUIPMENT && !(r as any).overflowBalances)).map(r => r.item as Character.Equipment))
         )
+
+    // Immediately save after summon (critical action)
+    SDK.getInstance().syncImmediately();
 
     return result
 }
