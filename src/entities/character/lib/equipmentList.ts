@@ -1043,6 +1043,6 @@ const all = [...Object.values(Weapons.WEAPONS),
 ...Object.values(Accessories.ACCESSORIES),
 ...Object.values(AllEquipment.EQUIPMENT).map(eq => Object.values(eq).flat()).flat(),]
 
-export const findEquipmentBaseByKey = (key: string) => {
-    return all.find(e => e.key === key);
+export const findEquipmentBaseByKeyNSlot = (key: string, slot: Character.EquipmentSlot) => {
+    return all.find(e => e.key === key && (slot ? e.slot === slot : true));
 }

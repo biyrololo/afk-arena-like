@@ -10,7 +10,7 @@ import type { Serializable } from "ysdk";
 import * as CHARACTERS from "@/entities/character/lib/allCharacters";
 
 import type { Character } from "@/shared/types/character";
-import { findEquipmentBaseByKey } from "@/entities/character/lib/equipmentList";
+import { findEquipmentBaseByKeyNSlot } from "@/entities/character/lib/equipmentList";
 
 const findCharacterByKey = (key: string) => {
     return Object.values(CHARACTERS).filter(v => 'power' in v).find(character => character.key === key);
@@ -110,6 +110,7 @@ interface CompactEquipmentRecord {
     r?: number; // accuracy
     u?: number; // energyRegen
     p?: number; // cooldownAttack
+    q: string; // slot
 }
 
 const equipmentToCompactEquipment = (equipment: Character.Equipment): CompactEquipmentRecord => {
@@ -129,13 +130,14 @@ const equipmentToCompactEquipment = (equipment: Character.Equipment): CompactEqu
         r: equipment.stats?.accuracy ?? undefined,
         u: equipment.stats?.energyRegen ?? undefined,
         p: equipment.stats?.cooldownAttack ?? undefined,
+        q: equipment.slot,
     }
 }
 
 const compactEquipmentToEquipment = (equipment: CompactEquipmentRecord | Character.Equipment): Character.Equipment => {
     if ('level' in equipment) return equipment;
 
-    const base = findEquipmentBaseByKey(equipment.k);
+    const base = findEquipmentBaseByKeyNSlot(equipment.k, equipment.q as Character.EquipmentSlot);
     if (!base) {
         console.error('Equipment base not found', equipment.k);
         throw new Error('Equipment base not found');
