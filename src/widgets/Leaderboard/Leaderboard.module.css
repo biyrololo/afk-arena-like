@@ -1,0 +1,22 @@
+.record {
+    background-color: #1a1a1a;
+
+    background-image:
+        linear-gradient(to right, #1a1a1a 30%, transparent 80%),
+        var(--bg-url);
+
+    background-position: right top;
+    background-size: cover;
+    background-repeat: no-repeat;
+    overflow: hidden;
+}
+
+.spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

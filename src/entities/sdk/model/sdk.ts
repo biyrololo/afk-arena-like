@@ -1,4 +1,4 @@
-import type { SDK as YaSDK, Player, Serializable } from 'ysdk';
+import type { SDK as YaSDK, Player, Serializable, GetLeaderboardEntriesOpts } from 'ysdk';
 import { dumpData, dumpStats, loadData, loadStats } from './sdkTools';
 
 export namespace SDKModel {
@@ -356,5 +356,25 @@ export class SDK {
     syncImmediately() {
         console.log('[SDK] Immediate sync triggered');
         return this.syncWithLocal(3);
+    }
+
+    setLeaderboardScore(leaderboardName: string, score: number, extraData = undefined) {
+        this.ysdk?.leaderboards.setScore(leaderboardName, score, extraData);
+    }
+
+    getPlayerEntry(leaderboardName: string) {
+        return this.ysdk?.leaderboards.getPlayerEntry(leaderboardName);
+    }
+
+    getLeaderboardEntries(leaderboardName: string, {
+        includeUser = true,
+        quantityAround = 5,
+        quantityTop = 5,
+    }: GetLeaderboardEntriesOpts) {
+        return this.ysdk?.leaderboards.getEntries(leaderboardName, {
+            includeUser,
+            quantityAround,
+            quantityTop,
+        });
     }
 }

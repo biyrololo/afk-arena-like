@@ -8,6 +8,7 @@ export type ModalProps = React.PropsWithChildren & {
     classNames?: {
         backdrop?: string;
         container?: string;
+        containerRoot?: string;
         title?: string;
     };
     component?: ElementType;

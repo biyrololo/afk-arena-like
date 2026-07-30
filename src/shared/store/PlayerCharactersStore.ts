@@ -1,12 +1,7 @@
 import { Character, cloneCharacter } from "../types/character";
 import type { PlayerCharacter } from "../types/PlayerCharacter";
 import { create } from "zustand";
-import { DEMON_SLIME, FIRE_KING_CHARACTER, SPEARWOMAN_CHARACTER } from "@/entities/character/lib/allCharacters";
-import { createEquipment } from "@/entities/character/lib/allEquipment";
-import { Accessories, AllEquipment, Weapons } from "@/entities/character/lib/equipmentList";
-import { calculateCharacterPower } from "../types/develop";
-import * as CHARACTERS from "@/entities/character/lib/allCharacters";
-import { mockCharacters } from "./mockCharacters";
+import { FIRE_KING_CHARACTER } from "@/entities/character/lib/allCharacters";
 
 interface PlayerCharactersStore {
   characters: PlayerCharacter[];

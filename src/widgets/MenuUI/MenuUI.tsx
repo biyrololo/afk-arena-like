@@ -28,6 +28,7 @@ import { useDailyRewardsStore } from "@/entities/daily-reward/model/daily-reward
 import classNames from "classnames";
 import { usePlayerStatsStore } from "@/entities/player/model/player-stats.store";
 import { Info } from "lucide-react";
+import { Leaderboard } from "../Leaderboard";
 
 export default function MenuUI() {
   const [clicked, clickDone] = useGameStateStore(useShallow(state => [
@@ -261,6 +262,7 @@ export default function MenuUI() {
         </span>
       </div>
       <TogleMusicButton />
+      <Leaderboard />
       <QuestsModal />
       <DailyRewardsModal />
       {!isOpenedModal && <PlotModal />}

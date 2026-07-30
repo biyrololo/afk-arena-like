@@ -32,7 +32,7 @@ export const Modal: FC<ModalProps> = ({
                 {
                     Boolean(title) && <span className={cn("text-white text-2xl text-center", classNames?.title)}>{title}</span>
                 }
-                <div>
+                <div className={cn(classNames?.containerRoot)}>
                     {
                         children
                     }
