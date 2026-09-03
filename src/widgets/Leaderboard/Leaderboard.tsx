@@ -12,6 +12,7 @@ import { SDK } from "@/entities/sdk/model/sdk";
 import { LEADERBOARD_NAME } from "@/shared/lib/constants";
 import type { LeaderboardEntriesData } from "ysdk";
 import { useGameStateStore } from "@/entities/game/model/game-state.store";
+import { parseExtraData } from "@/utils/leaderboard.utils";
 
 export const Leaderboard: FC = () => {
     const [isOpened, setIsOpened] = useState(false);
@@ -112,6 +113,7 @@ export const Leaderboard: FC = () => {
                                                                 rank={entry.rank}
                                                                 name={entry.player.publicName}
                                                                 score={entry.score}
+                                                                extraData={entry.extraData}
                                                                 avatar={entry.player.getAvatarSrc('medium')}
                                                                 isPlayerEntry={entry.rank === leaderboardEntriesData.userRank}
                                                             />
@@ -121,13 +123,14 @@ export const Leaderboard: FC = () => {
                                             ) : <>
                                                 {
                                                     leaderboardEntriesData.entries.map((entry, index) => {
-                                                        if (index <= 4 || entry.rank === leaderboardEntriesData.userRank) {
+                                                        if (index <= 3 || entry.rank === leaderboardEntriesData.userRank) {
                                                             return (
                                                                 <Record
                                                                     key={entry.rank}
                                                                     rank={entry.rank}
                                                                     name={entry.player.publicName}
                                                                     score={entry.score}
+                                                                    extraData={entry.extraData}
                                                                     avatar={entry.player.getAvatarSrc('medium')}
                                                                     isPlayerEntry={entry.rank === leaderboardEntriesData.userRank}
                                                                 />
@@ -206,10 +209,13 @@ interface RecordProps {
     score: number;
     avatar: string;
     isPlayerEntry?: boolean;
+    extraData?: string;
 }
 
-const Record: FC<RecordProps> = ({ rank, name, score, avatar, isPlayerEntry }) => {
+const Record: FC<RecordProps> = ({ rank, name, score, avatar, isPlayerEntry, extraData }) => {
     const stage = generateTowerStage(score);
+    const { squad } = parseExtraData(extraData);
+
     return (
         <div className={classNames("flex items-center gap-8 text-3xl relative p-3 rounded-xl", styles.record)}
             style={{
@@ -222,8 +228,8 @@ const Record: FC<RecordProps> = ({ rank, name, score, avatar, isPlayerEntry }) =
             <div className="text-white w-40 text-6xl">{score}</div>
             <div className="ml-auto">
                 <div className="flex items-center gap-2">
-                    {stage.enemies.filter((enemy) => enemy !== undefined).map((enemy, index) => (
-                        <HeroMiniCard withoutAnimation key={index} character={enemy} size="140px" />
+                    {squad.map((enemy) => (
+                        <HeroMiniCard withoutAnimation key={enemy.key} character={enemy} size="140px" />
                     ))}
                 </div>
             </div>

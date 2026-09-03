@@ -358,7 +358,7 @@ export class SDK {
         return this.syncWithLocal(3);
     }
 
-    setLeaderboardScore(leaderboardName: string, score: number, extraData = undefined) {
+    setLeaderboardScore(leaderboardName: string, score: number, extraData: string | undefined = undefined) {
         this.ysdk?.leaderboards.setScore(leaderboardName, score, extraData);
     }
 

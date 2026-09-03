@@ -34,7 +34,7 @@ interface CompactCharacterRecord {
     p: number; // cooldownAttack
 }
 
-const characterToCompactCharacter = (character: Character.Character): CompactCharacterRecord => {
+export const characterToCompactCharacter = (character: Character.Character): CompactCharacterRecord => {
     return {
         i: character.id,
         k: character.key,
@@ -55,7 +55,7 @@ const characterToCompactCharacter = (character: Character.Character): CompactCha
     }
 }
 
-const compactCharacterToCharacter = (character: CompactCharacterRecord | Character.Character): Character.Character => {
+export const compactCharacterToCharacter = (character: CompactCharacterRecord | Character.Character): Character.Character => {
     if ('progression' in character) return character;
 
     const base = findCharacterByKey(character.k);
@@ -113,7 +113,7 @@ interface CompactEquipmentRecord {
     q: string; // slot
 }
 
-const equipmentToCompactEquipment = (equipment: Character.Equipment): CompactEquipmentRecord => {
+export const equipmentToCompactEquipment = (equipment: Character.Equipment): CompactEquipmentRecord => {
     return {
         i: equipment.id,
         k: equipment.key,
@@ -134,7 +134,7 @@ const equipmentToCompactEquipment = (equipment: Character.Equipment): CompactEqu
     }
 }
 
-const compactEquipmentToEquipment = (equipment: CompactEquipmentRecord | Character.Equipment): Character.Equipment => {
+export const compactEquipmentToEquipment = (equipment: CompactEquipmentRecord | Character.Equipment): Character.Equipment => {
     if ('level' in equipment) return equipment;
 
     const base = findEquipmentBaseByKeyNSlot(equipment.k, equipment.q as Character.EquipmentSlot);

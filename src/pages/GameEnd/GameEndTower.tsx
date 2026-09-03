@@ -18,6 +18,7 @@ import { useShallow } from "zustand/shallow";
 
 import { Backgrounds } from "@/shared/backgrounds";
 import { LEADERBOARD_NAME } from "@/shared/lib/constants";
+import { createExtraData } from "@/utils/leaderboard.utils";
 
 export const GameEndTower: FC = () => {
   const { state } = useLocation();
@@ -54,7 +55,9 @@ export const GameEndTower: FC = () => {
     if (!state.win) return;
     const { stage } = state;
 
-    SDK.getInstance().setLeaderboardScore(LEADERBOARD_NAME, stage);
+    const extraData = createExtraData();
+
+    SDK.getInstance().setLeaderboardScore(LEADERBOARD_NAME, stage, extraData);
 
     const curStage = generateTowerStage(stage);
     console.log("curStage", curStage);
